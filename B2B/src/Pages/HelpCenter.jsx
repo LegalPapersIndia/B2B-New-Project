@@ -1,0 +1,519 @@
+// import { useState } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   FaSearch,
+//   FaQuestionCircle,
+//   FaBook,
+//   FaHeadset,
+//   FaChevronDown,
+//   FaChevronUp,
+// } from "react-icons/fa";
+
+// export default function HelpCenter() {
+
+//   const [openId, setOpenId] = useState(null);
+//   const [search, setSearch] = useState("");
+
+//   const toggle = (id) => {
+//     setOpenId(openId === id ? null : id);
+//   };
+
+//   const faqs = [
+//     {
+//       id: 1,
+//       q: "How do I create a buyer account?",
+//       a: "Click on Sign Up, choose Buyer option, fill details and verify your email.",
+//     },
+//     {
+//       id: 2,
+//       q: "How can I contact suppliers directly?",
+//       a: "Use inquiry form or WhatsApp button available on supplier profile pages.",
+//     },
+//     {
+//       id: 3,
+//       q: "Is the platform free to use?",
+//       a: "Yes, basic browsing and inquiries are free for all users.",
+//     },
+//     {
+//       id: 4,
+//       q: "How do I become a verified seller?",
+//       a: "Submit your business documents and complete KYC verification process.",
+//     },
+//   ];
+
+//   const filteredFaqs = faqs.filter((f) =>
+//     f.q.toLowerCase().includes(search.toLowerCase())
+//   );
+
+//   return (
+//     <div className="min-h-screen bg-[#f8fafc]">
+
+//       {/* ================= HERO ================= */}
+//       <section className="relative py-24 lg:py-32 overflow-hidden">
+
+//         <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-slate-900 to-orange-700" />
+
+//         <motion.div
+//           animate={{ y: [0, -20, 0], x: [0, 20, 0] }}
+//           transition={{ duration: 8, repeat: Infinity }}
+//           className="absolute top-10 left-10 w-72 h-72 bg-blue-500/20 blur-3xl rounded-full"
+//         />
+
+//         <motion.div
+//           animate={{ y: [0, 20, 0], x: [0, -20, 0] }}
+//           transition={{ duration: 10, repeat: Infinity }}
+//           className="absolute bottom-10 right-10 w-96 h-96 bg-orange-500/20 blur-3xl rounded-full"
+//         />
+
+//         <div className="relative max-w-7xl mx-auto px-6 text-center">
+
+//           <motion.h1
+//             initial={{ opacity: 0, y: 40 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             className="text-4xl md:text-6xl font-black text-white"
+//           >
+//             Help <span className="text-orange-500">Center</span>
+//           </motion.h1>
+
+//           <p className="text-gray-300 mt-6 max-w-2xl mx-auto text-lg">
+//             Find answers, guides, and support for all your B2B marketplace questions.
+//           </p>
+
+//           {/* SEARCH */}
+//           <div className="mt-10 max-w-xl mx-auto relative">
+
+//             <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
+
+//             <input
+//               value={search}
+//               onChange={(e) => setSearch(e.target.value)}
+//               type="text"
+//               placeholder="Search help articles..."
+//               className="w-full pl-14 pr-5 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder:text-gray-300 outline-none focus:border-orange-400"
+//             />
+//           </div>
+
+//         </div>
+//       </section>
+
+//       {/* ================= QUICK HELP ================= */}
+//       <section className="py-20">
+//         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+
+//           {[
+//             {
+//               icon: <FaQuestionCircle />,
+//               title: "FAQs",
+//               desc: "Most asked questions answered instantly.",
+//               color: "from-orange-500 to-orange-600",
+//             },
+//             {
+//               icon: <FaBook />,
+//               title: "Guides",
+//               desc: "Step by step platform usage tutorials.",
+//               color: "from-blue-500 to-blue-600",
+//             },
+//             {
+//               icon: <FaHeadset />,
+//               title: "Support",
+//               desc: "24/7 help from our support team.",
+//               color: "from-purple-500 to-indigo-600",
+//             },
+//           ].map((item, i) => (
+//             <motion.div
+//               key={i}
+//               whileHover={{ y: -8 }}
+//               className="bg-white rounded-3xl p-8 shadow-md border border-gray-100"
+//             >
+
+//               <div className={`w-14 h-14 rounded-2xl bg-gradient-to-r ${item.color} text-white flex items-center justify-center text-xl`}>
+//                 {item.icon}
+//               </div>
+
+//               <h3 className="text-xl font-bold mt-5">{item.title}</h3>
+//               <p className="text-gray-500 mt-2">{item.desc}</p>
+
+//             </motion.div>
+//           ))}
+
+//         </div>
+//       </section>
+
+//       {/* ================= FAQ ================= */}
+//       <section className="pb-24">
+//         <div className="max-w-4xl mx-auto px-6">
+
+//           <h2 className="text-3xl md:text-4xl font-black text-center mb-10">
+//             Frequently Asked <span className="text-orange-500">Questions</span>
+//           </h2>
+
+//           <div className="space-y-5">
+
+//             {filteredFaqs.map((item) => (
+//               <motion.div
+//                 key={item.id}
+//                 layout
+//                 className="bg-white rounded-3xl shadow-md border border-gray-100 overflow-hidden"
+//               >
+
+//                 <button
+//                   onClick={() => toggle(item.id)}
+//                   className="w-full flex justify-between items-center p-6 text-left"
+//                 >
+
+//                   <span className="font-semibold text-gray-800">
+//                     {item.q}
+//                   </span>
+
+//                   {openId === item.id ? (
+//                     <FaChevronUp className="text-orange-500" />
+//                   ) : (
+//                     <FaChevronDown className="text-gray-400" />
+//                   )}
+
+//                 </button>
+
+//                 <AnimatePresence>
+//                   {openId === item.id && (
+//                     <motion.div
+//                       initial={{ height: 0, opacity: 0 }}
+//                       animate={{ height: "auto", opacity: 1 }}
+//                       exit={{ height: 0, opacity: 0 }}
+//                       className="px-6 pb-6 text-gray-600"
+//                     >
+//                       {item.a}
+//                     </motion.div>
+//                   )}
+//                 </AnimatePresence>
+
+//               </motion.div>
+//             ))}
+
+//           </div>
+
+//         </div>
+//       </section>
+
+//       {/* ================= SUPPORT BANNER ================= */}
+//       <section className="pb-24">
+//         <div className="max-w-5xl mx-auto px-6">
+
+//           <motion.div
+//             whileHover={{ scale: 1.02 }}
+//             className="bg-gradient-to-r from-blue-600 to-orange-500 text-white rounded-3xl p-10 text-center shadow-2xl"
+//           >
+
+//             <h3 className="text-3xl font-black">
+//               Still Need Help?
+//             </h3>
+
+//             <p className="mt-3 text-white/90">
+//               Contact our support team anytime, we usually respond within minutes.
+//             </p>
+
+//             <button className="mt-6 bg-white text-orange-600 font-bold px-8 py-3 rounded-2xl hover:bg-gray-100 transition-all">
+//               Contact Support
+//             </button>
+
+//           </motion.div>
+
+//         </div>
+//       </section>
+
+//     </div>
+//   );
+// }
+
+
+
+
+
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  FaSearch,
+  FaHeadset,
+  FaWhatsapp,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaPaperPlane,
+  FaSpinner,
+  FaShieldAlt,
+  FaShippingFast,
+  FaHandshake,
+  FaFileInvoiceDollar,
+} from 'react-icons/fa';
+
+const HelpCenter = () => {
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
+
+  const whatsappNumber = "+917505266931";
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=Hello%20I%20need%20help%20with%20B2B%20Portal`;
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    setTimeout(() => {
+      setSubmitted(true);
+      setLoading(false);
+
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+        });
+      }, 4000);
+    }, 1200);
+  };
+
+  const faqCategories = [
+    {
+      icon: <FaShieldAlt />,
+      title: "Account & Verification",
+      color: "text-blue-600",
+    },
+    {
+      icon: <FaHandshake />,
+      title: "Buying & Selling",
+      color: "text-orange-600",
+    },
+    {
+      icon: <FaShippingFast />,
+      title: "Shipping & Logistics",
+      color: "text-blue-600",
+    },
+    {
+      icon: <FaFileInvoiceDollar />,
+      title: "Payments & Refunds",
+      color: "text-orange-600",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+
+      {/* ================= HERO ================= */}
+      <section className="relative py-24 overflow-hidden">
+
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-slate-900 to-orange-600" />
+
+        <motion.div
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 6, repeat: Infinity }}
+          className="absolute top-10 left-10 w-72 h-72 bg-blue-600/20 blur-3xl rounded-full"
+        />
+
+        <motion.div
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 7, repeat: Infinity }}
+          className="absolute bottom-10 right-10 w-96 h-96 bg-orange-500/20 blur-3xl rounded-full"
+        />
+
+        <div className="relative max-w-6xl mx-auto px-6 text-center">
+
+          <motion.div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-5 py-2 rounded-full mb-6">
+            <FaHeadset /> Help Center
+          </motion.div>
+
+          <h1 className="text-4xl md:text-6xl font-black text-white">
+            How Can We <span className="text-orange-500">Help You?</span>
+          </h1>
+
+          <p className="text-gray-300 mt-5 max-w-2xl mx-auto">
+            Search answers or contact our support team instantly.
+          </p>
+
+          <div className="mt-10 max-w-xl mx-auto relative">
+            <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search help topics..."
+              className="w-full pl-14 pr-5 py-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
+
+        </div>
+      </section>
+
+      {/* ================= CATEGORY CARDS (BIGGER + HOVER IMPROVED) ================= */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          {faqCategories.map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{
+                y: -10,
+                scale: 1.02
+              }}
+              className="bg-white rounded-3xl p-9 shadow-md border border-gray-100 hover:shadow-2xl hover:border-orange-300 transition-all duration-300 cursor-pointer hover:bg-orange-50"
+            >
+              <div className={`text-5xl mb-5 transition-colors duration-300 ${item.color}`}>
+                {item.icon}
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-600">
+                {item.title}
+              </h3>
+              <p className="text-gray-500 mt-3 text-sm">
+                Browse related help articles
+              </p>
+            </motion.div>
+          ))}
+
+        </div>
+      </section>
+
+      {/* ================= FAQ SECTION (ADDED BACK) ================= */}
+      <section className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-6 text-center mb-12">
+          <h2 className="text-4xl font-black text-gray-900">
+            Frequently Asked <span className="text-orange-600">Questions</span>
+          </h2>
+        </div>
+
+        <div className="max-w-5xl mx-auto space-y-5 px-6">
+
+          {faqCategories.map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.01 }}
+              className="bg-slate-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-300 rounded-3xl p-8 transition-all shadow-sm hover:shadow-xl"
+            >
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-3">
+                <span className="text-orange-500">{item.icon}</span>
+                {item.title}
+              </h3>
+              <p className="text-gray-600 mt-3">
+                Explore detailed answers and step-by-step guides in this category.
+              </p>
+            </motion.div>
+          ))}
+
+        </div>
+      </section>
+
+      {/* ================= CONTACT + FORM ================= */}
+      <section className="pb-24">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-3 gap-10">
+
+          {/* FORM */}
+          <div className="lg:col-span-2 bg-white rounded-3xl p-10 shadow-2xl border border-gray-100">
+
+            <h2 className="text-3xl font-black mb-6 text-gray-900">
+              Contact Support
+            </h2>
+
+            {submitted ? (
+              <div className="text-center py-16">
+                <div className="text-5xl mb-4">🎉</div>
+                <h3 className="text-xl font-bold text-green-600">
+                  Request Sent Successfully
+                </h3>
+              </div>
+            ) : (
+
+              <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
+
+                <input name="name" onChange={handleChange} placeholder="Name" className="p-4 border rounded-2xl" />
+                <input name="email" onChange={handleChange} placeholder="Email" className="p-4 border rounded-2xl" />
+                <input name="phone" onChange={handleChange} placeholder="Phone" className="p-4 border rounded-2xl" />
+                <input name="subject" onChange={handleChange} placeholder="Subject" className="p-4 border rounded-2xl" />
+
+                <textarea
+                  name="message"
+                  onChange={handleChange}
+                  placeholder="Message"
+                  className="md:col-span-2 p-4 border rounded-2xl h-44"
+                />
+
+                <button
+                  disabled={loading}
+                  className="md:col-span-2 bg-orange-600 hover:bg-orange-700 text-white py-4 rounded-2xl font-bold flex justify-center items-center gap-3 transition-all"
+                >
+                  {loading ? <FaSpinner className="animate-spin" /> : <FaPaperPlane />}
+                  Send Message
+                </button>
+
+              </form>
+
+            )}
+
+          </div>
+
+          {/* SIDEBAR */}
+          <div className="space-y-6 sticky top-8">
+
+            {/* WHATSAPP */}
+            <a href={whatsappLink} target="_blank"
+              className="flex items-center gap-4 bg-green-500 hover:bg-green-600 text-white p-7 rounded-3xl shadow-lg hover:scale-[1.02] transition-all">
+
+              <FaWhatsapp className="text-3xl" />
+              <div>
+                <h3 className="font-bold">WhatsApp Support</h3>
+                <p className="text-sm opacity-90">Instant reply</p>
+              </div>
+
+            </a>
+
+            {/* CONTACT */}
+            <div className="bg-white p-7 rounded-3xl shadow border hover:shadow-xl transition">
+              <h3 className="font-bold mb-5">Contact Info</h3>
+
+              <div className="space-y-5 text-sm">
+
+                <div className="flex gap-3">
+                  <FaPhoneAlt className="text-orange-500 mt-1" />
+                  +91 75052 66931
+                </div>
+
+                <div className="flex gap-3">
+                  <FaEnvelope className="text-blue-600 mt-1" />
+                  support@b2b.in
+                </div>
+
+              </div>
+            </div>
+
+            {/* QUICK LINKS (RESTORED) */}
+            <div className="bg-white p-7 rounded-3xl shadow border hover:shadow-xl transition">
+              <h3 className="font-bold mb-5">Quick Links</h3>
+
+              <ul className="space-y-3 text-gray-700">
+                <li className="hover:text-orange-600 cursor-pointer">About Us</li>
+                <li className="hover:text-orange-600 cursor-pointer">Privacy Policy</li>
+                <li className="hover:text-orange-600 cursor-pointer">Refund Policy</li>
+                <li className="hover:text-orange-600 cursor-pointer">Terms & Conditions</li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  );
+};
+
+export default HelpCenter;
