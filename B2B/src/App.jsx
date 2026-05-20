@@ -66,7 +66,7 @@ import CookiesPolicy from "./Pages/CookiesPolicy";
 import RefundPolicy from "./Pages/RefundPolicy";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
-import ManufacturingHubsAll from "./pages/ManufacturingHubsAll";
+import ManufacturingHubsAll from "./Pages/ManufacturingHubsAll";
 
 // SELLER PAGES
 import SellerDashboard from "./Pages/seller/SellerDashboard";
