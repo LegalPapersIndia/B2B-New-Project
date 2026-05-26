@@ -38,6 +38,24 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    
+  profileCompleted: {
+    type: Boolean,
+    default: false
+  },
+
+  isApproved: {
+    type: Boolean,
+    default: false
+  },
+
+  sellerProfile: {
+    companyName: String,
+    ownerName: String,
+    phone: String,
+    gst: String,
+    address: String,
+  }
   },
   {
     timestamps: true,
@@ -47,3 +65,5 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.model("User", userSchema);
 
 export default User;
+
+

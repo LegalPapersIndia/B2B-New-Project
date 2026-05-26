@@ -124,11 +124,7 @@ import LatestBuyRequirements from "../components/Home/LatestBuyRequirements";
 import MarketplaceStats from "../components/Home/MarketplaceStats";
 import Testimonials from "../components/Home/Testimonials";
 import CTASection from "../components/Home/CTASection";
-// import ManufacturingHubsCarousel from "../components/ManufacturingHubsCarousel";
-// import AllCompanies from "../components/AllCompanies";
-// import PromoCard from "../components/PromoCard";
-// import BuyerPromoCard from "../components/BuyerPromoCard";
-// import Testimonials from "../components/Testimonials";
+
 
 export default function Home() {
   const [showBuyForm, setShowBuyForm] = useState(false);
@@ -182,11 +178,7 @@ export default function Home() {
               <MarketplaceStats />
               <Testimonials/>
               <CTASection />
-            {/* <ManufacturingHubsCarousel /> */}
-            {/* <AllCompanies />
-            <PromoCard />
-            <BuyerPromoCard />
-            <Testimonials /> */}
+    
 
           </div>
         </>
