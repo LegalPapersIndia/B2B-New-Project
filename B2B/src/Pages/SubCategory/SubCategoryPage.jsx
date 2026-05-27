@@ -666,7 +666,7 @@ export default function SubCategoryPage() {
   const [loading, setLoading]               = useState(true);
   const [error, setError]                   = useState("");
   const [openInquiry, setOpenInquiry]       = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState("");
+const [selectedProduct, setSelectedProduct] = useState(null);
 
   // FILTER STATES
   const [selectedState, setSelectedState] = useState("");
@@ -855,9 +855,9 @@ export default function SubCategoryPage() {
                           </Link>
                           <button
                             onClick={() => {
-                              setOpenInquiry(true);
-                              setSelectedProduct(product.title);
-                            }}
+  setOpenInquiry(true);
+  setSelectedProduct(product); // poora object
+}}
                             className="flex-1 border border-blue-800 text-blue-800 hover:bg-blue-50 py-2.5 rounded-xl text-sm font-medium transition"
                           >
                             Send Inquiry
@@ -884,12 +884,12 @@ export default function SubCategoryPage() {
       </div>
 
       {/* INQUIRY MODAL */}
-      <InquiryModal
-        isOpen={openInquiry}
-        onClose={() => setOpenInquiry(false)}
-        productName={selectedProduct}
-        productId={selectedProduct._id} 
-      />
+    <InquiryModal
+  isOpen={openInquiry}
+  onClose={() => setOpenInquiry(false)}
+  productName={selectedProduct?.title}
+  productId={selectedProduct?._id}
+/>
 
     </div>
   );

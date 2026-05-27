@@ -525,7 +525,8 @@ import ProductStrip from "./ProductStrip";
 
 import { getCategories } from "../../api/categoryApi";
 
-import InquiryModal from "../../components/common/InquiryModal";
+import PostRequirementModal from "../../components/common/PostRequirementModal"; // ← changed
+
 
 // =========================
 // MAIN UI
@@ -626,7 +627,7 @@ export default function CategoryShowcase() {
                   className="bg-orange-600/90 backdrop-blur-md border border-white/20 px-5 py-2.5 rounded-xl flex items-center gap-2 font-semibold hover:bg-orange-700 transition duration-300"
                 >
                   <MessageSquareMore size={18} />
-                  Send Inquiry
+                  Get Quotes
                 </button>
               </div>
             </div>
@@ -641,10 +642,9 @@ export default function CategoryShowcase() {
       ))}
 
       {/* INQUIRY MODAL */}
-      <InquiryModal
+       <PostRequirementModal
         isOpen={openInquiry}
         onClose={() => setOpenInquiry(false)}
-        productName={selectedProduct}
       />
     </div>
   );

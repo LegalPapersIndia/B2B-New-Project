@@ -158,7 +158,7 @@ const SellerNavbar = () => {
               </div>
               <div>
                 <h1 className="text-xl font-black tracking-tight text-black">
-                  B2B<span className="text-[#1447E6]">Hub</span>
+                  LPI-<span className="text-[#1447E6]">B2B</span>
                 </h1>
                 <p className="text-[10px] text-gray-400 -mt-0.5">
                   Seller Dashboard

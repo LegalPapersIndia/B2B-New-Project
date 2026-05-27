@@ -12,7 +12,7 @@ import {
 
 const Footer = () => {
   const categories = [
-    { name: 'Medicine & Pharma', href: '/category/medicine' },
+    { name: 'Medicine & Pharma', href: '/category/Medical' },
     { name: 'Food & Beverages', href: '/category/food' },
     { name: 'Cosmetics & Beauty', href: '/category/cosmetics' },
     { name: 'Confectionery & Snacks', href: '/category/confectionery' },
@@ -48,7 +48,7 @@ const Footer = () => {
                 <span className="text-white font-bold text-3xl">B</span>
               </div>
               <div className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-orange-400 bg-clip-text text-transparent tracking-tighter">
-                B2B
+                LPI-B2B
               </div>
             </div>
 
@@ -163,7 +163,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} B2B Marketplace. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} LPI-B2B Marketplace. All rights reserved.</p>
           <p className="mt-2">
             Designed & Developed by{' '}
             <a 
