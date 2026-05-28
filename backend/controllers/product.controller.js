@@ -50,6 +50,10 @@ export const createProduct = async (req, res) => {
       ? "approved"
       : "pending";
 
+      const isFeatured = ["gold", "premium"].includes(
+  seller.subscriptionPlan
+);
+
     // CLOUDINARY UPLOAD
     const uploadedImages = await Promise.all(
       req.files.map((file) =>
@@ -83,6 +87,7 @@ export const createProduct = async (req, res) => {
       images,
       seller: req.user._id,
       status: productStatus,
+      featured: isFeatured,
     });
 
     return res.status(201).json({
@@ -193,7 +198,7 @@ export const getAllProducts = async (req, res) => {
     const products = await Product.find(filter)
       .populate("category", "name slug")
       .populate("subcategory", "name slug")
-      .populate("seller", "name")
+      .populate("seller", "name companyName city state companyWebsite")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -223,7 +228,7 @@ export const getSingleProduct = async (req, res) => {
     })
       .populate("category", "name slug")
       .populate("subcategory", "name slug")
-      .populate("seller", "name email");
+      .populate("seller", "name email companyName city state companyWebsite")
 
     if (!product) {
       return res.status(404).json({
@@ -305,7 +310,8 @@ export const getProductsBySubCategory = async (req, res) => {
     })
       .populate("category",    "name slug")
       .populate("subcategory", "name slug")
-      .populate("seller",      "name")
+     
+      .populate("seller", "name companyName city state companyWebsite")
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -388,6 +394,38 @@ export const deleteProductAdmin = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Delete failed",
+    });
+  }
+};
+
+
+// ─────────────────────────────────────────
+// GET FEATURED PRODUCTS (Public)
+// Premium/Gold sellers ke products
+// ─────────────────────────────────────────
+export const getFeaturedProducts = async (req, res) => {
+  try {
+    const products = await Product.find({
+      status:   "approved",
+      featured: true,
+      isActive: true,
+    })
+      .populate("category",    "name slug")
+      .populate("subcategory", "name slug")
+      .populate("seller",      "name companyName companyWebsite city state subscriptionPlan")
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    return res.status(200).json({
+      success: true,
+      products,
+    });
+
+  } catch (error) {
+    console.error("getFeaturedProducts error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch featured products",
     });
   }
 };

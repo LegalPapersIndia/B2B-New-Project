@@ -1,5 +1,3 @@
-
-
 // import React from "react";
 
 // import { useParams, Link } from "react-router-dom";
@@ -166,10 +164,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
 
 // import React, { useState } from "react";
 
@@ -420,9 +414,6 @@
 
 // }
 
-
-
-
 // import React, { useState, useEffect } from "react";
 // import { useParams, Link } from "react-router-dom";
 // import { ChevronRight, Grid3X3 } from "lucide-react";
@@ -642,9 +633,6 @@
 //   );
 // }
 
-
-
-
 // src/Pages/SubCategory/SubCategoryPage.jsx
 
 import React, { useState, useEffect } from "react";
@@ -655,26 +643,25 @@ import { getProductsBySubCategory } from "../../api/productApi";
 import FilterSidebar from "../Category/FilterSidebar";
 
 export default function SubCategoryPage() {
-
   const { categorySlug, subcategorySlug } = useParams();
 
   // ─────────────────────────────────────────
   // STATES
   // ─────────────────────────────────────────
-  const [products, setProducts]             = useState([]);
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading]               = useState(true);
-  const [error, setError]                   = useState("");
-  const [openInquiry, setOpenInquiry]       = useState(false);
-const [selectedProduct, setSelectedProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [openInquiry, setOpenInquiry] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // FILTER STATES
   const [selectedState, setSelectedState] = useState("");
-  const [verifiedOnly, setVerifiedOnly]   = useState(false);
-  const [price, setPrice]                 = useState(100000);
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [price, setPrice] = useState(100000);
 
   // FORMAT NAMES
-  const categoryName    = categorySlug.replace(/-/g, " ");
+  const categoryName = categorySlug.replace(/-/g, " ");
   const subcategoryName = subcategorySlug.replace(/-/g, " ");
 
   // ─────────────────────────────────────────
@@ -709,9 +696,7 @@ const [selectedProduct, setSelectedProduct] = useState(null);
     let result = [...products];
 
     // PRICE FILTER
-    result = result.filter(
-      (p) => Number(p.price || 0) <= price
-    );
+    result = result.filter((p) => Number(p.price || 0) <= price);
 
     setFilteredProducts(result);
   }, [price, selectedState, verifiedOnly, products]);
@@ -721,14 +706,15 @@ const [selectedProduct, setSelectedProduct] = useState(null);
   // ─────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
-
       {/* TOP HEADER */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-6">
-
           {/* BREADCRUMB */}
           <div className="flex items-center gap-2 text-sm mb-5">
-            <Link to="/" className="text-gray-500 hover:text-blue-800 transition">
+            <Link
+              to="/"
+              className="text-gray-500 hover:text-blue-800 transition"
+            >
               Home
             </Link>
             <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -760,14 +746,12 @@ const [selectedProduct, setSelectedProduct] = useState(null);
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
       {/* MAIN CONTENT */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-7">
-
           {/* ── SIDEBAR ── */}
           <div className="lg:col-span-1">
             <FilterSidebar
@@ -783,7 +767,6 @@ const [selectedProduct, setSelectedProduct] = useState(null);
 
           {/* ── PRODUCTS ── */}
           <div className="lg:col-span-3">
-
             {/* LOADING */}
             {loading && (
               <div className="flex items-center justify-center py-20">
@@ -826,13 +809,42 @@ const [selectedProduct, setSelectedProduct] = useState(null);
                       </div>
 
                       {/* CONTENT */}
+                      {/* CONTENT */}
                       <div className="p-4">
                         <h2 className="font-semibold text-gray-900 line-clamp-1">
                           {product.title}
                         </h2>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {product.seller?.name || "—"}
+
+                        <p className="text-sm text-blue-700 font-medium mt-1">
+                          {product.seller?.companyWebsite ? (
+                            <a
+                              href={product.seller.companyWebsite}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:underline"
+                            >
+                              {product.seller?.companyName ||
+                                product.seller?.name ||
+                                "—"}
+                            </a>
+                          ) : (
+                            <span>
+                              {product.seller?.companyName ||
+                                product.seller?.name ||
+                                "—"}
+                            </span>
+                          )}
                         </p>
+
+                        {(product.seller?.city || product.seller?.state) && (
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            📍{" "}
+                            {[product.seller?.city, product.seller?.state]
+                              .filter(Boolean)
+                              .join(", ")}
+                          </p>
+                        )}
+
                         <p className="text-blue-800 font-semibold mt-2">
                           ₹{product.price?.toLocaleString()}
                           <span className="text-gray-400 text-xs font-normal ml-1">
@@ -843,7 +855,6 @@ const [selectedProduct, setSelectedProduct] = useState(null);
                           MOQ: {product.moq} {product.unit}
                         </p>
 
-                        {/* BUTTONS */}
                         <div className="flex gap-3 mt-4">
                           <Link
                             to={`/category/${categorySlug}/subcategory/${subcategorySlug}/product/${product.slug}`}
@@ -855,9 +866,9 @@ const [selectedProduct, setSelectedProduct] = useState(null);
                           </Link>
                           <button
                             onClick={() => {
-  setOpenInquiry(true);
-  setSelectedProduct(product); // poora object
-}}
+                              setOpenInquiry(true);
+                              setSelectedProduct(product);
+                            }}
                             className="flex-1 border border-blue-800 text-blue-800 hover:bg-blue-50 py-2.5 rounded-xl text-sm font-medium transition"
                           >
                             Send Inquiry
@@ -878,19 +889,17 @@ const [selectedProduct, setSelectedProduct] = useState(null);
                 )}
               </div>
             )}
-
           </div>
         </div>
       </div>
 
       {/* INQUIRY MODAL */}
-    <InquiryModal
-  isOpen={openInquiry}
-  onClose={() => setOpenInquiry(false)}
-  productName={selectedProduct?.title}
-  productId={selectedProduct?._id}
-/>
-
+      <InquiryModal
+        isOpen={openInquiry}
+        onClose={() => setOpenInquiry(false)}
+        productName={selectedProduct?.title}
+        productId={selectedProduct?._id}
+      />
     </div>
   );
 }

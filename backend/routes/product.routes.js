@@ -11,6 +11,7 @@ import {
     getProductsBySubCategory,
     getProductByIdAdmin,   
   deleteProductAdmin,
+    getFeaturedProducts,
 } from "../controllers/product.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -27,7 +28,7 @@ router.get(
   adminAuthMiddleware,
   getAdminProducts
 );
-
+router.get("/featured", getFeaturedProducts);
 // ─────────────────────────────────────────
 // SELLER ROUTES
 // ─────────────────────────────────────────
@@ -73,5 +74,7 @@ router.delete(
   adminAuthMiddleware,
   deleteProductAdmin
 );
+
+
 
 export default router;

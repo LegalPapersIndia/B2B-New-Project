@@ -354,7 +354,7 @@ export default function Sellers() {
   const [filter, setFilter] = useState("all");
   const [sellers, setSellers] = useState([]);
 
-  const token = localStorage.getItem("token");
+const token = localStorage.getItem("adminToken");
 
   // 🔥 FETCH SELLERS
   const fetchSellers = async () => {

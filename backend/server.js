@@ -103,7 +103,7 @@ import productRoutes from "./routes/product.routes.js";
 import subscriptionRoutes from "./routes/subscription.routes.js";
 import leadRoutes from "./routes/lead.routes.js";
 import requirementRoutes from "./routes/requirement.routes.js";
-
+import sellerProfileRoutes from "./routes/sellerProfile.routes.js";
 
 dotenv.config();
 
@@ -162,6 +162,9 @@ app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/leads", leadRoutes);
 
 app.use("/api/requirements", requirementRoutes);
+
+app.use("/api/seller/profile", sellerProfileRoutes);
+
 // ─────────────────────────────────────────
 // SERVER
 // ─────────────────────────────────────────

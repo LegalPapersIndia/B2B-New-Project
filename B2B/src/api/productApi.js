@@ -92,3 +92,9 @@ export const getProductsBySubCategory = async (subcategorySlug) => {
   );
   return response.data;
 };
+
+// GET FEATURED PRODUCTS
+export const getFeaturedProducts = async () => {
+  const response = await axios.get(`${API}/products/featured`);
+  return response.data;
+};

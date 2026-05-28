@@ -723,10 +723,36 @@ import { getCategories } from "../../api/categoryApi";
 import { getSubCategoriesByCategory } from "../../api/subCategoryApi";
 import { addProduct } from "../../api/productApi";
 import { useNavigate } from "react-router-dom";
+import { getMyProfile } from "../../api/sellerProfileApi"; 
 
 const AddProduct = () => {
 
 const navigate = useNavigate();
+
+const seller = JSON.parse(localStorage.getItem("user") || "{}");
+const isSubscribed = seller?.subscriptionActive;
+// Yeh useEffect sabse pehle add karo — navigate ke baad
+
+useEffect(() => {
+  const checkProfile = async () => {
+    try {
+      const data = await getMyProfile();
+      const seller = data.seller;
+      
+      const isComplete = seller.companyName && seller.phone && seller.city && seller.state;
+      
+      if (!isComplete) {
+        navigate("/seller/profile", { 
+  state: { message: "⚠️ Please complete your profile before adding products." } 
+});
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  checkProfile();
+}, []);
+
   // ─────────────────────────────────────────
   // STATES
   // ─────────────────────────────────────────
@@ -907,65 +933,70 @@ const navigate = useNavigate();
 
           {/* SUBSCRIPTION CARD */}
        {/* SUBSCRIPTION CARD */}
-<div className="mx-8 mt-8 relative overflow-hidden bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] rounded-3xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-5 shadow-lg">
+{/* SUBSCRIPTION CARD */}
+{!isSubscribed && (
+  <div className="mx-8 mt-8 relative overflow-hidden bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] rounded-3xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-5 shadow-lg">
 
-  {/* BG DECORATION */}
-  <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-  <div className="absolute bottom-0 left-1/3 w-40 h-40 bg-orange-500/10 rounded-full translate-y-1/2 pointer-events-none" />
+    {/* BG DECORATION */}
+    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+    <div className="absolute bottom-0 left-1/3 w-40 h-40 bg-orange-500/10 rounded-full translate-y-1/2 pointer-events-none" />
 
-  {/* LEFT */}
-  <div className="flex items-center gap-5 relative z-10">
-
-    {/* ICON */}
-    <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg flex-shrink-0">
-      <FaCrown className="text-2xl text-white" />
-    </div>
-
-    {/* TEXT */}
-    <div>
-      <div className="flex items-center gap-3 mb-1">
-        <h3 className="text-lg font-bold text-white">
-          Pending Subscription
-        </h3>
-        <span className="bg-orange-500/20 text-orange-400 text-xs px-3 py-1 rounded-full border border-orange-500/30 font-medium">
-          Free Plan
-        </span>
+    <div className="flex items-center gap-5 relative z-10">
+      <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg flex-shrink-0">
+        <FaCrown className="text-2xl text-white" />
       </div>
-
-      <p className="text-white/60 text-sm leading-relaxed max-w-xl">
-        Your products will stay <span className="text-orange-400 font-medium">pending</span> until subscription is active.
-        Upgrade to publish products instantly.
-      </p>
-
-      {/* PLAN PILLS */}
-      <div className="flex gap-2 mt-3 flex-wrap">
-        {["Basic", "Premium", "Gold"].map((plan) => (
-          <span
-            key={plan}
-            className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/50 border border-white/10"
-          >
-            {plan}
+      <div>
+        <div className="flex items-center gap-3 mb-1">
+          <h3 className="text-lg font-bold text-white">Pending Subscription</h3>
+          <span className="bg-orange-500/20 text-orange-400 text-xs px-3 py-1 rounded-full border border-orange-500/30 font-medium">
+            Free Plan
           </span>
-        ))}
+        </div>
+        <p className="text-white/60 text-sm leading-relaxed max-w-xl">
+          Your products will stay <span className="text-orange-400 font-medium">pending</span> until subscription is active.
+          Upgrade to publish products instantly.
+        </p>
+        <div className="flex gap-2 mt-3 flex-wrap">
+          {["Basic", "Premium", "Gold"].map((plan) => (
+            <span key={plan} className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/50 border border-white/10">
+              {plan}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
+
+    <button
+      type="button"
+      onClick={() => navigate("/seller/subscription")}
+      className="group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-bold shadow-lg transition-all duration-200 flex items-center gap-2 z-10"
+    >
+      <FaCrown className="text-sm" />
+      Subscribe Now
+      <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
+        HOT
+      </span>
+    </button>
 
   </div>
+)}
 
-  {/* BUTTON */}
-  <button
-  type="button"
-  onClick={() => navigate("/seller/subscription")}
-  className="group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-bold shadow-lg transition-all duration-200 flex items-center gap-2"
->
-  <FaCrown className="text-sm" />
-  Subscribe Now
-  <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
-    HOT
-  </span>
-</button>
-
-</div>
+{/* SUBSCRIPTION ACTIVE BANNER */}
+{isSubscribed && (
+  <div className="mx-8 mt-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl p-5 flex items-center gap-4 shadow-lg">
+    <div className="h-12 w-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+      <FaCrown className="text-white text-xl" />
+    </div>
+    <div>
+      <p className="text-white font-bold">
+        {seller?.subscriptionPlan?.toUpperCase()} Plan Active ✅
+      </p>
+      <p className="text-green-100 text-sm">
+        Your products will go live instantly after submission!
+      </p>
+    </div>
+  </div>
+)}
 
           {/* FORM */}
           <form onSubmit={handleSubmit} className="p-8 space-y-8">

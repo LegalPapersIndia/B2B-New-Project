@@ -126,17 +126,37 @@ import {
   FaBell,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { getMyProfile } from "../../api/sellerProfileApi";
 
 const SellerNavbar = () => {
   const navigate = useNavigate();
   const [seller, setSeller] = useState(null);
 
-  useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      setSeller(JSON.parse(userData));
+ useEffect(() => {
+  // Pehle localStorage se show karo (fast)
+  const userData = localStorage.getItem("user");
+  if (userData) setSeller(JSON.parse(userData));
+
+  // Phir API se fresh data fetch karo
+  const fetchProfile = async () => {
+    try {
+      const data = await getMyProfile();
+      if (data.success) {
+        setSeller(data.seller);
+        // localStorage update karo
+        const userData = JSON.parse(localStorage.getItem("user") || "{}");
+        localStorage.setItem("user", JSON.stringify({
+          ...userData,
+          ...data.seller,
+        }));
+      }
+    } catch (err) {
+      console.error(err);
     }
-  }, []);
+  };
+
+  fetchProfile();
+}, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -220,30 +240,36 @@ const SellerNavbar = () => {
               {/* AVATAR WITH STATUS RING */}
               {/* AVATAR WITH STATUS RING */}
               <div className="relative">
-                <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-blue-100 text-blue-800 border-[3px] transition-all duration-300
+  <div
+    className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center font-bold text-sm bg-blue-100 text-blue-800 border-[3px] transition-all duration-300
     ${isSubscribed ? "border-green-500" : "border-yellow-400"}`}
-                >
-                  {seller?.name ? (
-                    seller.name.charAt(0).toUpperCase()
-                  ) : (
-                    <FaUserCircle />
-                  )}
-                </div>
+  >
+    {seller?.profileImage ? (
+      <img
+       src={seller.profileImage.url}
+        alt={seller.name}
+        className="w-full h-full object-cover"
+      />
+    ) : seller?.name ? (
+      seller.name.charAt(0).toUpperCase()
+    ) : (
+      <FaUserCircle />
+    )}
+  </div>
 
-                {/* STATUS DOT */}
-                {isSubscribed ? (
-                  <span className="absolute -bottom-0.5 -right-0.5 flex">
-                    <span className="animate-ping absolute w-3 h-3 rounded-full bg-green-400 opacity-75" />
-                    <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-white" />
-                  </span>
-                ) : (
-                  <span className="absolute -bottom-0.5 -right-0.5 flex">
-                    <span className="animate-ping absolute w-3 h-3 rounded-full bg-yellow-400 opacity-75" />
-                    <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-white" />
-                  </span>
-                )}
-              </div>
+  {/* STATUS DOT */}
+  {isSubscribed ? (
+    <span className="absolute -bottom-0.5 -right-0.5 flex">
+      <span className="animate-ping absolute w-3 h-3 rounded-full bg-green-400 opacity-75" />
+      <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-white" />
+    </span>
+  ) : (
+    <span className="absolute -bottom-0.5 -right-0.5 flex">
+      <span className="animate-ping absolute w-3 h-3 rounded-full bg-yellow-400 opacity-75" />
+      <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-white" />
+    </span>
+  )}
+</div>
 
               {/* NAME */}
               <div className="hidden sm:block">
