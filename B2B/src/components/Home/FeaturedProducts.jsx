@@ -691,23 +691,6 @@ const FeaturedProducts = () => {
               </motion.div>
             ))}
           </div>
-
-          {/* MOBILE SCROLL BUTTONS */}
-          <div className="flex justify-center gap-3 mt-4 sm:hidden">
-            <button
-              onClick={() => scroll("prev")}
-              className="bg-white shadow-md p-3 rounded-full border border-gray-200"
-            >
-              <FaChevronLeft className="text-gray-700" />
-            </button>
-            <button
-              onClick={() => scroll("next")}
-              className="bg-white shadow-md p-3 rounded-full border border-gray-200"
-            >
-              <FaChevronRight className="text-gray-700" />
-            </button>
-          </div>
-
         </div>
       </div>
     </section>
