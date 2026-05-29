@@ -123,11 +123,12 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      // Frontend
+        // Frontend
+      "https://b2-b-new-project-wexx.vercel.app",
       "https://b2-b-new-project.vercel.app",
 
       // Admin Panel
-      "https://YOUR-ADMIN-URL.vercel.app",
+      "https://b2-b-new-project-eah9.vercel.app",
     ],
     credentials: true,
   })
