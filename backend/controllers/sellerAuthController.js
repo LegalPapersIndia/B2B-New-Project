@@ -107,3 +107,31 @@ export const getAllSellers = async (req, res) => {
 
   }
 };
+
+
+// DELETE SELLER (Admin)
+export const deleteSeller = async (req, res) => {
+  try {
+    const seller = await Seller.findById(req.params.id);
+
+    if (!seller) {
+      return res.status(404).json({
+        success: false,
+        message: "Seller not found",
+      });
+    }
+
+    await seller.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "Seller deleted successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

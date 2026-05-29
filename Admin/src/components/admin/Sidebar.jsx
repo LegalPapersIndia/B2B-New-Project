@@ -312,7 +312,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           </div>
           <div>
             <div className="text-base font-bold text-slate-100">
-              B2B<span className="text-blue-400">Market</span>
+              LPI-<span className="text-blue-400">B2B</span>
             </div>
             <div className="text-[10px] text-white/30">Admin Panel</div>
           </div>

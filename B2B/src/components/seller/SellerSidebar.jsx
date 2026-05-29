@@ -185,9 +185,12 @@ const SellerSidebar = () => {
             Add more products and get more buyer enquiries faster.
           </p>
 
-          <button className="w-full bg-white text-orange-600 hover:bg-orange-50 py-3 rounded-2xl font-semibold transition">
-            Upgrade Business
-          </button>
+        <Link
+  to="/seller/subscription"
+  className="w-full bg-white text-orange-600 hover:bg-orange-50 py-3 rounded-2xl font-semibold transition block text-center"
+>
+  Upgrade Business
+</Link>
 
         </div>
 
