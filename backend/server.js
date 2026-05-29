@@ -128,7 +128,7 @@ app.use(
       "https://b2-b-new-project.vercel.app",
 
       // Admin Panel
-      "https://b2-b-new-project-eah9.vercel.app",
+      "https://b2-b-new-project-4pru.vercel.app",
     ],
     credentials: true,
   })
