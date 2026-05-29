@@ -400,10 +400,14 @@ const limited =
       </button>
 
       {/* SCROLL AREA */}
-      <div
-        ref={scrollRef}
-        className="flex gap-5 overflow-x-auto scrollbar-hide scroll-smooth"
-      >
+     <div
+  ref={scrollRef}
+  className="flex gap-5 overflow-x-auto scrollbar-hide scroll-smooth"
+  style={{
+    WebkitOverflowScrolling: "touch",
+    scrollbarWidth: "none",
+  }}
+>
         {loading ? (
           <p className="text-white p-4">
             Loading...
