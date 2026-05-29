@@ -407,6 +407,8 @@ const limited =
     WebkitOverflowScrolling: "touch",
     scrollbarWidth: "none",
   }}
+  onTouchStart={() => setIsHovered(true)}
+  onTouchEnd={() => setIsHovered(false)}
 >
         {loading ? (
           <p className="text-white p-4">
