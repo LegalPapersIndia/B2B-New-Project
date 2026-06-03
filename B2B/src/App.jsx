@@ -41,7 +41,7 @@ import ProductDetailsPage from "./Pages/Product/ProductDetailsPage";
 // import SellerWaiting from "./Pages/seller/SellerWaiting";
 import Subscription from "./Pages/seller/Subscription";
 import HubPage from "./Pages/HubPage";
-import SearchPage from "./pages/SearchPage";
+import SearchPage from "./Pages/SearchPage";
 import SellerPublicProfile from "./Pages/SellerPublicProfile";
 import BlogDetails from "./Pages/BlogDetails";
 
