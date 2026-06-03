@@ -5,6 +5,7 @@ import Seller from "../models/Seller.js";
 import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.utils.js";
 import slugify from "slugify";
 import SubCategory from "../models/subCategoryModel.js";
+import mongoose from "mongoose";
 // ─────────────────────────────────────────
 // CREATE PRODUCT (Seller)
 // ─────────────────────────────────────────
@@ -176,45 +177,261 @@ export const deleteProduct = async (req, res) => {
 // ─────────────────────────────────────────
 // GET ALL APPROVED PRODUCTS (Public)
 // ─────────────────────────────────────────
+// export const getAllProducts = async (req, res) => {
+//   try {
+//     const { category, subcategory, minPrice, maxPrice, search } = req.query;
+
+//     const filter = {
+//       status: "approved",
+//       isActive: true,
+//     };
+
+//     if (category)    filter.category    = category;
+//     if (subcategory) filter.subcategory = subcategory;
+//     if (search)      filter.title       = { $regex: search, $options: "i" };
+
+//     if (minPrice || maxPrice) {
+//       filter.price = {};
+//       if (minPrice) filter.price.$gte = Number(minPrice);
+//       if (maxPrice) filter.price.$lte = Number(maxPrice);
+//     }
+
+//     const products = await Product.find(filter)
+//       .populate("category", "name slug")
+//       .populate("subcategory", "name slug")
+//       .populate("seller", "name companyName city state companyWebsite")
+//       .sort({ createdAt: -1 });
+
+//     return res.status(200).json({
+//       success: true,
+//       count: products.length,
+//       products,
+//     });
+
+//   } catch (error) {
+//     console.error("getAllProducts error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to fetch products",
+//     });
+//   }
+// };
+
+// export const getAllProducts = async (req, res) => {
+//   try {
+//     const { search, city, state, category, subcategory } = req.query;
+
+//     const filter = { status: "approved", isActive: true };
+
+//     // SEARCH FILTER
+//     if (search) filter.title = { $regex: search, $options: "i" };
+
+//     // CATEGORY FILTER
+//     if (category)    filter.category    = category;
+//     if (subcategory) filter.subcategory = subcategory;
+
+//     // CITY/STATE FILTER — seller ke through
+//     if (city || state) {
+//       const sellerQuery = {};
+//       if (city)  sellerQuery.city  = { $regex: city,  $options: "i" };
+//       if (state) sellerQuery.state = { $regex: state, $options: "i" };
+
+//       const sellers = await Seller.find(sellerQuery).select("_id");
+//       filter.seller = { $in: sellers.map(s => s._id) };
+//     }
+
+//     const products = await Product.find(filter)
+//       .populate("category",    "name slug")
+//       .populate("subcategory", "name slug")
+//       .populate("seller",      "name companyName city state companyWebsite subscriptionPlan")
+//       .sort({ createdAt: -1 });
+
+//     return res.status(200).json({
+//       success: true,
+//       count:   products.length,
+//       products,
+//     });
+
+//   } catch (error) {
+//     console.error("getAllProducts error:", error);
+//     return res.status(500).json({ success: false, message: "Failed to fetch products" });
+//   }
+// };
+// export const getAllProducts = async (req, res) => {
+//   try {
+//     const { search, city, state, category, subcategory } = req.query;
+
+//     const filter = { status: "approved", isActive: true };
+
+//     // ✅ FUZZY SEARCH — title, brand, shortDesc sab mein
+//     if (search) {
+//       filter.$or = [
+//         { title:     { $regex: search, $options: "i" } },
+//         { brand:     { $regex: search, $options: "i" } },
+//         { shortDesc: { $regex: search, $options: "i" } },
+//       ];
+//     }
+
+//     // CATEGORY FILTER
+//     if (category)    filter.category    = category;
+//     if (subcategory) filter.subcategory = subcategory;
+
+//     // ✅ CITY/STATE FILTER — partial match
+//     if (city || state) {
+//       const sellerQuery = {};
+//       if (city)  sellerQuery.city  = { $regex: city.trim(),  $options: "i" };
+//       if (state) sellerQuery.state = { $regex: state.trim(), $options: "i" };
+
+//       const sellers = await Seller.find(sellerQuery).select("_id");
+//       filter.seller = { $in: sellers.map(s => s._id) };
+//     }
+
+//     const products = await Product.find(filter)
+//       .populate("category",    "name slug")
+//       .populate("subcategory", "name slug")
+//       .populate("seller",      "name companyName city state companyWebsite subscriptionPlan")
+//       .sort({ createdAt: -1 });
+
+//     return res.status(200).json({
+//       success: true,
+//       count:   products.length,
+//       products,
+//     });
+
+//   } catch (error) {
+//     console.error("getAllProducts error:", error);
+//     return res.status(500).json({ success: false, message: "Failed to fetch products" });
+//   }
+// };
+
+
+
 export const getAllProducts = async (req, res) => {
   try {
-    const { category, subcategory, minPrice, maxPrice, search } = req.query;
+    const { search, city, state, category, subcategory } = req.query;
 
-    const filter = {
-      status: "approved",
-      isActive: true,
-    };
-
-    if (category)    filter.category    = category;
-    if (subcategory) filter.subcategory = subcategory;
-    if (search)      filter.title       = { $regex: search, $options: "i" };
-
-    if (minPrice || maxPrice) {
-      filter.price = {};
-      if (minPrice) filter.price.$gte = Number(minPrice);
-      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    // ─── CITY/STATE SE SELLERS DHUNDO ───
+    let sellerIds = null;
+    if (city || state) {
+      const sellerQuery = {};
+      if (city)  sellerQuery.city  = { $regex: city.trim(),  $options: "i" };
+      if (state) sellerQuery.state = { $regex: state.trim(), $options: "i" };
+      const sellers = await Seller.find(sellerQuery).select("_id");
+      sellerIds = sellers.map(s => s._id);
     }
 
-    const products = await Product.find(filter)
-      .populate("category", "name slug")
-      .populate("subcategory", "name slug")
-      .populate("seller", "name companyName city state companyWebsite")
-      .sort({ createdAt: -1 });
+    let products = [];
+
+    if (search) {
+      // ─── ATLAS SEARCH — FUZZY ───
+      const pipeline = [
+        {
+          $search: {
+            index: "product_search",
+            text: {
+              query: search,
+              path: ["title", "brand", "shortDesc", "description"],
+              fuzzy: {
+                maxEdits: 1,       // 1 letter galat ho tab bhi milega
+                prefixLength: 2,   // pehle 2 letters sahi hone chahiye
+              },
+            },
+          },
+        },
+
+        // ─── FILTERS ───
+        {
+          $match: {
+            status: "approved",
+            isActive: true,
+            ...(category    && { category:    new mongoose.Types.ObjectId(category) }),
+            ...(subcategory && { subcategory: new mongoose.Types.ObjectId(subcategory) }),
+            ...(sellerIds   && { seller: { $in: sellerIds } }),
+          },
+        },
+
+        // ─── SCORE SE SORT — best match pehle ───
+        { $sort: { score: { $meta: "searchScore" }, createdAt: -1 } },
+
+        // ─── POPULATE ───
+        {
+          $lookup: {
+            from: "categories",
+            localField: "category",
+            foreignField: "_id",
+            as: "category",
+          },
+        },
+        { $unwind: { path: "$category",    preserveNullAndEmptyArrays: true } },
+
+        {
+          $lookup: {
+            from: "subcategories",
+            localField: "subcategory",
+            foreignField: "_id",
+            as: "subcategory",
+          },
+        },
+       { $unwind: { path: "$subcategory", preserveNullAndEmptyArrays: true } },
+
+        {
+          $lookup: {
+            from: "sellers",
+            localField: "seller",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+       { $unwind: { path: "$seller",      preserveNullAndEmptyArrays: true } },
+
+        // ─── SIRF ZARURI FIELDS ───
+        {
+          $project: {
+            title: 1, slug: 1, brand: 1, shortDesc: 1,
+            price: 1, moq: 1, unit: 1, images: 1,
+            status: 1, isActive: 1, createdAt: 1,
+            score: { $meta: "searchScore" },
+            "category.name":    1, "category.slug":    1,
+            "subcategory.name": 1, "subcategory.slug": 1,
+            "seller.name": 1, "seller.companyName": 1,
+            "seller.city": 1, "seller.state":       1,
+            "seller.companyWebsite":  1,
+            "seller.subscriptionPlan": 1,
+          },
+        },
+      ];
+
+      products = await Product.aggregate(pipeline);
+
+    } else {
+      // ─── SEARCH NAHI HAI — NORMAL FILTER ───
+      const filter = { status: "approved", isActive: true };
+      if (category)    filter.category    = category;
+      if (subcategory) filter.subcategory = subcategory;
+      if (sellerIds)   filter.seller      = { $in: sellerIds };
+
+      products = await Product.find(filter)
+        .populate("category",    "name slug")
+        .populate("subcategory", "name slug")
+        .populate("seller", "name companyName city state companyWebsite subscriptionPlan")
+        .sort({ createdAt: -1 });
+    }
 
     return res.status(200).json({
       success: true,
-      count: products.length,
+      count:   products.length,
       products,
     });
 
   } catch (error) {
     console.error("getAllProducts error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch products",
-    });
+    return res.status(500).json({ success: false, message: "Failed to fetch products" });
   }
 };
+
+
+
+
 
 // ─────────────────────────────────────────
 // GET SINGLE PRODUCT (Public)
@@ -427,5 +644,44 @@ export const getFeaturedProducts = async (req, res) => {
       success: false,
       message: "Failed to fetch featured products",
     });
+  }
+};
+
+
+
+// Neeche ye function add karo
+export const getProductsByCity = async (req, res) => {
+  try {
+    const { citySlug } = req.params;
+
+    const cityName = citySlug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+
+    const sellers = await Seller.find({
+      city: { $regex: new RegExp(`^${cityName}$`, "i") },
+    }).select("_id");
+
+    if (!sellers.length) {
+      return res.status(200).json({ success: true, products: [], total: 0 });
+    }
+
+    const sellerIds = sellers.map((s) => s._id);
+
+    const products = await Product.find({
+      seller: { $in: sellerIds },
+      status: "approved",
+      isActive: true,
+    })
+      .populate("seller", "companyName city state companyWebsite")
+      .populate("category", "name slug")
+      .populate("subcategory", "name slug")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, products, total: products.length });
+  } catch (error) {
+    console.error("getProductsByCity error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

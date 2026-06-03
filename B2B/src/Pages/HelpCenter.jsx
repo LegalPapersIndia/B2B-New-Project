@@ -243,7 +243,7 @@ import {
   FaHandshake,
   FaFileInvoiceDollar,
 } from 'react-icons/fa';
-
+import { createContact } from '../api/contactApi';
 const HelpCenter = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -265,26 +265,32 @@ const HelpCenter = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    await createContact(formData);  // 👈 API call
+    setSubmitted(true);
 
     setTimeout(() => {
-      setSubmitted(true);
-      setLoading(false);
+      setSubmitted(false);
+      setFormData({
+        name: '',
+        email: '',
+        mobile: '',
+        subject: '',
+        message: '',
+      });
+    }, 4000);
 
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: '',
-        });
-      }, 4000);
-    }, 1200);
-  };
+  } catch (error) {
+    console.error("Contact form error:", error);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const faqCategories = [
     {
@@ -437,7 +443,7 @@ const HelpCenter = () => {
 
                 <input name="name" onChange={handleChange} placeholder="Name" className="p-4 border rounded-2xl" />
                 <input name="email" onChange={handleChange} placeholder="Email" className="p-4 border rounded-2xl" />
-                <input name="phone" onChange={handleChange} placeholder="Phone" className="p-4 border rounded-2xl" />
+                <input name="mobile" onChange={handleChange} placeholder="Mobile" className="p-4 border rounded-2xl" />
                 <input name="subject" onChange={handleChange} placeholder="Subject" className="p-4 border rounded-2xl" />
 
                 <textarea

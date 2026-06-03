@@ -368,20 +368,27 @@ import {
   FaApple,
   FaCubes,
   FaSearch,
+  FaPills,
+  FaHardHat,
+  FaSpa,
+  FaTshirt,
+  FaCarrot,
 } from "react-icons/fa";
+import { GiBrickWall } from "react-icons/gi";
 
 import { getCategories } from "../../api/categoryApi";
 
 // ================= ICON MAP =================
 const iconMap = {
-  plastics: <FaCubes className="text-orange-600" size={24} />,
-  machinery: <FaTools className="text-blue-600" size={24} />,
-  chemicals: <FaIndustry className="text-green-600" size={24} />,
-  food: <FaApple className="text-red-500" size={24} />,
-  electronics: <FaBolt className="text-yellow-500" size={24} />,
-  automobile: <FaCar className="text-gray-700" size={24} />,
-  agriculture: <FaLeaf className="text-green-500" size={24} />,
-  general: <FaBox className="text-purple-500" size={24} />,
+  // exact slugs daalo jo backend se aate hain
+  "medicine-pharma":            <FaPills className="text-red-500" size={24} />,
+  "industrial-machinery":       <FaTools className="text-blue-600" size={24} />,
+  "cosmetics-beauty":           <FaSpa className="text-pink-500" size={24} />,
+  "electronics-electricals":    <FaBolt className="text-yellow-500" size={24} />,
+  "building-construction":      <GiBrickWall className="text-orange-700" size={24} />,
+  "apparel-fashion-textile":    <FaTshirt className="text-purple-500" size={24} />,
+  "food-agriculture":           <FaCarrot className="text-green-500" size={24} />,
+  "other-categories":           <FaBox className="text-gray-500" size={24} />,
 };
 
 export default function Sidebar() {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { createContact } from "../api/contactApi";
 import {
   FaMapMarkerAlt,
   FaDirections,
@@ -16,7 +16,15 @@ import {
 
 export default function ContactPage() {
   const [activeId, setActiveId] = useState(1);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+      mobile: "",
+    subject: "",
+    message: "",
+  });
 
+  const [loading, setLoading] = useState(false);
   const faqData = [
     {
       id: 1,
@@ -46,6 +54,42 @@ export default function ContactPage() {
 
   const toggleFAQ = (id) => {
     setActiveId(activeId === id ? null : id);
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const data = await createContact(formData);
+
+      if (data.success) {
+        alert("Message sent successfully!");
+
+        setFormData({
+          name: "",
+          email: "",
+          mobile: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        alert(data.message || "Failed to send message");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const whatsappLink =
@@ -224,40 +268,67 @@ export default function ContactPage() {
                 Our team will get back to you within 24 hours.
               </p>
 
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 {/* ROW */}
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-3 gap-6">
                   <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     placeholder="Your Name"
+                    required
                     className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
                   />
 
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="Your Email"
+                    required
                     className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
                   />
+
+                  <input
+  type="tel"
+  name="mobile"
+  value={formData.mobile}
+  onChange={handleChange}
+  placeholder="Mobile Number"
+  required
+  className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+/>
                 </div>
 
                 <input
                   type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   placeholder="Subject"
+                  required
                   className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
                 />
-
                 <textarea
                   rows="6"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Write your message..."
+                  required
                   className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all resize-none"
                 />
 
                 <motion.button
+                  type="submit"
+                  disabled={loading}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="group bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-2xl font-semibold flex items-center justify-center gap-3 shadow-xl w-full sm:w-auto"
                 >
-                  Send Message
+                  {loading ? "Sending..." : "Send Message"}
                   <motion.div
                     whileHover={{ x: 4 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -429,4 +500,3 @@ export default function ContactPage() {
     </div>
   );
 }
-

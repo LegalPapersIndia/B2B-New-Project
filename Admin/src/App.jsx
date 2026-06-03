@@ -15,6 +15,11 @@ import Settings from "./pages/admin/Settings";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminLayout from "./layout/AdminLayout";
 
+import Cities from "./pages/admin/Cities"; 
+import Contacts from "./pages/admin/Contacts";
+import Blogs from "./pages/admin/Blogs";
+import AdminCareers from "./pages/admin/AdminCareers";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -41,6 +46,10 @@ export default function App() {
          <Route path="subcategories" element={<Subcategories />} />
          <Route path="analytics" element={<Analytics />} />
            <Route path="settings" element={<Settings />} />
+           <Route path="cities" element={<Cities />} />
+            <Route path="contacts" element={<Contacts />} />
+            <Route path="/admin/blogs" element={<Blogs />} />
+            <Route path="/admin/careers" element={<AdminCareers />} />
         </Route>
 
       </Routes>

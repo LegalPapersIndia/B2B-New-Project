@@ -200,8 +200,7 @@
 
 
 // src/pages/Home.jsx
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import HeroCarousel from "../components/Home/HeroCarousel";
 import Sidebar from "../components/Home/SideBar";
 import ActionSidebar from "../components/Home/ActionSide";
@@ -215,8 +214,18 @@ import LatestBuyRequirements from "../components/Home/LatestBuyRequirements";
 import MarketplaceStats from "../components/Home/MarketplaceStats";
 import Testimonials from "../components/Home/Testimonials";
 import CTASection from "../components/Home/CTASection";
+import PostRequirementModal from "../components/common/PostRequirementModal";  // ← ADD
 
 export default function Home() {
+  const [showRequirement, setShowRequirement] = useState(false);
+
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setShowRequirement(true);
+  }, 1000);
+  return () => clearTimeout(timer);
+}, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
 
@@ -259,6 +268,10 @@ export default function Home() {
         <Testimonials />
         <CTASection />
       </div>
+  <PostRequirementModal                                         
+        isOpen={showRequirement}
+        onClose={() => setShowRequirement(false)}
+      />
 
     </div>
   );

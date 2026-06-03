@@ -12,12 +12,13 @@ import {
 
 const Footer = () => {
   const categories = [
-    { name: 'Medicine & Pharma', href: '/category/Medical' },
-    { name: 'Food & Beverages', href: '/category/food' },
-    { name: 'Cosmetics & Beauty', href: '/category/cosmetics' },
-    { name: 'Confectionery & Snacks', href: '/category/confectionery' },
-    { name: 'Daily Use & FMCG', href: '/category/daily-use' },
-    { name: 'Electronics & Electrical', href: '/category/electronics' },
+    { name: 'Medicine & Pharma', href: '/category/medicine-pharma' },
+    { name: 'Industrial Machinery', href: '/category/industrial-machinery' },
+    { name: 'Cosmetics & Beauty', href: '/category/cosmetics-beauty' },
+    { name: 'Electronics & Electricals', href: '/category/electronics' },
+    { name: 'Food & Agriculture', href: '/category/foodi-agriculture' },
+    { name: 'Apparel, Fashion & Textile', href: '/category/apparel-fashion-textile' },
+    
   ];
 
   const companyLinks = [

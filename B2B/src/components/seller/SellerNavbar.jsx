@@ -227,10 +227,10 @@ const SellerNavbar = () => {
           {/* ── RIGHT — PROFILE + LOGOUT ── */}
           <div className="flex items-center gap-4">
             {/* NOTIFICATION BELL */}
-            <button className="relative hidden sm:flex w-9 h-9 rounded-xl bg-gray-50 border border-gray-200 items-center justify-center text-gray-500 hover:text-blue-800 hover:border-blue-200 transition">
+            {/* <button className="relative hidden sm:flex w-9 h-9 rounded-xl bg-gray-50 border border-gray-200 items-center justify-center text-gray-500 hover:text-blue-800 hover:border-blue-200 transition">
               <FaBell className="text-sm" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-500 rounded-full" />
-            </button>
+            </button> */}
 
             {/* PROFILE AVATAR */}
             <Link

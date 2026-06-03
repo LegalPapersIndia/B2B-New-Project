@@ -31,3 +31,16 @@ export const updateProfile = async (formData) => {
   );
   return response.data;
 };
+
+// GET FEATURED SELLERS
+export const getFeaturedSellers = async () => {
+  const response = await axios.get(`${API}/seller/profile/featured`);
+  return response.data;
+};
+
+
+// GET SELLER PUBLIC PROFILE
+export const getSellerPublicProfile = async (id) => {
+  const response = await axios.get(`${API}/seller/profile/public/${id}`);
+  return response.data;
+};

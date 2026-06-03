@@ -104,6 +104,10 @@ import subscriptionRoutes from "./routes/subscription.routes.js";
 import leadRoutes from "./routes/lead.routes.js";
 import requirementRoutes from "./routes/requirement.routes.js";
 import sellerProfileRoutes from "./routes/sellerProfile.routes.js";
+import cityRoutes from "./routes/city.routes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+import blogRoutes from "./routes/blog.routes.js";
+import careerRoutes from "./routes/career.routes.js";
 
 dotenv.config();
 
@@ -171,6 +175,13 @@ app.use("/api/requirements", requirementRoutes);
 
 app.use("/api/seller/profile", sellerProfileRoutes);
 
+app.use("/api/cities", cityRoutes);
+
+app.use("/api/contact", contactRoutes);
+
+app.use("/api/blogs", blogRoutes);
+
+app.use("/api/careers", careerRoutes);
 // ─────────────────────────────────────────
 // SERVER
 // ─────────────────────────────────────────

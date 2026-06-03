@@ -418,6 +418,7 @@ import { ChevronRight, MapPin, Star, ShoppingBag, Shield } from "lucide-react";
 import { createPortal } from "react-dom";
 import InquiryModal from "../../components/common/InquiryModal";
 import { getSingleProduct, getProductsBySubCategory } from "../../api/productApi";
+import { getSellerPublicProfile } from "../../api/sellerProfileApi";
 
 export default function ProductDetailsPage() {
   const { categorySlug, subcategorySlug, productSlug } = useParams();
@@ -428,6 +429,8 @@ export default function ProductDetailsPage() {
   const [error, setError]                   = useState("");
   const [selectedImage, setSelectedImage]   = useState(0);
   const [openInquiry, setOpenInquiry]       = useState(false);
+const [selectedSeller, setSelectedSeller] = useState(null);
+const [sellerLoading, setSellerLoading]   = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -478,6 +481,18 @@ export default function ProductDetailsPage() {
   );
 
   const sellerInitial = (product.seller?.companyName || product.seller?.name || "S").charAt(0).toUpperCase();
+
+  const handleViewSeller = async () => {
+  try {
+    setSellerLoading(true);
+    const data = await getSellerPublicProfile(product.seller._id);
+    if (data.success) setSelectedSeller(data.seller);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setSellerLoading(false);
+  }
+};
 
   return (
     <>
@@ -653,34 +668,41 @@ export default function ProductDetailsPage() {
             </div>
           )}
 
-          {/* ── SUPPLIER INFO ── */}
-          <div className="mt-6 bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">Supplier Information</h3>
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-blue-800 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
-                {sellerInitial}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="font-bold text-gray-900 text-lg">
-                    {product.seller?.companyName || product.seller?.name || "—"}
-                  </p>
-                  <Shield className="w-4 h-4 text-green-500" />
-                </div>
-                {(product.seller?.city || product.seller?.state) && (
-                  <div className="flex items-center gap-1 mt-1">
-                    <MapPin className="w-3 h-3 text-gray-400" />
-                    <span className="text-sm text-gray-500">
-                      {[product.seller?.city, product.seller?.state].filter(Boolean).join(", ")}
-                    </span>
-                  </div>
-                )}
-                {product.seller?.companyType && (
-                  <p className="text-sm text-gray-500 mt-1">{product.seller.companyType}</p>
-                )}
-              </div>
-            </div>
-          </div>
+        {/* ── SUPPLIER INFO ── */}
+<div
+  onClick={handleViewSeller}
+  className="mt-6 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 cursor-pointer hover:shadow-md transition"
+>
+  <h3 className="text-lg font-bold text-slate-900 mb-4">Supplier Information</h3>
+  <div className="flex items-center gap-4">
+    <div className="w-14 h-14 rounded-2xl bg-blue-800 flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+      {sellerLoading ? (
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      ) : (
+        sellerInitial
+      )}
+    </div>
+    <div>
+      <div className="flex items-center gap-2">
+        <p className="font-bold text-gray-900 text-lg">
+          {product.seller?.companyName || product.seller?.name || "—"}
+        </p>
+        <Shield className="w-4 h-4 text-green-500" />
+      </div>
+      {(product.seller?.city || product.seller?.state) && (
+        <div className="flex items-center gap-1 mt-1">
+          <MapPin className="w-3 h-3 text-gray-400" />
+          <span className="text-sm text-gray-500">
+            {[product.seller?.city, product.seller?.state].filter(Boolean).join(", ")}
+          </span>
+        </div>
+      )}
+      {product.seller?.companyType && (
+        <p className="text-sm text-gray-500 mt-1">{product.seller.companyType}</p>
+      )}
+    </div>
+  </div>
+</div>
 
           {/* ── RELATED PRODUCTS ── */}
           {relatedProducts.length > 0 && (
@@ -754,6 +776,104 @@ export default function ProductDetailsPage() {
           )}
         </div>
       </div>
+
+      {/* SELLER MODAL */}
+{selectedSeller && createPortal(
+  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+  <div className="bg-white border border-gray-200 rounded-2xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col">
+
+  {/* HEADER */}
+  <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center flex-shrink-0">
+    <h2 className="text-lg font-semibold text-gray-900">Supplier Details</h2>
+    <button onClick={() => setSelectedSeller(null)} className="text-gray-400 hover:text-gray-700 text-xl">✕</button>
+  </div>
+
+  <div className="p-6 space-y-4 overflow-y-auto">
+
+    {/* AVATAR + NAME */}
+    <div className="flex items-center gap-4">
+      <div className="w-16 h-16 rounded-2xl overflow-hidden bg-blue-800/20 flex items-center justify-center flex-shrink-0">
+        {selectedSeller.profileImage?.url ? (
+          <img src={selectedSeller.profileImage.url} alt={selectedSeller.name} className="w-full h-full object-cover" />
+        ) : (
+          <span className="text-blue-800 font-bold text-2xl">
+            {(selectedSeller.companyName || selectedSeller.name || "S").charAt(0).toUpperCase()}
+          </span>
+        )}
+      </div>
+      <div>
+        <h3 className="font-bold text-lg text-gray-900">{selectedSeller.name}</h3>
+        <p className="text-gray-400 text-sm">{selectedSeller.email}</p>
+        <span className={`mt-1 inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize
+          ${selectedSeller.subscriptionPlan === "gold" ? "bg-yellow-500/20 text-yellow-600" :
+            selectedSeller.subscriptionPlan === "premium" ? "bg-purple-500/20 text-purple-600" :
+            "bg-blue-500/20 text-blue-600"}`}>
+          {selectedSeller.subscriptionPlan || "No Plan"}
+        </span>
+      </div>
+    </div>
+
+    {/* DETAILS GRID */}
+    <div className="grid grid-cols-2 gap-3 text-sm">
+      {[
+        { label: "Phone",          value: selectedSeller.phone },
+        { label: "Company",        value: selectedSeller.companyName },
+        { label: "Company Type",   value: selectedSeller.companyType },
+        { label: "Year Est.",      value: selectedSeller.yearEstablished },
+        { label: "Employees",      value: selectedSeller.employees },
+        { label: "Annual Turnover",value: selectedSeller.annualTurnover },
+        { label: "GST Number",     value: selectedSeller.gstNumber },
+        { label: "City",           value: selectedSeller.city },
+        { label: "State",          value: selectedSeller.state },
+        { label: "Pincode",        value: selectedSeller.pincode },
+      ].map(({ label, value }) => (
+        <div key={label}>
+          <p className="text-gray-400 text-xs mb-1">{label}</p>
+          <p className="font-medium text-gray-800">{value || "—"}</p>
+        </div>
+      ))}
+    </div>
+
+    {/* WEBSITE */}
+    {selectedSeller.companyWebsite && (
+      <div>
+        <p className="text-gray-400 text-xs mb-1">Website</p>
+        <a href={selectedSeller.companyWebsite} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline text-sm">
+          {selectedSeller.companyWebsite}
+        </a>
+      </div>
+    )}
+
+    {/* ADDRESS */}
+    {selectedSeller.address && (
+      <div>
+        <p className="text-gray-400 text-xs mb-1">Address</p>
+        <p className="text-sm text-gray-600">{selectedSeller.address}</p>
+      </div>
+    )}
+
+    {/* DESCRIPTION */}
+    {selectedSeller.companyDescription && (
+      <div>
+        <p className="text-gray-400 text-xs mb-1">Company Description</p>
+        <p className="text-sm text-gray-600 bg-gray-50 rounded-xl p-3 leading-relaxed">
+          {selectedSeller.companyDescription}
+        </p>
+      </div>
+    )}
+
+  </div>
+
+  <div className="px-6 py-4 border-t border-gray-200 flex justify-end flex-shrink-0">
+    <button onClick={() => setSelectedSeller(null)} className="px-4 py-2 border border-gray-200 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition">
+      Close
+    </button>
+  </div>
+
+</div>
+  </div>,
+  document.body
+)}
 
       {/* INQUIRY MODAL */}
       {openInquiry && createPortal(

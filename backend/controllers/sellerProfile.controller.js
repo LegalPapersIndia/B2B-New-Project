@@ -2,6 +2,7 @@
 
 import Seller from "../models/Seller.js";
 import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.utils.js";
+import Product from "../models/product.model.js";
 
 // ─────────────────────────────────────────
 // GET MY PROFILE
@@ -107,6 +108,95 @@ seller.address            = address            ?? seller.address;
     return res.status(500).json({
       success: false,
       message: "Failed to update profile",
+    });
+  }
+};
+
+
+// ─────────────────────────────────────────
+// GET FEATURED SELLERS (Public)
+// Gold + Premium sellers
+// ─────────────────────────────────────────
+export const getFeaturedSellers = async (req, res) => {
+  try {
+    // Gold + Premium sellers fetch karo
+    const sellers = await Seller.find({
+      subscriptionActive: true,
+      subscriptionPlan:   { $in: ["gold", "premium"] },
+      companyName:        { $ne: "" },
+    })
+      .select("name companyName companyType city state profileImage subscriptionPlan yearEstablished")
+      .sort({ subscriptionPlan: 1 }) // gold pehle
+      .limit(10);
+
+    // Har seller ke products count karo
+    const sellersWithCount = await Promise.all(
+      sellers.map(async (seller) => {
+        const productCount = await Product.countDocuments({
+          seller:   seller._id,
+          status:   "approved",
+          isActive: true,
+        });
+
+        return {
+          ...seller.toObject(),
+          productCount,
+        };
+      })
+    );
+
+    return res.status(200).json({
+      success: true,
+      sellers: sellersWithCount,
+    });
+
+  } catch (error) {
+    console.error("getFeaturedSellers error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch sellers",
+    });
+  }
+};
+
+
+
+// ─────────────────────────────────────────
+// GET SELLER PUBLIC PROFILE (Public)
+// ─────────────────────────────────────────
+export const getSellerPublicProfile = async (req, res) => {
+  try {
+    const seller = await Seller.findById(req.params.id)
+      .select("-password -panNumber -regNumber");
+
+    if (!seller) {
+      return res.status(404).json({
+        success: false,
+        message: "Seller not found",
+      });
+    }
+
+    // Seller ke approved products
+    const products = await Product.find({
+      seller:   seller._id,
+      status:   "approved",
+      isActive: true,
+    })
+      .populate("category",    "name slug")
+      .populate("subcategory", "name slug")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      seller,
+      products,
+    });
+
+  } catch (error) {
+    console.error("getSellerPublicProfile error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch seller profile",
     });
   }
 };

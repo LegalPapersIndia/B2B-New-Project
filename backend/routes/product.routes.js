@@ -12,6 +12,7 @@ import {
     getProductByIdAdmin,   
   deleteProductAdmin,
     getFeaturedProducts,
+     getProductsByCity, 
 } from "../controllers/product.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -55,7 +56,11 @@ router.delete(
 // PUBLIC ROUTES — dynamic routes sabse neeche
 // ─────────────────────────────────────────
 router.get("/", getAllProducts);
-router.get("/:slug", getSingleProduct);
+// router.get("/:slug", getSingleProduct);
+router.get(
+  "/city/:citySlug",
+  getProductsByCity
+);
 
 router.get(
   "/subcategory/:subcategorySlug",
@@ -76,5 +81,6 @@ router.delete(
 );
 
 
+router.get("/:slug", getSingleProduct);
 
 export default router;

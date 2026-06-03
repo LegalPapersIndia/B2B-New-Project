@@ -125,6 +125,11 @@ export default function PostRequirementModal({ isOpen, onClose }) {
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
 
+<div className="bg-orange-500 px-6 py-2 flex items-center justify-center gap-2">
+  <span className="animate-pulse text-white text-xs font-bold uppercase tracking-widest">
+    🔔 Tell us what you need — Get quotes in 24 hrs!
+  </span>
+</div>
         {/* HEADER */}
         <div className="bg-gradient-to-r from-blue-900 to-blue-800 px-6 py-5 flex items-center justify-between flex-shrink-0">
           <div>

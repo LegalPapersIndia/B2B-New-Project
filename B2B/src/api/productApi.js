@@ -98,3 +98,22 @@ export const getFeaturedProducts = async () => {
   const response = await axios.get(`${API}/products/featured`);
   return response.data;
 };
+
+
+export const getProductsByCity = async (citySlug) => {
+  try {
+    const response = await axios.get(`${API}/products/city/${citySlug}`);
+    return response.data;
+  } catch (error) {
+    console.error("getProductsByCity API error:", error);
+    return { success: false, products: [], total: 0 };
+  }
+};
+
+
+
+// SEARCH PRODUCTS
+export const searchProducts = async (params) => {
+  const response = await axios.get(`${API}/products`, { params });
+  return response.data;
+};
