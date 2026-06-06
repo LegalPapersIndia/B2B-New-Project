@@ -90,9 +90,14 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 
 import connectDB from "./config/db.js";
 import cloudinaryConnect from "./config/cloudinary.js";
+
+import cron from "node-cron";
+import Seller from "./models/Seller.js";
+import Product from "./models/product.model.js";
 
 import adminAuthRoutes from "./routes/adminAuthRoutes.js";
 import sellerAuthRoutes from "./routes/sellerAuthRoutes.js";
@@ -108,6 +113,10 @@ import cityRoutes from "./routes/city.routes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import blogRoutes from "./routes/blog.routes.js";
 import careerRoutes from "./routes/career.routes.js";
+import Plan from "./models/Plan.model.js";
+import testimonialRoutes from "./routes/testimonial.routes.js";
+import bulkUploadRouter from "./routes/admin/bulkUpload.js";
+import marketplaceStatRoutes from "./routes/marketplaceStat.routes.js";
 
 dotenv.config();
 
@@ -117,7 +126,62 @@ const app = express();
 // DATABASE + CLOUDINARY
 // ─────────────────────────────────────────
 connectDB();
+
+// SEED PLANS
+const seedPlans = async () => {
+  try {
+    const count = await Plan.countDocuments();
+    if (count === 0) {
+      await Plan.insertMany([
+        { key: "basic",   amount: 999,  duration: 30 },
+        { key: "premium", amount: 1999, duration: 30 },
+        { key: "gold",    amount: 3999, duration: 30 },
+      ]);
+      console.log(" Plans seeded");
+    }
+  } catch (err) {
+    console.error("Seed error:", err);
+  }
+};
+
+
+mongoose.connection.once("open", () => {
+  seedPlans();
+});
+
 cloudinaryConnect();
+
+// ─────────────────────────────────────────
+// CRON JOB — HAR RAAT 12 BAJE
+// ─────────────────────────────────────────
+cron.schedule("0 0 * * *", async () => {
+  try {
+    const now = new Date();
+
+    const expiredSellers = await Seller.find({
+      subscriptionActive: true,
+      subscriptionExpire: { $lt: now },
+    });
+
+    if (expiredSellers.length === 0) return;
+
+    const expiredIds = expiredSellers.map((s) => s._id);
+
+    await Seller.updateMany(
+      { _id: { $in: expiredIds } },
+      { $set: { subscriptionActive: false, subscriptionPlan: null } }
+    );
+
+    await Product.updateMany(
+      { seller: { $in: expiredIds } },
+      { $set: { status: "pending", featured: false } }
+    );
+
+    console.log(`✅ Cron: ${expiredSellers.length} sellers expired`);
+  } catch (err) {
+    console.error("Cron job error:", err);
+  }
+});
 
 // ─────────────────────────────────────────
 // MIDDLEWARE
@@ -128,7 +192,7 @@ app.use(
       "http://localhost:5173",
       "http://localhost:5174",
         // Frontend
-      "https://b2-b-new-project-wexx.vercel.app",
+      // "https://b2-b-new-project-wexx.vercel.app",
       "https://b2-b-new-project.vercel.app",
 
       // Admin Panel
@@ -182,6 +246,13 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/blogs", blogRoutes);
 
 app.use("/api/careers", careerRoutes);
+
+app.use("/api/testimonials", testimonialRoutes);
+
+app.use("/api/admin", bulkUploadRouter);
+
+app.use("/api/marketplace-stats", marketplaceStatRoutes);
+
 // ─────────────────────────────────────────
 // SERVER
 // ─────────────────────────────────────────

@@ -45,11 +45,19 @@ export const createProduct = async (req, res) => {
     // subscriptionActive = true  → approved
     // subscriptionActive = false → pending
     // ─────────────────────────────────────────
-    const seller = await Seller.findById(req.user._id);
+   const seller = await Seller.findById(req.user._id);
 
-    const productStatus = seller.subscriptionActive
-      ? "approved"
-      : "pending";
+// ✅ REAL-TIME EXPIRE CHECK
+const now = new Date();
+if (seller.subscriptionExpire && seller.subscriptionExpire < now) {
+  seller.subscriptionActive = false;
+  seller.subscriptionPlan = null;
+  await seller.save();
+}
+
+const productStatus = seller.subscriptionActive
+  ? "approved"
+  : "pending";
 
       const isFeatured = ["gold", "premium"].includes(
   seller.subscriptionPlan
@@ -512,6 +520,7 @@ export const getProductsBySubCategory = async (req, res) => {
     const subCategory = await SubCategory.findOne({
       slug: subcategorySlug,
     });
+    
 
     if (!subCategory) {
       return res.status(404).json({
@@ -622,16 +631,22 @@ export const deleteProductAdmin = async (req, res) => {
 // ─────────────────────────────────────────
 export const getFeaturedProducts = async (req, res) => {
   try {
-    const products = await Product.find({
-      status:   "approved",
-      featured: true,
-      isActive: true,
-    })
-      .populate("category",    "name slug")
-      .populate("subcategory", "name slug")
-      .populate("seller",      "name companyName companyWebsite city state subscriptionPlan")
-      .sort({ createdAt: -1 })
-      .limit(10);
+    // ✅ BAAD MEIN
+const products = await Product.find({
+  status:   "approved",
+  featured: true,
+  isActive: true,
+})
+  .populate({
+    path: "seller",
+    match: { subscriptionActive: true },
+    select: "name companyName companyWebsite city state subscriptionPlan",
+  })
+  .populate("category",    "name slug")
+  .populate("subcategory", "name slug")
+  .sort({ createdAt: -1 })
+  .limit(10)
+  .then(products => products.filter(p => p.seller !== null));
 
     return res.status(200).json({
       success: true,
@@ -683,5 +698,83 @@ export const getProductsByCity = async (req, res) => {
   } catch (error) {
     console.error("getProductsByCity error:", error);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
+export const updateProduct = async (req, res) => {
+  try {
+    const product = await Product.findOne({
+      _id:    req.params.id,
+      seller: req.user._id,
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    const {
+      title,
+      shortDesc,
+      description,
+      price,
+      moq,
+      unit,
+      brand,
+      stock,
+      removeImages,
+    } = req.body;
+
+    if (title)       product.title       = title;
+    if (shortDesc)   product.shortDesc   = shortDesc;
+    if (description) product.description = description;
+    if (price)       product.price       = price;
+    if (moq)         product.moq         = moq;
+    if (unit)        product.unit        = unit;
+    if (brand !== undefined) product.brand = brand;
+    if (stock !== undefined) product.stock = stock;
+
+    if (title) {
+      const baseSlug  = slugify(title, { lower: true, strict: true });
+      product.slug    = `${baseSlug}-${Date.now()}`;
+    }
+
+    if (removeImages) {
+      const toRemove = JSON.parse(removeImages);
+      await Promise.all(toRemove.map((pid) => deleteFromCloudinary(pid)));
+      product.images = product.images.filter(
+        (img) => !toRemove.includes(img.public_id)
+      );
+    }
+
+    if (req.files && req.files.length > 0) {
+      const uploaded = await Promise.all(
+        req.files.map((file) => uploadToCloudinary(file.buffer, "b2b/products"))
+      );
+      const newImages = uploaded.map((r) => ({
+        url:       r.secure_url,
+        public_id: r.public_id,
+      }));
+      product.images = [...product.images, ...newImages];
+    }
+
+    await product.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Product updated successfully.",  // ✅ message bhi update kiya
+      product,
+    });
+
+  } catch (error) {
+    console.error("updateProduct error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Product update failed",
+    });
   }
 };

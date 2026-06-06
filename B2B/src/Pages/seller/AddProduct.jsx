@@ -1,5 +1,3 @@
-
-
 // import React, { useState, useEffect } from "react";
 
 // import {
@@ -236,11 +234,6 @@
 
 // export default AddProduct;
 
-
-
-
-
-
 // src/pages/seller/AddProduct.jsx
 
 // import React, { useState, useEffect } from "react";
@@ -280,7 +273,7 @@
 //     stock: "",
 //     shortDesc: "",
 //     description: "",
-    
+
 //   });
 
 //   // ─────────────────────────────────────────
@@ -703,9 +696,6 @@
 
 // export default AddProduct;
 
-
-
-
 // // src/pages/seller/AddProduct.jsx
 
 // import React, { useState, useEffect } from "react";
@@ -723,7 +713,7 @@
 // import { getSubCategoriesByCategory } from "../../api/subCategoryApi";
 // import { addProduct } from "../../api/productApi";
 // import { useNavigate } from "react-router-dom";
-// import { getMyProfile } from "../../api/sellerProfileApi"; 
+// import { getMyProfile } from "../../api/sellerProfileApi";
 
 // const AddProduct = () => {
 
@@ -738,12 +728,12 @@
 //     try {
 //       const data = await getMyProfile();
 //       const seller = data.seller;
-      
+
 //       const isComplete = seller.companyName && seller.phone && seller.city && seller.state;
-      
+
 //       if (!isComplete) {
-//         navigate("/seller/profile", { 
-//   state: { message: "⚠️ Please complete your profile before adding products." } 
+//         navigate("/seller/profile", {
+//   state: { message: "⚠️ Please complete your profile before adding products." }
 // });
 //       }
 //     } catch (err) {
@@ -1300,9 +1290,6 @@
 
 // export default AddProduct;
 
-
-
-
 import React, { useState, useEffect } from "react";
 import {
   FaCloudUploadAlt,
@@ -1322,7 +1309,6 @@ import { getMyProfile } from "../../api/sellerProfileApi";
 import AlertPopup from "../../components/common/AlertPopup";
 
 const AddProduct = () => {
-
   const navigate = useNavigate();
 
   const seller = JSON.parse(localStorage.getItem("user") || "{}");
@@ -1333,10 +1319,14 @@ const AddProduct = () => {
       try {
         const data = await getMyProfile();
         const seller = data.seller;
-        const isComplete = seller.companyName && seller.phone && seller.city && seller.state;
+        const isComplete =
+          seller.companyName && seller.phone && seller.city && seller.state;
         if (!isComplete) {
           navigate("/seller/profile", {
-            state: { message: "⚠️ Please complete your profile before adding products." }
+            state: {
+              message:
+                "⚠️ Please complete your profile before adding products.",
+            },
           });
         }
       } catch (err) {
@@ -1349,12 +1339,12 @@ const AddProduct = () => {
   // ─────────────────────────────────────────
   // STATES
   // ─────────────────────────────────────────
-  const [categories, setCategories]       = useState([]);
+  const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [imageFiles, setImageFiles]       = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
-  const [loading, setLoading]             = useState(false);
-  const [alert, setAlert]                 = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState(null);
   // { type: "error" | "success" | "warning", message: "" }
 
   const [form, setForm] = useState({
@@ -1441,7 +1431,13 @@ const AddProduct = () => {
     e.preventDefault();
     setAlert(null);
 
-    if (!form.title || !form.category || !form.subcategory || !form.price || !form.description) {
+    if (
+      !form.title ||
+      !form.category ||
+      !form.subcategory ||
+      !form.price ||
+      !form.description
+    ) {
       setAlert({ type: "error", message: "Please fill all required fields." });
       return;
     }
@@ -1455,15 +1451,15 @@ const AddProduct = () => {
       setLoading(true);
 
       const formData = new FormData();
-      formData.append("title",       form.title);
-      formData.append("category",    form.category);
+      formData.append("title", form.title);
+      formData.append("category", form.category);
       formData.append("subcategory", form.subcategory);
-      formData.append("price",       form.price);
-      formData.append("moq",         form.moq);
-      formData.append("unit",        form.unit);
-      formData.append("brand",       form.brand);
-      formData.append("stock",       form.stock);
-      formData.append("shortDesc",   form.shortDesc);
+      formData.append("price", form.price);
+      formData.append("moq", form.moq);
+      formData.append("unit", form.unit);
+      formData.append("brand", form.brand);
+      formData.append("stock", form.stock);
+      formData.append("shortDesc", form.shortDesc);
       formData.append("description", form.description);
 
       imageFiles.forEach((file) => {
@@ -1472,29 +1468,48 @@ const AddProduct = () => {
 
       const res = await addProduct(formData);
 
-     if (res.success) {
-  setAlert({ 
-    type: "warning", 
-    message: "Product submitted! ⚠️ Your product is NOT LIVE yet — it will remain pending until you activate a subscription plan." 
-  });
+      if (res.success) {
+       if (isSubscribed) {
+    setAlert({ 
+      type: "success", 
+      message: "Product submitted successfully! 🎉 Your product is now live." 
+    });
+  } else {
+    setAlert({ 
+      type: "warning", 
+      message: "Product submitted! ⚠️ Your product is NOT LIVE yet — it will remain pending until you activate a subscription plan." 
+    });
+  }
 
         // FORM RESET
         setForm({
-          title: "", category: "", subcategory: "",
-          price: "", moq: "", unit: "", brand: "",
-          stock: "", shortDesc: "", description: "",
+          title: "",
+          category: "",
+          subcategory: "",
+          price: "",
+          moq: "",
+          unit: "",
+          brand: "",
+          stock: "",
+          shortDesc: "",
+          description: "",
         });
         setImageFiles([]);
         setImagePreviews([]);
         setSubCategories([]);
-
       } else {
-        setAlert({ type: "error", message: res.message || "Something went wrong." });
+        setAlert({
+          type: "error",
+          message: res.message || "Something went wrong.",
+        });
       }
-
     } catch (err) {
       console.error("Submit error:", err);
-      setAlert({ type: "error", message: err.response?.data?.message || "Server error. Please try again." });
+      setAlert({
+        type: "error",
+        message:
+          err.response?.data?.message || "Server error. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -1505,7 +1520,6 @@ const AddProduct = () => {
   // ─────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-
       {/* ALERT POPUP */}
       {alert && (
         <AlertPopup
@@ -1517,17 +1531,17 @@ const AddProduct = () => {
 
       <main className="flex-1 p-6 overflow-y-auto">
         <div className="bg-white rounded-[30px] shadow-md border border-gray-100 overflow-hidden">
-
           {/* HEADER */}
           <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-8 py-6">
             <h2 className="text-2xl font-bold">Add New Product</h2>
-            <p className="text-blue-100 text-sm">Add accurate details for better buyer reach</p>
+            <p className="text-blue-100 text-sm">
+              Add accurate details for better buyer reach
+            </p>
           </div>
 
           {/* SUBSCRIPTION CARD */}
           {!isSubscribed && (
             <div className="mx-8 mt-8 relative overflow-hidden bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] rounded-3xl p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-5 shadow-lg">
-
               <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
               <div className="absolute bottom-0 left-1/3 w-40 h-40 bg-orange-500/10 rounded-full translate-y-1/2 pointer-events-none" />
 
@@ -1537,18 +1551,25 @@ const AddProduct = () => {
                 </div>
                 <div>
                   <div className="flex items-center gap-3 mb-1">
-                    <h3 className="text-lg font-bold text-white">Pending Subscription</h3>
+                    <h3 className="text-lg font-bold text-white">
+                      Pending Subscription
+                    </h3>
                     <span className="bg-orange-500/20 text-orange-400 text-xs px-3 py-1 rounded-full border border-orange-500/30 font-medium">
                       Free Plan
                     </span>
                   </div>
                   <p className="text-white/60 text-sm leading-relaxed max-w-xl">
-                    Your products will stay <span className="text-orange-400 font-medium">pending</span> until subscription is active.
-                    Upgrade to publish products instantly.
+                    Your products will stay{" "}
+                    <span className="text-orange-400 font-medium">pending</span>{" "}
+                    until subscription is active. Upgrade to publish products
+                    instantly.
                   </p>
                   <div className="flex gap-2 mt-3 flex-wrap">
                     {["Basic", "Premium", "Gold"].map((plan) => (
-                      <span key={plan} className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/50 border border-white/10">
+                      <span
+                        key={plan}
+                        className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/50 border border-white/10"
+                      >
                         {plan}
                       </span>
                     ))}
@@ -1589,10 +1610,8 @@ const AddProduct = () => {
 
           {/* FORM */}
           <form onSubmit={handleSubmit} className="p-8 space-y-8">
-
             {/* ROW */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
               {/* TITLE */}
               <div>
                 <label className="font-semibold block mb-2">
@@ -1626,7 +1645,9 @@ const AddProduct = () => {
                   >
                     <option value="">Select Category</option>
                     {categories.map((cat) => (
-                      <option key={cat._id} value={cat._id}>{cat.name}</option>
+                      <option key={cat._id} value={cat._id}>
+                        {cat.name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -1647,10 +1668,14 @@ const AddProduct = () => {
                     className="w-full h-14 pl-12 pr-4 border rounded-2xl focus:border-orange-500 outline-none appearance-none disabled:opacity-50"
                   >
                     <option value="">
-                      {form.category ? "Select Sub Category" : "Select category first"}
+                      {form.category
+                        ? "Select Sub Category"
+                        : "Select category first"}
                     </option>
                     {subCategories.map((sub) => (
-                      <option key={sub._id} value={sub._id}>{sub.name}</option>
+                      <option key={sub._id} value={sub._id}>
+                        {sub.name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -1676,7 +1701,9 @@ const AddProduct = () => {
 
               {/* MOQ */}
               <div>
-                <label className="font-semibold block mb-2">Minimum Order Quantity</label>
+                <label className="font-semibold block mb-2">
+                  Minimum Order Quantity
+                </label>
                 <input
                   name="moq"
                   value={form.moq}
@@ -1735,12 +1762,13 @@ const AddProduct = () => {
                   className="w-full h-14 px-4 border rounded-2xl focus:border-orange-500 outline-none"
                 />
               </div>
-
             </div>
 
             {/* SHORT DESCRIPTION */}
             <div>
-              <label className="font-semibold block mb-2">Short Description</label>
+              <label className="font-semibold block mb-2">
+                Short Description
+              </label>
               <input
                 name="shortDesc"
                 value={form.shortDesc}
@@ -1752,18 +1780,27 @@ const AddProduct = () => {
             </div>
 
             {/* DESCRIPTION */}
-            <div>
-              <label className="font-semibold block mb-2">
-                Full Description <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                placeholder="Write detailed product description..."
-                className="w-full h-36 p-4 border rounded-3xl focus:border-orange-500 outline-none resize-none"
-              />
-            </div>
+            {/* DESCRIPTION */}
+<div>
+  <label className="font-semibold block mb-2">
+    Full Description <span className="text-red-500">*</span>
+  </label>
+  <div className="relative">
+  <textarea
+  name="description"
+  value={form.description}
+  onChange={handleChange}
+
+  placeholder="Write detailed product description..."
+  className="w-full h-36 p-4 border rounded-3xl focus:border-orange-500 outline-none resize-none"
+/>
+<span className={`absolute bottom-3 right-4 text-xs font-medium ${
+  form.description.length >= 1500 ? "text-red-500" : "text-gray-400"
+}`}>
+  {form.description.length}/2000
+</span>
+  </div>
+</div>
 
             {/* IMAGE */}
             <div>
@@ -1775,7 +1812,8 @@ const AddProduct = () => {
                 <FaCloudUploadAlt className="text-4xl text-orange-500 mb-3" />
                 <p className="font-semibold">Click to Upload Images</p>
                 <p className="text-sm text-gray-500">
-                  JPG, PNG, WebP (Max 5 images) — Selected: {imageFiles.length}/5
+                  JPG, PNG, WebP (Max 5 images) — Selected: {imageFiles.length}
+                  /5
                 </p>
                 <input
                   type="file"
@@ -1819,7 +1857,6 @@ const AddProduct = () => {
                 Cancel
               </button>
             </div>
-
           </form>
         </div>
       </main>

@@ -275,7 +275,9 @@ const Subscription = () => {
                 <h3 className="text-xl font-bold">{plan.name}</h3>
                 <div className="mt-3 flex items-end gap-1">
                   <span className="text-3xl font-bold">₹{plan.amount}</span>
-                  <span className="text-white/70 mb-1">/month</span>
+                  <span className="text-white/70 mb-1">
+  /{Math.round(plan.duration / 30)} month{Math.round(plan.duration / 30) > 1 ? "s" : ""}
+</span>
                 </div>
               </div>
 

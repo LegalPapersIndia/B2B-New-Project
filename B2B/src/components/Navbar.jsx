@@ -824,11 +824,11 @@ const Navbar = () => {
     const detectLocation = async () => {
       setDetectingLocation(true);
       try {
-        const res  = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-        if (!data.error) {
-          setDetected({ region: data.region || "", city: data.city || "" });
-        }
+      const res = await fetch("http://ip-api.com/json/?fields=regionName,city,status");
+const data = await res.json();
+if (data.status === "success") {
+  setDetected({ region: data.regionName || "", city: data.city || "" });
+}
       } catch (err) {
         console.log(err);
       } finally {

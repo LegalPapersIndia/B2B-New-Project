@@ -19,6 +19,11 @@ import Cities from "./pages/admin/Cities";
 import Contacts from "./pages/admin/Contacts";
 import Blogs from "./pages/admin/Blogs";
 import AdminCareers from "./pages/admin/AdminCareers";
+import AdminPlans from "./pages/admin/AdminPlans";
+import AdminTestimonials from "./pages/admin/AdminTestimonials";
+
+import BulkUpload from "./pages/admin/BulkUpload";
+import AdminMarketplaceStats from "./pages/admin/AdminMarketplaceStats";
 
 export default function App() {
   return (
@@ -50,6 +55,10 @@ export default function App() {
             <Route path="contacts" element={<Contacts />} />
             <Route path="/admin/blogs" element={<Blogs />} />
             <Route path="/admin/careers" element={<AdminCareers />} />
+            <Route path="/admin/plans" element={<AdminPlans />} />
+            <Route path="/admin/testimonials" element={<AdminTestimonials />} />
+             <Route path="/admin/bulk-upload" element={<BulkUpload />} />
+             <Route path="/admin/marketplace-stats" element={<AdminMarketplaceStats />} />
         </Route>
 
       </Routes>

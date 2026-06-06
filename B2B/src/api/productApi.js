@@ -117,3 +117,20 @@ export const searchProducts = async (params) => {
   const response = await axios.get(`${API}/products`, { params });
   return response.data;
 };
+
+
+// UPDATE PRODUCT (Seller)
+export const updateProduct = async (id, formData) => {
+  const response = await axios.put(
+    `${API}/products/${id}`,
+    formData,
+    {
+      headers: {
+        ...authHeader(),
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};
+ 

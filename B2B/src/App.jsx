@@ -45,6 +45,9 @@ import SearchPage from "./Pages/SearchPage";
 import SellerPublicProfile from "./Pages/SellerPublicProfile";
 import BlogDetails from "./Pages/BlogDetails";
 
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage  from "./pages/ResetPasswordPage";
+
 function App() {
   return (
     <BrowserRouter>
@@ -91,6 +94,9 @@ function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/seller-profile/:id" element={<SellerPublicProfile />} />
           <Route path="/blog/:slug" element={<BlogDetails />} />
+
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+<Route path="/reset-password"  element={<ResetPasswordPage />} />
         </Route>
 
         <Route
