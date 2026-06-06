@@ -22,7 +22,7 @@ import AdminCareers from "./pages/admin/AdminCareers";
 import AdminPlans from "./pages/admin/AdminPlans";
 import AdminTestimonials from "./pages/admin/AdminTestimonials";
 
-import BulkUpload from "./pages/admin/BulkUpload";
+import BulkUpload from "./pages/admin/Bulkupload";
 import AdminMarketplaceStats from "./pages/admin/AdminMarketplaceStats";
 
 export default function App() {
