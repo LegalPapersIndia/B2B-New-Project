@@ -10,6 +10,8 @@ export default function Cities() {
   const [editingId, setEditingId] = useState(null);
   const [image,     setImage]     = useState(null);
   const [formData,  setFormData]  = useState({ name: "", slug: "" });
+const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 10;
 
   // ── FETCH ──
   useEffect(() => { fetchCities(); }, []);
@@ -21,7 +23,14 @@ export default function Cities() {
     } catch (err) {
       console.log(err);
     }
+   
   };
+
+  const totalPages = Math.ceil(cities.length / itemsPerPage);
+const paginatedCities = cities.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
 
   // ── HANDLE CHANGE ──
   const handleChange = (e) => {
@@ -184,7 +193,7 @@ export default function Cities() {
               </tr>
             </thead>
             <tbody>
-              {cities.map((city) => (
+              {paginatedCities.map((city) => (
                 <tr key={city._id} className="border-t border-white/10 hover:bg-white/[0.03] transition">
 
                   {/* IMAGE */}
@@ -261,6 +270,43 @@ export default function Cities() {
             </tbody>
           </table>
         </div>
+        {/* PAGINATION */}
+{totalPages > 1 && (
+  <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+    <p className="text-white/40 text-sm">
+      Showing {((currentPage - 1) * itemsPerPage) + 1}–{Math.min(currentPage * itemsPerPage, cities.length)} of {cities.length}
+    </p>
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        ← Prev
+      </button>
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`w-8 h-8 rounded-lg text-xs font-medium transition
+            ${currentPage === page
+              ? "bg-blue-600 text-white"
+              : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
+            }`}
+        >
+          {page}
+        </button>
+      ))}
+      <button
+        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+)}
       </div>
     </div>
   );

@@ -41,3 +41,17 @@ export const updateLeadStatus = async (id, status) => {
   );
   return response.data;
 };
+
+export const deleteLead = async (id) => {
+  const response = await axios.delete(`${API}/leads/${id}`, {
+    headers: authHeader(),
+  });
+  return response.data;
+};
+
+export const deleteMultipleLeads = async (ids) => {
+  const response = await axios.post(`${API}/leads/delete-multiple`, { ids }, {
+    headers: authHeader(),
+  });
+  return response.data;
+};

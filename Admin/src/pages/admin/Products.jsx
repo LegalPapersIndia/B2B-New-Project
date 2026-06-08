@@ -11,6 +11,13 @@ export default function Products() {
   const [loading, setLoading]       = useState(true);
   const [error, setError]           = useState("");
   const navigate                    = useNavigate();
+const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 10;
+
+const handleFilterChange = (f) => {
+  setFilter(f);
+  setCurrentPage(1); // filter change hone pe page reset
+};
 
   // ─────────────────────────────────────────
   // FETCH PRODUCTS
@@ -45,6 +52,12 @@ export default function Products() {
       ? products
       : products.filter((p) => p.status === filter);
 
+      const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+const paginatedProducts = filteredProducts.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
+
   // ─────────────────────────────────────────
   // STATUS STYLE
   // ─────────────────────────────────────────
@@ -76,7 +89,7 @@ export default function Products() {
           {["all", "pending", "approved", "rejected"].map((f) => (
             <button
               key={f}
-              onClick={() => setFilter(f)}
+             onClick={() => handleFilterChange(f)}
               className={`px-3 py-2 rounded-lg text-xs border transition capitalize
                 ${filter === f
                   ? "bg-blue-800 border-blue-600"
@@ -135,7 +148,7 @@ export default function Products() {
               )}
 
               {/* ROWS */}
-              {!loading && filteredProducts.map((p) => (
+              {!loading && paginatedProducts.map((p) => (
                 <tr
                   key={p._id}
                   className="border-t border-white/10 hover:bg-white/5 transition"
@@ -228,6 +241,43 @@ export default function Products() {
             </tbody>
           </table>
         </div>
+        {/* PAGINATION */}
+{!loading && totalPages > 1 && (
+  <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+    <p className="text-white/40 text-sm">
+      Showing {((currentPage - 1) * itemsPerPage) + 1}–{Math.min(currentPage * itemsPerPage, filteredProducts.length)} of {filteredProducts.length}
+    </p>
+    <div className="flex items-center gap-2">
+      <button
+       onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        ← Prev
+      </button>
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`w-8 h-8 rounded-lg text-xs font-medium transition
+            ${currentPage === page
+              ? "bg-blue-600 text-white"
+              : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
+            }`}
+        >
+          {page}
+        </button>
+      ))}
+      <button
+       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        Next →
+      </button>
+    </div>
+  </div>
+)}
       </div>
 
     </div>

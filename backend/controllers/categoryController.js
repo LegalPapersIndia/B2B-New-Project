@@ -168,6 +168,7 @@
 
 import Category from "../models/Category.js";
 import { uploadToCloudinary } from "../utils/cloudinary.utils.js";
+import Product from "../models/product.model.js";
 
 // ==========================
 // CREATE CATEGORY
@@ -218,18 +219,26 @@ export const createCategory = async (req, res) => {
 // ==========================
 export const getCategories = async (req, res) => {
   try {
-    const categories = await Category.find().sort({ createdAt: -1 });
+    const categories = await Category.find().sort({ createdAt: -1 }).lean();
+
+    // Har category ke liye product count add karo
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (cat) => {
+        const productCount = await Product.countDocuments({
+          category: cat._id,
+          status: "approved",
+        });
+        return { ...cat, productCount };
+      })
+    );
 
     res.status(200).json({
       success: true,
-      categories,
+      categories: categoriesWithCount,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

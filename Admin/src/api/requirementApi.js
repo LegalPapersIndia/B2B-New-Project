@@ -16,3 +16,23 @@ export const getAllRequirements = async () => {
   );
   return response.data;
 };
+
+
+// DELETE SINGLE REQUIREMENT (Admin)
+export const deleteRequirementAdmin = async (id) => {
+  const response = await axios.delete(
+    `${API}/requirements/admin/${id}`,
+    { headers: authHeader() }
+  );
+  return response.data;
+};
+
+// DELETE MULTIPLE REQUIREMENTS (Admin)
+export const deleteMultipleRequirementsAdmin = async (ids) => {
+  const response = await axios.post(
+    `${API}/requirements/admin/delete-multiple`,
+    { ids },
+    { headers: authHeader() }
+  );
+  return response.data;
+};

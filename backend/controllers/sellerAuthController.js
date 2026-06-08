@@ -145,6 +145,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.js";
+import Notification from "../models/Notification.model.js";
 
 // ─────────────────────────────────────────
 // REGISTER SELLER
@@ -170,6 +171,12 @@ export const registerSeller = async (req, res) => {
       phone,
       password: hashedPassword,
     });
+
+    await Notification.create({
+  type: "new_seller",
+  message: `New seller registered: ${name}`,
+  data: { sellerId: seller._id, name, email },
+});
 
     res.status(201).json({
       success: true,

@@ -5,6 +5,10 @@ import {
   postRequirement,
   getMyRequirements,
   getAllRequirements,
+    deleteRequirement,            
+  deleteMultipleRequirements,
+  deleteRequirementAdmin, 
+  deleteMultipleRequirementsAdmin
 } from "../controllers/requirement.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -20,5 +24,14 @@ router.get("/my-requirements", authMiddleware, getMyRequirements);
 
 // ADMIN — Saari requirements
 router.get("/admin/all", adminAuthMiddleware, getAllRequirements);
+
+// Single delete
+router.delete("/:id", authMiddleware, deleteRequirement);
+
+// Multiple delete
+router.post("/delete-multiple", authMiddleware, deleteMultipleRequirements);
+
+router.delete("/admin/:id", adminAuthMiddleware, deleteRequirementAdmin);
+router.post("/admin/delete-multiple", adminAuthMiddleware, deleteMultipleRequirementsAdmin);
 
 export default router;

@@ -38,7 +38,10 @@ import {
   createLead,
   getMyLeads,
   updateLeadStatus,
-  getAllLeads,          // ⬅️ ADD KARO
+  getAllLeads,        
+    deleteLead,              
+  deleteMultipleLeads, 
+  deleteLeadAdmin, deleteMultipleLeadsAdmin
 } from "../controllers/lead.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -64,6 +67,15 @@ router.patch("/:id/status", authMiddleware, updateLeadStatus);
 // ─────────────────────────────────────────
 // ADMIN — Saari leads dekhe
 // ─────────────────────────────────────────
-router.get("/admin/all", adminAuthMiddleware, getAllLeads);  // ⬅️ ADD KARO
+router.get("/admin/all", adminAuthMiddleware, getAllLeads); 
+
+// Single delete
+router.delete("/:id", authMiddleware, deleteLead);
+
+// Multiple delete
+router.post("/delete-multiple", authMiddleware, deleteMultipleLeads);
+
+router.delete("/admin/:id", adminAuthMiddleware, deleteLeadAdmin);
+router.post("/admin/delete-multiple", adminAuthMiddleware, deleteMultipleLeadsAdmin);
 
 export default router;

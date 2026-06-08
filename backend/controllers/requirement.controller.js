@@ -543,3 +543,84 @@ export const getAllRequirements = async (req, res) => {
     });
   }
 };
+
+
+// ─────────────────────────────────────────
+// DELETE SINGLE REQUIREMENT (Seller)
+// ─────────────────────────────────────────
+export const deleteRequirement = async (req, res) => {
+  try {
+    // Seller sirf apni matched requirements delete kar sakta hai
+    const req_ = await Requirement.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        "matchedSellers.seller": req.user._id,
+      },
+      {
+        $pull: { matchedSellers: { seller: req.user._id } },
+      },
+      { new: true }
+    );
+
+    if (!req_) {
+      return res.status(404).json({ success: false, message: "Requirement not found" });
+    }
+
+    return res.status(200).json({ success: true, message: "Requirement removed" });
+  } catch (error) {
+    console.error("deleteRequirement error:", error);
+    return res.status(500).json({ success: false, message: "Delete failed" });
+  }
+};
+
+// ─────────────────────────────────────────
+// DELETE MULTIPLE REQUIREMENTS (Seller)
+// ─────────────────────────────────────────
+export const deleteMultipleRequirements = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!ids || !ids.length) {
+      return res.status(400).json({ success: false, message: "No IDs provided" });
+    }
+
+    await Requirement.updateMany(
+      {
+        _id: { $in: ids },
+        "matchedSellers.seller": req.user._id,
+      },
+      {
+        $pull: { matchedSellers: { seller: req.user._id } },
+      }
+    );
+
+    return res.status(200).json({ success: true, message: `${ids.length} requirements removed` });
+  } catch (error) {
+    console.error("deleteMultipleRequirements error:", error);
+    return res.status(500).json({ success: false, message: "Delete failed" });
+  }
+};
+
+
+// DELETE SINGLE REQUIREMENT (Admin)
+export const deleteRequirementAdmin = async (req, res) => {
+  try {
+    const req_ = await Requirement.findByIdAndDelete(req.params.id);
+    if (!req_) return res.status(404).json({ success: false, message: "Not found" });
+    return res.status(200).json({ success: true, message: "Requirement deleted" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Delete failed" });
+  }
+};
+
+// DELETE MULTIPLE REQUIREMENTS (Admin)
+export const deleteMultipleRequirementsAdmin = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !ids.length) return res.status(400).json({ success: false, message: "No IDs provided" });
+    await Requirement.deleteMany({ _id: { $in: ids } });
+    return res.status(200).json({ success: true, message: `${ids.length} deleted` });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Delete failed" });
+  }
+};

@@ -22,3 +22,18 @@ export const getMyRequirements = async () => {
   );
   return response.data;
 };
+
+
+export const deleteRequirement = async (id) => {
+  const response = await axios.delete(`${API}/requirements/${id}`, {
+    headers: authHeader(),
+  });
+  return response.data;
+};
+
+export const deleteMultipleRequirements = async (ids) => {
+  const response = await axios.post(`${API}/requirements/delete-multiple`, { ids }, {
+    headers: authHeader(),
+  });
+  return response.data;
+};

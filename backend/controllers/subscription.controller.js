@@ -1,5 +1,4 @@
 
-
 // controllers/subscription.controller.js
  
 import Razorpay from "razorpay";
@@ -7,15 +6,36 @@ import crypto from "crypto";
 import Seller from "../models/Seller.js";
 import Subscription from "../models/Subscription.model.js";
 import Plan from "../models/Plan.model.js";
+ import Notification from "../models/Notification.model.js";
  
 // ─────────────────────────────────────────
 // FEATURES CONFIG (hardcode rehne do)
 // ─────────────────────────────────────────
 const getFeatures = (key) => {
   const features = {
-    basic:   ["Unlimited product listings", "Products go live instantly", "Basic seller dashboard", "Email support"],
-    premium: ["Everything in Basic", "Featured product listing", "Priority search ranking", "Chat support"],
-    gold:    ["Everything in Premium", "Dedicated account manager", "Analytics dashboard", "Priority support 24/7"],
+    basic: [
+      "Unlimited product listings",
+      "Products go live instantly",
+      "Seller dashboard access",
+      "Buy requirements access — 1 hour delay",
+      "Email support",
+    ],
+    premium: [
+      "Unlimited product listings",
+      "Products go live instantly",
+      "Seller dashboard access",
+      "Listed in Trusted Suppliers section",
+      "Buy requirements access — 30 min delay",
+     
+    ],
+    gold: [
+      "Unlimited product listings",
+      "Products go live instantly",
+      "Featured Products on Home Page",
+      "Listed in Trusted Suppliers section",
+      "Buy requirements — Instant access",
+      "Priority support 24/7",
+    ],
   };
   return features[key] || [];
 };
@@ -253,6 +273,13 @@ export const verifyPayment = async (req, res) => {
       { featured: isFeatured }
     );
  
+    // Payment verify hone ke baad
+await Notification.create({
+  type: "new_subscription",
+  message: `New subscription: ${subscription.plan} plan activated`,
+  data: { sellerId: subscription.seller, plan: subscription.plan },
+});
+
     return res.status(200).json({
       success: true,
       message: "Payment verified! Subscription activated successfully.",

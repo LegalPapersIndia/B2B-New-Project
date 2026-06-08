@@ -6,6 +6,7 @@ import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.ut
 import slugify from "slugify";
 import SubCategory from "../models/subCategoryModel.js";
 import mongoose from "mongoose";
+import Notification from "../models/Notification.model.js";
 // ─────────────────────────────────────────
 // CREATE PRODUCT (Seller)
 // ─────────────────────────────────────────
@@ -98,6 +99,12 @@ const productStatus = seller.subscriptionActive
       status: productStatus,
       featured: isFeatured,
     });
+
+    await Notification.create({
+  type: "new_product",
+  message: `New product added: ${title}`,
+  data: { productId: product._id, title, sellerId: req.user._id },
+});
 
     return res.status(201).json({
       success: true,
@@ -629,40 +636,67 @@ export const deleteProductAdmin = async (req, res) => {
 // GET FEATURED PRODUCTS (Public)
 // Premium/Gold sellers ke products
 // ─────────────────────────────────────────
+// export const getFeaturedProducts = async (req, res) => {
+//   try {
+//     // ✅ BAAD MEIN
+// const products = await Product.find({
+//   status:   "approved",
+//   featured: true,
+//   isActive: true,
+// })
+//   .populate({
+//     path: "seller",
+//     match: { subscriptionActive: true },
+//     select: "name companyName companyWebsite city state subscriptionPlan",
+//   })
+//   .populate("category",    "name slug")
+//   .populate("subcategory", "name slug")
+//   .sort({ createdAt: -1 })
+//   .limit(10)
+//   .then(products => products.filter(p => p.seller !== null));
+
+//     return res.status(200).json({
+//       success: true,
+//       products,
+//     });
+
+//   } catch (error) {
+//     console.error("getFeaturedProducts error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to fetch featured products",
+//     });
+//   }
+// };
+
 export const getFeaturedProducts = async (req, res) => {
   try {
-    // ✅ BAAD MEIN
-const products = await Product.find({
-  status:   "approved",
-  featured: true,
-  isActive: true,
-})
-  .populate({
-    path: "seller",
-    match: { subscriptionActive: true },
-    select: "name companyName companyWebsite city state subscriptionPlan",
-  })
-  .populate("category",    "name slug")
-  .populate("subcategory", "name slug")
-  .sort({ createdAt: -1 })
-  .limit(10)
-  .then(products => products.filter(p => p.seller !== null));
+    const activeSellers = await Seller.find({
+      subscriptionActive: true,
+      subscriptionPlan: "gold",
+      accountStatus: "active",
+    }).select("_id");
 
-    return res.status(200).json({
-      success: true,
-      products,
-    });
+    const sellerIds = activeSellers.map(s => s._id);
+
+    const products = await Product.find({
+      status: "approved",
+      isActive: true,
+      seller: { $in: sellerIds },
+    })
+      .populate("seller", "name companyName companyWebsite city state subscriptionPlan")
+      .populate("category", "name slug")
+      .populate("subcategory", "name slug")
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    return res.status(200).json({ success: true, products });
 
   } catch (error) {
     console.error("getFeaturedProducts error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Failed to fetch featured products",
-    });
+    return res.status(500).json({ success: false, message: "Failed to fetch featured products" });
   }
 };
-
-
 
 // Neeche ye function add karo
 export const getProductsByCity = async (req, res) => {

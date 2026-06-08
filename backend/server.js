@@ -117,6 +117,8 @@ import Plan from "./models/Plan.model.js";
 import testimonialRoutes from "./routes/testimonial.routes.js";
 import bulkUploadRouter from "./routes/admin/bulkUpload.js";
 import marketplaceStatRoutes from "./routes/marketplaceStat.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
+import Notification from "./models/Notification.model.js"; 
 
 dotenv.config();
 
@@ -180,6 +182,24 @@ cron.schedule("0 0 * * *", async () => {
     console.log(`✅ Cron: ${expiredSellers.length} sellers expired`);
   } catch (err) {
     console.error("Cron job error:", err);
+  }
+});
+
+
+
+// ── NOTIFICATION CLEANUP — HAR RAAT 1 BAJE ──
+cron.schedule("0 1 * * *", async () => {
+  try {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const deleted = await Notification.deleteMany({
+      createdAt: { $lt: sevenDaysAgo },
+    });
+
+    console.log(`✅ Cleanup: ${deleted.deletedCount} old notifications deleted`);
+  } catch (err) {
+    console.error("Notification cleanup error:", err);
   }
 });
 
@@ -252,6 +272,8 @@ app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/admin", bulkUploadRouter);
 
 app.use("/api/marketplace-stats", marketplaceStatRoutes);
+
+app.use("/api/notifications", notificationRoutes);
 
 // ─────────────────────────────────────────
 // SERVER

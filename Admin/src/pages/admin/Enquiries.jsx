@@ -1,630 +1,11 @@
-// // import { useEffect, useState } from "react";
-
-// // export default function Enquiries() {
-// //   const [filter, setFilter] = useState("all");
-// //   const [enquiries, setEnquiries] = useState([]);
-
-// //   // ─── DUMMY DATA ───
-// //   useEffect(() => {
-// //     setEnquiries([
-// //       {
-// //         id: 1,
-// //         buyer: "Amit Industries",
-// //         company: "Amit Steel Pvt Ltd",
-// //         phone: "+91 9876543210",
-// //         email: "amit@gmail.com",
-// //         product: "Industrial Steel Rod",
-// //         quantity: "500 Units",
-// //         message: "Need urgent delivery for Delhi location.",
-// //         date: "18 May 2026",
-// //         status: "pending",
-// //       },
-
-// //       {
-// //         id: 2,
-// //         buyer: "Global Traders",
-// //         company: "Global Trade Corp",
-// //         phone: "+91 9123456780",
-// //         email: "global@gmail.com",
-// //         product: "PVC Pipes",
-// //         quantity: "200 Units",
-// //         message: "Please send latest quotation.",
-// //         date: "17 May 2026",
-// //         status: "replied",
-// //       },
-
-// //       {
-// //         id: 3,
-// //         buyer: "Sharma Export",
-// //         company: "Sharma Chemicals",
-// //         phone: "+91 9988776655",
-// //         email: "sharma@gmail.com",
-// //         product: "Chemical Powder",
-// //         quantity: "1000 KG",
-// //         message: "Looking for long-term supplier.",
-// //         date: "16 May 2026",
-// //         status: "pending",
-// //       },
-
-// //       {
-// //         id: 4,
-// //         buyer: "Royal Enterprises",
-// //         company: "Royal Industries",
-// //         phone: "+91 9090909090",
-// //         email: "royal@gmail.com",
-// //         product: "Copper Wire",
-// //         quantity: "300 Units",
-// //         message: "Requirement completed successfully.",
-// //         date: "15 May 2026",
-// //         status: "closed",
-// //       },
-// //     ]);
-// //   }, []);
-
-// //   // ─── FILTER ───
-// //   const filteredEnquiries =
-// //     filter === "all"
-// //       ? enquiries
-// //       : enquiries.filter((e) => e.status === filter);
-
-// //   // ─── ACTIONS ───
-
-// //   // Reply = Admin/Seller contacted buyer
-// //   const handleReply = (id) => {
-// //     setEnquiries((prev) =>
-// //       prev.map((e) =>
-// //         e.id === id
-// //           ? { ...e, status: "replied" }
-// //           : e
-// //       )
-// //     );
-// //   };
-
-// //   // Close = Deal completed / enquiry finished
-// //   const handleClose = (id) => {
-// //     setEnquiries((prev) =>
-// //       prev.map((e) =>
-// //         e.id === id
-// //           ? { ...e, status: "closed" }
-// //           : e
-// //       )
-// //     );
-// //   };
-
-// //   return (
-// //     <div className="min-h-screen bg-[#0A0A0F] text-white p-4 sm:p-6 w-full">
-
-// //       {/* ───────────────── HEADER ───────────────── */}
-// //       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-
-// //         <div>
-// //           <h1 className="text-2xl font-bold">
-// //             Enquiries Management
-// //           </h1>
-
-// //           <p className="text-sm text-white/40 mt-1">
-// //             Manage buyer enquiries and responses
-// //           </p>
-// //         </div>
-
-// //         {/* FILTERS */}
-// //         <div className="flex gap-2 flex-wrap">
-
-// //           {["all", "pending", "replied", "closed"].map((f) => (
-// //             <button
-// //               key={f}
-// //               onClick={() => setFilter(f)}
-// //               className={`px-4 py-2 rounded-lg text-xs border transition-all
-// //               ${
-// //                 filter === f
-// //                   ? "bg-blue-800 border-blue-700 text-white"
-// //                   : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-// //               }`}
-// //             >
-// //               {f.toUpperCase()}
-// //             </button>
-// //           ))}
-
-// //         </div>
-
-// //       </div>
-
-// //       {/* ───────────────── TABLE CARD ───────────────── */}
-// //       <div className="bg-[#0D0D14] border border-white/10 rounded-2xl overflow-hidden">
-
-// //         <div className="overflow-x-auto">
-
-// //           <table className="min-w-[1300px] w-full text-sm text-left">
-
-// //             {/* TABLE HEAD */}
-// //             <thead className="bg-white/5 text-white/50 border-b border-white/10">
-// //               <tr>
-// //                 <th className="p-4">Buyer</th>
-// //                 <th className="p-4">Company</th>
-// //                 <th className="p-4">Phone</th>
-// //                 <th className="p-4">Email</th>
-// //                 <th className="p-4">Product</th>
-// //                 <th className="p-4">Quantity</th>
-// //                 <th className="p-4">Message</th>
-// //                 <th className="p-4">Date</th>
-// //                 <th className="p-4">Status</th>
-// //                 <th className="p-4">Actions</th>
-// //               </tr>
-// //             </thead>
-
-// //             {/* TABLE BODY */}
-// //             <tbody>
-
-// //               {filteredEnquiries.map((e) => (
-// //                 <tr
-// //                   key={e.id}
-// //                   className="border-t border-white/10 hover:bg-white/[0.03] transition"
-// //                 >
-
-// //                   {/* BUYER */}
-// //                   <td className="p-4 font-medium text-white">
-// //                     {e.buyer}
-// //                   </td>
-
-// //                   {/* COMPANY */}
-// //                   <td className="p-4 text-white/60">
-// //                     {e.company}
-// //                   </td>
-
-// //                   {/* PHONE */}
-// //                   <td className="p-4 text-white/60">
-// //                     {e.phone}
-// //                   </td>
-
-// //                   {/* EMAIL */}
-// //                   <td className="p-4 text-white/60">
-// //                     {e.email}
-// //                   </td>
-
-// //                   {/* PRODUCT */}
-// //                   <td className="p-4 text-white/70">
-// //                     {e.product}
-// //                   </td>
-
-// //                   {/* QUANTITY */}
-// //                   <td className="p-4 text-white/60">
-// //                     {e.quantity}
-// //                   </td>
-
-// //                   {/* MESSAGE */}
-// //                   <td className="p-4 text-white/50 max-w-[250px]">
-// //                     {e.message}
-// //                   </td>
-
-// //                   {/* DATE */}
-// //                   <td className="p-4 text-white/40 whitespace-nowrap">
-// //                     {e.date}
-// //                   </td>
-
-// //                   {/* STATUS */}
-// //                   <td className="p-4">
-
-// //                     <span
-// //                       className={`px-3 py-1 rounded-full text-[11px] font-medium
-// //                       ${
-// //                         e.status === "pending"
-// //                           ? "bg-yellow-500/20 text-yellow-400"
-// //                           : e.status === "replied"
-// //                           ? "bg-green-500/20 text-green-400"
-// //                           : "bg-red-500/20 text-red-400"
-// //                       }`}
-// //                     >
-// //                       {e.status}
-// //                     </span>
-
-// //                   </td>
-
-// //                   {/* ACTIONS */}
-// //                   <td className="p-4">
-
-// //                     <div className="flex gap-2 flex-wrap">
-
-// //                       {/* PENDING */}
-// //                       {e.status === "pending" && (
-// //                         <>
-// //                           <button
-// //                             onClick={() => handleReply(e.id)}
-// //                             className="bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded-lg text-xs transition"
-// //                           >
-// //                             Reply
-// //                           </button>
-
-// //                           <button
-// //                             onClick={() => handleClose(e.id)}
-// //                             className="bg-red-800 hover:bg-red-900 px-3 py-1.5 rounded-lg text-xs transition"
-// //                           >
-// //                             Close
-// //                           </button>
-// //                         </>
-// //                       )}
-
-// //                       {/* REPLIED */}
-// //                       {e.status === "replied" && (
-// //                         <button
-// //                           onClick={() => handleClose(e.id)}
-// //                           className="bg-red-800 hover:bg-red-900 px-3 py-1.5 rounded-lg text-xs transition"
-// //                         >
-// //                           Close
-// //                         </button>
-// //                       )}
-
-// //                       {/* CLOSED */}
-// //                       {e.status === "closed" && (
-// //                         <span className="text-white/30 text-xs">
-// //                           No actions available
-// //                         </span>
-// //                       )}
-
-// //                     </div>
-
-// //                   </td>
-
-// //                 </tr>
-// //               ))}
-
-// //             </tbody>
-
-// //           </table>
-
-// //         </div>
-
-// //       </div>
-
-// //     </div>
-// //   );
-// // }
-
-
-
-
-// // pages/admin/Enquiries.jsx
-
-// import { useEffect, useState } from "react";
-// import { getAllLeads } from "../../api/leadApi";
-
-// export default function Enquiries() {
-//   const [filter, setFilter]       = useState("all");
-//   const [leads, setLeads]         = useState([]);
-//   const [loading, setLoading]     = useState(true);
-//   const [error, setError]         = useState("");
-//   const [selectedLead, setSelectedLead] = useState(null);
-
-//   // ─────────────────────────────────────────
-//   // FETCH LEADS
-//   // ─────────────────────────────────────────
-//   useEffect(() => {
-//     const fetchLeads = async () => {
-//       try {
-//         setLoading(true);
-//         const data = await getAllLeads();
-//         if (data.success) {
-//           setLeads(data.leads);
-//         } else {
-//           setError(data.message || "Failed to fetch leads");
-//         }
-//       } catch (err) {
-//         console.error(err);
-//         setError("Server error. Please try again.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchLeads();
-//   }, []);
-
-//   // ─────────────────────────────────────────
-//   // FILTER
-//   // ─────────────────────────────────────────
-//   const filteredLeads = filter === "all"
-//     ? leads
-//     : leads.filter((l) => l.status === filter);
-
-//   // ─────────────────────────────────────────
-//   // STATUS STYLE
-//   // ─────────────────────────────────────────
-//   const statusStyle = (status) => {
-//     switch (status) {
-//       case "new":       return "bg-blue-500/20 text-blue-400";
-//       case "viewed":    return "bg-yellow-500/20 text-yellow-400";
-//       case "contacted": return "bg-purple-500/20 text-purple-400";
-//       case "converted": return "bg-green-500/20 text-green-400";
-//       case "rejected":  return "bg-red-500/20 text-red-400";
-//       default:          return "bg-gray-500/20 text-gray-400";
-//     }
-//   };
-
-//   // ─────────────────────────────────────────
-//   // RENDER
-//   // ─────────────────────────────────────────
-//   return (
-//     <div className="min-h-screen bg-[#0A0A0F] text-white p-4 sm:p-6 w-full">
-
-//       {/* HEADER */}
-//       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-//         <div>
-//           <h1 className="text-2xl font-bold">Enquiries Management</h1>
-//           <p className="text-sm text-white/40 mt-1">
-//             {leads.length} total enquiries
-//           </p>
-//         </div>
-
-//         {/* FILTERS */}
-//         <div className="flex gap-2 flex-wrap">
-//           {["all", "new", "viewed", "contacted", "converted", "rejected"].map((f) => (
-//             <button
-//               key={f}
-//               onClick={() => setFilter(f)}
-//               className={`px-4 py-2 rounded-lg text-xs border transition capitalize
-//                 ${filter === f
-//                   ? "bg-blue-800 border-blue-700 text-white"
-//                   : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-//                 }`}
-//             >
-//               {f}
-//             </button>
-//           ))}
-//         </div>
-//       </div>
-
-//       {/* ERROR */}
-//       {error && (
-//         <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm mb-4">
-//           {error}
-//         </div>
-//       )}
-
-//       {/* TABLE */}
-//       <div className="bg-[#0D0D14] border border-white/10 rounded-2xl overflow-hidden">
-//         <div className="overflow-x-auto">
-//           <table className="min-w-[1100px] w-full text-sm text-left">
-
-//             <thead className="bg-white/5 text-white/50 border-b border-white/10">
-//               <tr>
-//                 <th className="p-4">Buyer</th>
-//                 <th className="p-4">Phone</th>
-//                 <th className="p-4">Email</th>
-//                 <th className="p-4">Product</th>
-//                 <th className="p-4">Quantity</th>
-//                 <th className="p-4">Seller</th>
-//                 <th className="p-4">Message</th>
-//                 <th className="p-4">Date</th>
-//                 <th className="p-4">Status</th>
-//                 <th className="p-4">Actions</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-
-//               {/* LOADING */}
-//               {loading && (
-//                 <tr>
-//                   <td colSpan={10} className="p-10 text-center text-white/40">
-//                     <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-//                     Loading...
-//                   </td>
-//                 </tr>
-//               )}
-
-//               {/* EMPTY */}
-//               {!loading && filteredLeads.length === 0 && (
-//                 <tr>
-//                   <td colSpan={10} className="p-10 text-center text-white/40">
-//                     No enquiries found
-//                   </td>
-//                 </tr>
-//               )}
-
-//               {/* ROWS */}
-//               {!loading && filteredLeads.map((lead) => (
-//                 <tr
-//                   key={lead._id}
-//                   className="border-t border-white/10 hover:bg-white/[0.03] transition"
-//                 >
-
-//                   {/* BUYER */}
-//                   <td className="p-4 font-medium text-white">
-//                     {lead.buyerName}
-//                   </td>
-
-//                   {/* PHONE */}
-//                   <td className="p-4 text-white/60">
-//                     <a href={`tel:${lead.buyerPhone}`} className="hover:text-green-400 transition">
-//                       {lead.buyerPhone}
-//                     </a>
-//                   </td>
-
-//                   {/* EMAIL */}
-//                   <td className="p-4 text-white/60">
-//                     <a href={`mailto:${lead.buyerEmail}`} className="hover:text-blue-400 transition text-xs">
-//                       {lead.buyerEmail || "—"}
-//                     </a>
-//                   </td>
-
-//                   {/* PRODUCT */}
-//                   <td className="p-4">
-//                     <div className="flex items-center gap-2">
-//                       {lead.productId?.images?.[0]?.url && (
-//                         <img
-//                           src={lead.productId.images[0].url}
-//                           alt={lead.productName}
-//                           className="h-8 w-8 object-cover rounded-lg border border-white/10"
-//                         />
-//                       )}
-//                       <p className="text-white/70 line-clamp-1">
-//                         {lead.productName || lead.productId?.title || "—"}
-//                       </p>
-//                     </div>
-//                   </td>
-
-//                   {/* QUANTITY */}
-//                   <td className="p-4 text-white/60">
-//                     {lead.quantity || "—"}
-//                   </td>
-
-//                   {/* SELLER */}
-//                   <td className="p-4 text-white/60">
-//                     <p>{lead.sellerId?.name || "—"}</p>
-//                     <p className="text-xs text-white/30">{lead.sellerId?.email}</p>
-//                   </td>
-
-//                   {/* MESSAGE */}
-//                   <td className="p-4 text-white/50 max-w-[200px]">
-//                     <p className="line-clamp-2">{lead.message || "—"}</p>
-//                   </td>
-
-//                   {/* DATE */}
-//                   <td className="p-4 text-white/40 whitespace-nowrap">
-//                     {new Date(lead.createdAt).toLocaleDateString("en-IN", {
-//                       day: "numeric", month: "short", year: "numeric"
-//                     })}
-//                   </td>
-
-//                   {/* STATUS */}
-//                   <td className="p-4">
-//                     <span className={`px-3 py-1 rounded-full text-[11px] font-medium capitalize ${statusStyle(lead.status)}`}>
-//                       {lead.status}
-//                     </span>
-//                   </td>
-
-//                   {/* ACTIONS */}
-//                   <td className="p-4">
-//                     <button
-//                       onClick={() => setSelectedLead(lead)}
-//                       className="bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded-lg text-xs transition"
-//                     >
-//                       View
-//                     </button>
-//                   </td>
-
-//                 </tr>
-//               ))}
-
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-
-//       {/* ─────────────────────────────────────────
-//           VIEW MODAL
-//       ───────────────────────────────────────── */}
-//       {selectedLead && (
-//         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-//           <div className="bg-[#0D0D14] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden">
-
-//             {/* MODAL HEADER */}
-//             <div className="px-6 py-4 border-b border-white/10 flex justify-between items-center">
-//               <h2 className="text-lg font-semibold">Enquiry Details</h2>
-//               <button
-//                 onClick={() => setSelectedLead(null)}
-//                 className="text-white/40 hover:text-white text-xl"
-//               >
-//                 ✕
-//               </button>
-//             </div>
-
-//             <div className="p-6 space-y-4">
-
-//               {/* PRODUCT */}
-//               <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3">
-//                 {selectedLead.productId?.images?.[0]?.url && (
-//                   <img
-//                     src={selectedLead.productId.images[0].url}
-//                     alt={selectedLead.productName}
-//                     className="h-14 w-14 object-cover rounded-xl border border-white/10"
-//                   />
-//                 )}
-//                 <div>
-//                   <p className="text-xs text-white/40">Product</p>
-//                   <p className="font-semibold">
-//                     {selectedLead.productName || selectedLead.productId?.title || "—"}
-//                   </p>
-//                 </div>
-//               </div>
-
-//               {/* DETAILS GRID */}
-//               <div className="grid grid-cols-2 gap-3 text-sm">
-//                 <div>
-//                   <p className="text-white/40 text-xs mb-1">Buyer Name</p>
-//                   <p className="font-medium">{selectedLead.buyerName}</p>
-//                 </div>
-//                 <div>
-//                   <p className="text-white/40 text-xs mb-1">Phone</p>
-//                   <a href={`tel:${selectedLead.buyerPhone}`} className="font-medium text-green-400">
-//                     {selectedLead.buyerPhone}
-//                   </a>
-//                 </div>
-//                 <div>
-//                   <p className="text-white/40 text-xs mb-1">Email</p>
-//                   <a href={`mailto:${selectedLead.buyerEmail}`} className="font-medium text-blue-400 text-xs">
-//                     {selectedLead.buyerEmail || "—"}
-//                   </a>
-//                 </div>
-//                 <div>
-//                   <p className="text-white/40 text-xs mb-1">Quantity</p>
-//                   <p className="font-medium">{selectedLead.quantity || "—"}</p>
-//                 </div>
-//                 <div>
-//                   <p className="text-white/40 text-xs mb-1">Seller</p>
-//                   <p className="font-medium">{selectedLead.sellerId?.name || "—"}</p>
-//                 </div>
-//                 <div>
-//                   <p className="text-white/40 text-xs mb-1">Status</p>
-//                   <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${statusStyle(selectedLead.status)}`}>
-//                     {selectedLead.status}
-//                   </span>
-//                 </div>
-//               </div>
-
-//               {/* MESSAGE */}
-//               {selectedLead.message && (
-//                 <div>
-//                   <p className="text-white/40 text-xs mb-1">Message</p>
-//                   <p className="text-sm text-white/70 bg-white/5 rounded-xl p-3 leading-relaxed">
-//                     {selectedLead.message}
-//                   </p>
-//                 </div>
-//               )}
-
-//             </div>
-
-//             {/* FOOTER */}
-//             <div className="px-6 py-4 border-t border-white/10 flex justify-between items-center">
-//               <p className="text-xs text-white/30">
-//                 {new Date(selectedLead.createdAt).toLocaleDateString("en-IN", {
-//                   day: "numeric", month: "long", year: "numeric"
-//                 })}
-//               </p>
-//               <button
-//                 onClick={() => setSelectedLead(null)}
-//                 className="px-4 py-2 border border-white/10 rounded-xl text-sm hover:bg-white/5 transition"
-//               >
-//                 Close
-//               </button>
-//             </div>
-
-//           </div>
-//         </div>
-//       )}
-
-//     </div>
-//   );
-// }
-
-
 
 
 
 // pages/admin/Enquiries.jsx
 
 import { useEffect, useState } from "react";
-import { getAllLeads } from "../../api/leadApi";
-import { getAllRequirements } from "../../api/requirementApi";
+import { getAllLeads, deleteLeadAdmin, deleteMultipleLeadsAdmin } from "../../api/leadApi";
+import { getAllRequirements, deleteRequirementAdmin, deleteMultipleRequirementsAdmin } from "../../api/requirementApi";
 
 export default function Enquiries() {
 
@@ -641,6 +22,13 @@ export default function Enquiries() {
   const [leadsLoading, setLeadsLoading] = useState(true);
   const [leadsError, setLeadsError]     = useState("");
   const [selectedLead, setSelectedLead] = useState(null);
+  const [selectedLeadIds, setSelectedLeadIds] = useState([]);
+
+  // LEADS pagination
+  const [leadsPage, setLeadsPage]             = useState(1);
+  // REQUIREMENTS pagination  
+  const [requirementsPage, setRequirementsPage] = useState(1);
+  const itemsPerPage = 10;
 
   // ─────────────────────────────────────────
   // REQUIREMENTS STATES
@@ -649,6 +37,14 @@ export default function Enquiries() {
   const [requirementsLoading, setRequirementsLoading] = useState(true);
   const [requirementsError, setRequirementsError]     = useState("");
   const [selectedReq, setSelectedReq]                 = useState(null);
+  const [selectedReqIds, setSelectedReqIds]           = useState([]);
+
+  // ─────────────────────────────────────────
+  // CONFIRM DIALOG (simple window.confirm — AlertPopup baad mein)
+  // ─────────────────────────────────────────
+  const confirmDelete = (message, onConfirm) => {
+    if (window.confirm(message)) onConfirm();
+  };
 
   // ─────────────────────────────────────────
   // FETCH LEADS
@@ -691,11 +87,135 @@ export default function Enquiries() {
   }, []);
 
   // ─────────────────────────────────────────
+  // DELETE SINGLE LEAD
+  // ─────────────────────────────────────────
+  const handleDeleteLead = (id) => {
+    confirmDelete("Delete this lead? This cannot be undone.", async () => {
+      try {
+        const data = await deleteLeadAdmin(id);
+        if (data.success) {
+          setLeads((prev) => prev.filter((l) => l._id !== id));
+          setSelectedLeadIds((prev) => prev.filter((i) => i !== id));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  };
+
+  // ─────────────────────────────────────────
+  // DELETE MULTIPLE LEADS
+  // ─────────────────────────────────────────
+  const handleDeleteMultipleLeads = () => {
+    if (!selectedLeadIds.length) return;
+    confirmDelete(`Delete ${selectedLeadIds.length} selected lead(s)? This cannot be undone.`, async () => {
+      try {
+        const data = await deleteMultipleLeadsAdmin(selectedLeadIds);
+        if (data.success) {
+          setLeads((prev) => prev.filter((l) => !selectedLeadIds.includes(l._id)));
+          setSelectedLeadIds([]);
+          setLeadsPage(1);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  };
+
+  // ─────────────────────────────────────────
+  // DELETE SINGLE REQUIREMENT
+  // ─────────────────────────────────────────
+  const handleDeleteReq = (id) => {
+    confirmDelete("Delete this requirement? This cannot be undone.", async () => {
+      try {
+        const data = await deleteRequirementAdmin(id);
+        if (data.success) {
+          setRequirements((prev) => prev.filter((r) => r._id !== id));
+          setSelectedReqIds((prev) => prev.filter((i) => i !== id));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  };
+
+  // ─────────────────────────────────────────
+  // DELETE MULTIPLE REQUIREMENTS
+  // ─────────────────────────────────────────
+  const handleDeleteMultipleReqs = () => {
+    if (!selectedReqIds.length) return;
+    confirmDelete(`Delete ${selectedReqIds.length} selected requirement(s)? This cannot be undone.`, async () => {
+      try {
+        const data = await deleteMultipleRequirementsAdmin(selectedReqIds);
+        if (data.success) {
+          setRequirements((prev) => prev.filter((r) => !selectedReqIds.includes(r._id)));
+          setSelectedReqIds([]);
+          setRequirementsPage(1);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  };
+
+  // ─────────────────────────────────────────
+  // CHECKBOX HELPERS — LEADS
+  // ─────────────────────────────────────────
+  const toggleLeadCheckbox = (id) => {
+    setSelectedLeadIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllLeads = () => {
+    const pageIds = paginatedLeads.map((l) => l._id);
+    const allSelected = pageIds.every((id) => selectedLeadIds.includes(id));
+    if (allSelected) {
+      setSelectedLeadIds((prev) => prev.filter((id) => !pageIds.includes(id)));
+    } else {
+      setSelectedLeadIds((prev) => [...new Set([...prev, ...pageIds])]);
+    }
+  };
+
+  // ─────────────────────────────────────────
+  // CHECKBOX HELPERS — REQUIREMENTS
+  // ─────────────────────────────────────────
+  const toggleReqCheckbox = (id) => {
+    setSelectedReqIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const toggleAllReqs = () => {
+    const pageIds = paginatedRequirements.map((r) => r._id);
+    const allSelected = pageIds.every((id) => selectedReqIds.includes(id));
+    if (allSelected) {
+      setSelectedReqIds((prev) => prev.filter((id) => !pageIds.includes(id)));
+    } else {
+      setSelectedReqIds((prev) => [...new Set([...prev, ...pageIds])]);
+    }
+  };
+
+  // ─────────────────────────────────────────
   // FILTER LEADS
   // ─────────────────────────────────────────
   const filteredLeads = filter === "all"
     ? leads
     : leads.filter((l) => l.status === filter);
+
+  // LEADS
+  const leadsTotal = Math.ceil(filteredLeads.length / itemsPerPage);
+  const paginatedLeads = filteredLeads.slice(
+    (leadsPage - 1) * itemsPerPage,
+    leadsPage * itemsPerPage
+  );
+
+  // REQUIREMENTS
+  const reqTotal = Math.ceil(requirements.length / itemsPerPage);
+  const paginatedRequirements = requirements.slice(
+    (requirementsPage - 1) * itemsPerPage,
+    requirementsPage * itemsPerPage
+  );
 
   // ─────────────────────────────────────────
   // STATUS STYLE
@@ -779,21 +299,31 @@ export default function Enquiries() {
       ═══════════════════════════════════════ */}
       {activeTab === "leads" && (
         <>
-          {/* FILTERS */}
-          <div className="flex gap-2 flex-wrap mb-4">
-            {["all", "new", "viewed", "contacted", "converted", "rejected"].map((f) => (
+          {/* FILTERS + DELETE SELECTED */}
+          <div className="flex items-center justify-between gap-2 flex-wrap mb-4">
+            <div className="flex gap-2 flex-wrap">
+              {["all", "new", "viewed", "contacted", "converted", "rejected"].map((f) => (
+                <button
+                  key={f}
+                  onClick={() => { setFilter(f); setLeadsPage(1); }}
+                  className={`px-4 py-2 rounded-lg text-xs border transition capitalize
+                    ${filter === f
+                      ? "bg-blue-800 border-blue-700 text-white"
+                      : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
+                    }`}
+                >
+                  {f}
+                </button>
+              ))}
+            </div>
+            {selectedLeadIds.length > 0 && (
               <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-2 rounded-lg text-xs border transition capitalize
-                  ${filter === f
-                    ? "bg-blue-800 border-blue-700 text-white"
-                    : "bg-white/5 border-white/10 text-white/60 hover:bg-white/10"
-                  }`}
+                onClick={handleDeleteMultipleLeads}
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-xs font-semibold transition"
               >
-                {f}
+                🗑 Delete Selected ({selectedLeadIds.length})
               </button>
-            ))}
+            )}
           </div>
 
           <div className="bg-[#0D0D14] border border-white/10 rounded-2xl overflow-hidden">
@@ -802,6 +332,14 @@ export default function Enquiries() {
 
                 <thead className="bg-white/5 text-white/50 border-b border-white/10">
                   <tr>
+                    <th className="p-4 w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 accent-blue-600 cursor-pointer"
+                        checked={paginatedLeads.length > 0 && paginatedLeads.every((l) => selectedLeadIds.includes(l._id))}
+                        onChange={toggleAllLeads}
+                      />
+                    </th>
                     <th className="p-4">Buyer</th>
                     <th className="p-4">Phone</th>
                     <th className="p-4">Email</th>
@@ -818,7 +356,7 @@ export default function Enquiries() {
                 <tbody>
                   {leadsLoading && (
                     <tr>
-                      <td colSpan={10} className="p-10 text-center text-white/40">
+                      <td colSpan={11} className="p-10 text-center text-white/40">
                         <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                         Loading...
                       </td>
@@ -827,14 +365,25 @@ export default function Enquiries() {
 
                   {!leadsLoading && filteredLeads.length === 0 && (
                     <tr>
-                      <td colSpan={10} className="p-10 text-center text-white/40">
+                      <td colSpan={11} className="p-10 text-center text-white/40">
                         No leads found
                       </td>
                     </tr>
                   )}
 
-                  {!leadsLoading && filteredLeads.map((lead) => (
-                    <tr key={lead._id} className="border-t border-white/10 hover:bg-white/[0.03] transition">
+                  {!leadsLoading && paginatedLeads.map((lead) => (
+                    <tr
+                      key={lead._id}
+                      className={`border-t border-white/10 hover:bg-white/[0.03] transition ${selectedLeadIds.includes(lead._id) ? "bg-blue-900/10" : ""}`}
+                    >
+                      <td className="p-4">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 accent-blue-600 cursor-pointer"
+                          checked={selectedLeadIds.includes(lead._id)}
+                          onChange={() => toggleLeadCheckbox(lead._id)}
+                        />
+                      </td>
 
                       <td className="p-4 font-medium">{lead.buyerName}</td>
 
@@ -885,12 +434,20 @@ export default function Enquiries() {
                       </td>
 
                       <td className="p-4">
-                        <button
-                          onClick={() => setSelectedLead(lead)}
-                          className="bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded-lg text-xs transition"
-                        >
-                          View
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setSelectedLead(lead)}
+                            className="bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded-lg text-xs transition"
+                          >
+                            View
+                          </button>
+                          <button
+                            onClick={() => handleDeleteLead(lead._id)}
+                            className="bg-red-700 hover:bg-red-800 px-3 py-1.5 rounded-lg text-xs transition"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
 
                     </tr>
@@ -898,6 +455,44 @@ export default function Enquiries() {
                 </tbody>
               </table>
             </div>
+
+            {/* LEADS PAGINATION */}
+            {!leadsLoading && leadsTotal > 1 && (
+              <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+                <p className="text-white/40 text-sm">
+                  Showing {((leadsPage - 1) * itemsPerPage) + 1}–{Math.min(leadsPage * itemsPerPage, filteredLeads.length)} of {filteredLeads.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setLeadsPage(prev => Math.max(prev - 1, 1))}
+                    disabled={leadsPage === 1}
+                    className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                  >
+                    ← Prev
+                  </button>
+                  {Array.from({ length: leadsTotal }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      onClick={() => setLeadsPage(page)}
+                      className={`w-8 h-8 rounded-lg text-xs font-medium transition
+                        ${leadsPage === page
+                          ? "bg-blue-600 text-white"
+                          : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setLeadsPage(prev => Math.min(prev + 1, leadsTotal))}
+                    disabled={leadsPage === leadsTotal}
+                    className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </>
       )}
@@ -906,115 +501,194 @@ export default function Enquiries() {
           TAB 2 — BUY REQUIREMENTS
       ═══════════════════════════════════════ */}
       {activeTab === "requirements" && (
-        <div className="bg-[#0D0D14] border border-white/10 rounded-2xl overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-[1000px] w-full text-sm text-left">
+        <>
+          {/* DELETE SELECTED */}
+          {selectedReqIds.length > 0 && (
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={handleDeleteMultipleReqs}
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-xs font-semibold transition"
+              >
+                🗑 Delete Selected ({selectedReqIds.length})
+              </button>
+            </div>
+          )}
 
-              <thead className="bg-white/5 text-white/50 border-b border-white/10">
-                <tr>
-                  <th className="p-4">Buyer</th>
-                  <th className="p-4">Phone</th>
-                  <th className="p-4">Product</th>
-                  <th className="p-4">Category</th>
-                  <th className="p-4">Quantity</th>
-                  <th className="p-4">Budget</th>
-                  <th className="p-4">Sellers Notified</th>
-                  <th className="p-4">Date</th>
-                  <th className="p-4">Actions</th>
-                </tr>
-              </thead>
+          <div className="bg-[#0D0D14] border border-white/10 rounded-2xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-[1000px] w-full text-sm text-left">
 
-              <tbody>
-                {requirementsLoading && (
+                <thead className="bg-white/5 text-white/50 border-b border-white/10">
                   <tr>
-                    <td colSpan={9} className="p-10 text-center text-white/40">
-                      <div className="w-8 h-8 border-2 border-orange-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                      Loading...
-                    </td>
+                    <th className="p-4 w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 accent-orange-600 cursor-pointer"
+                        checked={paginatedRequirements.length > 0 && paginatedRequirements.every((r) => selectedReqIds.includes(r._id))}
+                        onChange={toggleAllReqs}
+                      />
+                    </th>
+                    <th className="p-4">Buyer</th>
+                    <th className="p-4">Phone</th>
+                    <th className="p-4">Product</th>
+                    <th className="p-4">Category</th>
+                    <th className="p-4">Quantity</th>
+                    <th className="p-4">Budget</th>
+                    <th className="p-4">Sellers Notified</th>
+                    <th className="p-4">Date</th>
+                    <th className="p-4">Actions</th>
                   </tr>
-                )}
+                </thead>
 
-                {!requirementsLoading && requirements.length === 0 && (
-                  <tr>
-                    <td colSpan={9} className="p-10 text-center text-white/40">
-                      No requirements found
-                    </td>
-                  </tr>
-                )}
+                <tbody>
+                  {requirementsLoading && (
+                    <tr>
+                      <td colSpan={10} className="p-10 text-center text-white/40">
+                        <div className="w-8 h-8 border-2 border-orange-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                        Loading...
+                      </td>
+                    </tr>
+                  )}
 
-                {!requirementsLoading && requirements.map((req) => (
-                  <tr key={req._id} className="border-t border-white/10 hover:bg-white/[0.03] transition">
+                  {!requirementsLoading && requirements.length === 0 && (
+                    <tr>
+                      <td colSpan={10} className="p-10 text-center text-white/40">
+                        No requirements found
+                      </td>
+                    </tr>
+                  )}
 
-                    <td className="p-4">
-                      <p className="font-medium">{req.buyerName}</p>
-                      <p className="text-xs text-white/30">{req.buyerEmail}</p>
-                    </td>
+                  {!requirementsLoading && paginatedRequirements.map((req) => (
+                    <tr
+                      key={req._id}
+                      className={`border-t border-white/10 hover:bg-white/[0.03] transition ${selectedReqIds.includes(req._id) ? "bg-orange-900/10" : ""}`}
+                    >
+                      <td className="p-4">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 accent-orange-600 cursor-pointer"
+                          checked={selectedReqIds.includes(req._id)}
+                          onChange={() => toggleReqCheckbox(req._id)}
+                        />
+                      </td>
 
-                    <td className="p-4 text-white/60">
-                      <a href={`tel:${req.buyerPhone}`} className="hover:text-green-400 transition">
-                        {req.buyerPhone}
-                      </a>
-                    </td>
+                      <td className="p-4">
+                        <p className="font-medium">{req.buyerName}</p>
+                        <p className="text-xs text-white/30">{req.buyerEmail}</p>
+                      </td>
 
-                    <td className="p-4 text-white/70 font-medium">
-                      {req.productName}
-                    </td>
+                      <td className="p-4 text-white/60">
+                        <a href={`tel:${req.buyerPhone}`} className="hover:text-green-400 transition">
+                          {req.buyerPhone}
+                        </a>
+                      </td>
 
-                    <td className="p-4 text-white/60">
-                      <p>{req.category?.name || "—"}</p>
-                      {req.subCategory?.name && (
-                        <p className="text-xs text-white/30">{req.subCategory.name}</p>
-                      )}
-                    </td>
+                      <td className="p-4 text-white/70 font-medium">
+                        {req.productName}
+                      </td>
 
-                    <td className="p-4 text-white/60">{req.quantity || "—"}</td>
-
-                    <td className="p-4 text-white/60">{req.budget || "—"}</td>
-
-                    {/* SELLERS NOTIFIED */}
-                    <td className="p-4">
-                      <div className="flex flex-col gap-1">
-                        {["gold", "premium", "basic"].map((plan) => {
-                          const count = req.matchedSellers?.filter(
-                            (s) => s.plan === plan
-                          ).length;
-                          if (!count) return null;
-                          return (
-                            <span
-                              key={plan}
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-medium capitalize w-fit ${planStyle(plan)}`}
-                            >
-                              {plan}: {count}
-                            </span>
-                          );
-                        })}
-                        {req.matchedSellers?.length === 0 && (
-                          <span className="text-white/30 text-xs">No sellers</span>
+                      <td className="p-4 text-white/60">
+                        <p>{req.category?.name || "—"}</p>
+                        {req.subCategory?.name && (
+                          <p className="text-xs text-white/30">{req.subCategory.name}</p>
                         )}
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="p-4 text-white/40 whitespace-nowrap">
-                      {new Date(req.createdAt).toLocaleDateString("en-IN", {
-                        day: "numeric", month: "short", year: "numeric"
-                      })}
-                    </td>
+                      <td className="p-4 text-white/60">{req.quantity || "—"}</td>
 
-                    <td className="p-4">
-                      <button
-                        onClick={() => setSelectedReq(req)}
-                        className="bg-orange-600 hover:bg-orange-700 px-3 py-1.5 rounded-lg text-xs transition"
-                      >
-                        View
-                      </button>
-                    </td>
+                      <td className="p-4 text-white/60">{req.budget || "—"}</td>
 
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      {/* SELLERS NOTIFIED */}
+                      <td className="p-4">
+                        <div className="flex flex-col gap-1">
+                          {["gold", "premium", "basic"].map((plan) => {
+                            const count = req.matchedSellers?.filter(
+                              (s) => s.plan === plan
+                            ).length;
+                            if (!count) return null;
+                            return (
+                              <span
+                                key={plan}
+                                className={`px-2 py-0.5 rounded-full text-[10px] font-medium capitalize w-fit ${planStyle(plan)}`}
+                              >
+                                {plan}: {count}
+                              </span>
+                            );
+                          })}
+                          {req.matchedSellers?.length === 0 && (
+                            <span className="text-white/30 text-xs">No sellers</span>
+                          )}
+                        </div>
+                      </td>
+
+                      <td className="p-4 text-white/40 whitespace-nowrap">
+                        {new Date(req.createdAt).toLocaleDateString("en-IN", {
+                          day: "numeric", month: "short", year: "numeric"
+                        })}
+                      </td>
+
+                      <td className="p-4">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => setSelectedReq(req)}
+                            className="bg-orange-600 hover:bg-orange-700 px-3 py-1.5 rounded-lg text-xs transition"
+                          >
+                            View
+                          </button>
+                          <button
+                            onClick={() => handleDeleteReq(req._id)}
+                            className="bg-red-700 hover:bg-red-800 px-3 py-1.5 rounded-lg text-xs transition"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* REQUIREMENTS PAGINATION */}
+            {!requirementsLoading && reqTotal > 1 && (
+              <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+                <p className="text-white/40 text-sm">
+                  Showing {((requirementsPage - 1) * itemsPerPage) + 1}–{Math.min(requirementsPage * itemsPerPage, requirements.length)} of {requirements.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setRequirementsPage(prev => Math.max(prev - 1, 1))}
+                    disabled={requirementsPage === 1}
+                    className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                  >
+                    ← Prev
+                  </button>
+                  {Array.from({ length: reqTotal }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      onClick={() => setRequirementsPage(page)}
+                      className={`w-8 h-8 rounded-lg text-xs font-medium transition
+                        ${requirementsPage === page
+                          ? "bg-orange-600 text-white"
+                          : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setRequirementsPage(prev => Math.min(prev + 1, reqTotal))}
+                    disabled={requirementsPage === reqTotal}
+                    className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        </>
       )}
 
       {/* ─────────────────────────────────────────
