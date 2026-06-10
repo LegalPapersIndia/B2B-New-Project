@@ -45,7 +45,7 @@ import BlogDetails from "./Pages/BlogDetails";
 
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 import ResetPasswordPage from "./Pages/ResetPasswordPage";
-import SellerProfilePage from "./Pages/Seller/SellerProfilePage";
+import SellerProfilePage from "./Pages/seller/SellerProfilePage";
 
 function App() {
   return (
