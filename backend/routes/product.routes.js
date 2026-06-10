@@ -104,6 +104,7 @@ import {
   deleteProductAdmin,
   getFeaturedProducts,
   getProductsByCity,
+   getProductsBySeller,
 } from "../controllers/product.controller.js";
 
 import authMiddleware      from "../middleware/authMiddleware.js";
@@ -152,5 +153,7 @@ router.get("/admin/product/:id",    adminAuthMiddleware, getProductByIdAdmin);
 router.delete("/admin/product/:id", adminAuthMiddleware, deleteProductAdmin);
 
 router.get("/:slug", getSingleProduct);
+
+router.get("/seller/:sellerId", getProductsBySeller);
 
 export default router;

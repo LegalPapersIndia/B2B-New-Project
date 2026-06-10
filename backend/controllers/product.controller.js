@@ -189,136 +189,6 @@ export const deleteProduct = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// GET ALL APPROVED PRODUCTS (Public)
-// ─────────────────────────────────────────
-// export const getAllProducts = async (req, res) => {
-//   try {
-//     const { category, subcategory, minPrice, maxPrice, search } = req.query;
-
-//     const filter = {
-//       status: "approved",
-//       isActive: true,
-//     };
-
-//     if (category)    filter.category    = category;
-//     if (subcategory) filter.subcategory = subcategory;
-//     if (search)      filter.title       = { $regex: search, $options: "i" };
-
-//     if (minPrice || maxPrice) {
-//       filter.price = {};
-//       if (minPrice) filter.price.$gte = Number(minPrice);
-//       if (maxPrice) filter.price.$lte = Number(maxPrice);
-//     }
-
-//     const products = await Product.find(filter)
-//       .populate("category", "name slug")
-//       .populate("subcategory", "name slug")
-//       .populate("seller", "name companyName city state companyWebsite")
-//       .sort({ createdAt: -1 });
-
-//     return res.status(200).json({
-//       success: true,
-//       count: products.length,
-//       products,
-//     });
-
-//   } catch (error) {
-//     console.error("getAllProducts error:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Failed to fetch products",
-//     });
-//   }
-// };
-
-// export const getAllProducts = async (req, res) => {
-//   try {
-//     const { search, city, state, category, subcategory } = req.query;
-
-//     const filter = { status: "approved", isActive: true };
-
-//     // SEARCH FILTER
-//     if (search) filter.title = { $regex: search, $options: "i" };
-
-//     // CATEGORY FILTER
-//     if (category)    filter.category    = category;
-//     if (subcategory) filter.subcategory = subcategory;
-
-//     // CITY/STATE FILTER — seller ke through
-//     if (city || state) {
-//       const sellerQuery = {};
-//       if (city)  sellerQuery.city  = { $regex: city,  $options: "i" };
-//       if (state) sellerQuery.state = { $regex: state, $options: "i" };
-
-//       const sellers = await Seller.find(sellerQuery).select("_id");
-//       filter.seller = { $in: sellers.map(s => s._id) };
-//     }
-
-//     const products = await Product.find(filter)
-//       .populate("category",    "name slug")
-//       .populate("subcategory", "name slug")
-//       .populate("seller",      "name companyName city state companyWebsite subscriptionPlan")
-//       .sort({ createdAt: -1 });
-
-//     return res.status(200).json({
-//       success: true,
-//       count:   products.length,
-//       products,
-//     });
-
-//   } catch (error) {
-//     console.error("getAllProducts error:", error);
-//     return res.status(500).json({ success: false, message: "Failed to fetch products" });
-//   }
-// };
-// export const getAllProducts = async (req, res) => {
-//   try {
-//     const { search, city, state, category, subcategory } = req.query;
-
-//     const filter = { status: "approved", isActive: true };
-
-//     // ✅ FUZZY SEARCH — title, brand, shortDesc sab mein
-//     if (search) {
-//       filter.$or = [
-//         { title:     { $regex: search, $options: "i" } },
-//         { brand:     { $regex: search, $options: "i" } },
-//         { shortDesc: { $regex: search, $options: "i" } },
-//       ];
-//     }
-
-//     // CATEGORY FILTER
-//     if (category)    filter.category    = category;
-//     if (subcategory) filter.subcategory = subcategory;
-
-//     // ✅ CITY/STATE FILTER — partial match
-//     if (city || state) {
-//       const sellerQuery = {};
-//       if (city)  sellerQuery.city  = { $regex: city.trim(),  $options: "i" };
-//       if (state) sellerQuery.state = { $regex: state.trim(), $options: "i" };
-
-//       const sellers = await Seller.find(sellerQuery).select("_id");
-//       filter.seller = { $in: sellers.map(s => s._id) };
-//     }
-
-//     const products = await Product.find(filter)
-//       .populate("category",    "name slug")
-//       .populate("subcategory", "name slug")
-//       .populate("seller",      "name companyName city state companyWebsite subscriptionPlan")
-//       .sort({ createdAt: -1 });
-
-//     return res.status(200).json({
-//       success: true,
-//       count:   products.length,
-//       products,
-//     });
-
-//   } catch (error) {
-//     console.error("getAllProducts error:", error);
-//     return res.status(500).json({ success: false, message: "Failed to fetch products" });
-//   }
-// };
-
 
 
 export const getAllProducts = async (req, res) => {
@@ -632,43 +502,6 @@ export const deleteProductAdmin = async (req, res) => {
 };
 
 
-// ─────────────────────────────────────────
-// GET FEATURED PRODUCTS (Public)
-// Premium/Gold sellers ke products
-// ─────────────────────────────────────────
-// export const getFeaturedProducts = async (req, res) => {
-//   try {
-//     // ✅ BAAD MEIN
-// const products = await Product.find({
-//   status:   "approved",
-//   featured: true,
-//   isActive: true,
-// })
-//   .populate({
-//     path: "seller",
-//     match: { subscriptionActive: true },
-//     select: "name companyName companyWebsite city state subscriptionPlan",
-//   })
-//   .populate("category",    "name slug")
-//   .populate("subcategory", "name slug")
-//   .sort({ createdAt: -1 })
-//   .limit(10)
-//   .then(products => products.filter(p => p.seller !== null));
-
-//     return res.status(200).json({
-//       success: true,
-//       products,
-//     });
-
-//   } catch (error) {
-//     console.error("getFeaturedProducts error:", error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Failed to fetch featured products",
-//     });
-//   }
-// };
-
 export const getFeaturedProducts = async (req, res) => {
   try {
     const activeSellers = await Seller.find({
@@ -800,7 +633,7 @@ export const updateProduct = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Product updated successfully.",  // ✅ message bhi update kiya
+      message: "Product updated successfully.",  
       product,
     });
 
@@ -809,6 +642,39 @@ export const updateProduct = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Product update failed",
+    });
+  }
+};
+
+
+
+// ─────────────────────────────────────────
+// GET PRODUCTS BY SELLER (Public)
+// ─────────────────────────────────────────
+export const getProductsBySeller = async (req, res) => {
+  try {
+    const { sellerId } = req.params;
+
+    const products = await Product.find({
+      seller:   sellerId,
+      status:   "approved",
+      isActive: true,
+    })
+      .populate("category",    "name slug")
+      .populate("subcategory", "name slug")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success:  true,
+      count:    products.length,
+      products,
+    });
+
+  } catch (error) {
+    console.error("getProductsBySeller error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch seller products",
     });
   }
 };

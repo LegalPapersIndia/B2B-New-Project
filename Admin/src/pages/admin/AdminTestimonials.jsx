@@ -1,3 +1,5 @@
+
+
 // pages/admin/AdminTestimonials.jsx
 
 import { useEffect, useState } from "react";
@@ -8,6 +10,7 @@ import {
   adminDeleteTestimonial,
 } from "../../api/testimonialApi";
 import { Star } from "lucide-react";
+import ConfirmModal from "../../components/common/ConfirmModal";
 
 const EMPTY_FORM = {
   name: "", company: "", review: "", rating: 5, isActive: true,
@@ -23,6 +26,16 @@ export default function AdminTestimonials() {
   const [preview,      setPreview]      = useState("");
   const [submitting,   setSubmitting]   = useState(false);
   const [deletingId,   setDeletingId]   = useState(null);
+
+  // ================= CONFIRM MODAL =================
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmText: "OK",
+    showCancel: false,
+    onConfirm: null,
+  });
 
   const fetchTestimonials = async () => {
     setLoading(true);
@@ -69,7 +82,14 @@ export default function AdminTestimonials() {
 
   const handleSubmit = async () => {
     if (!form.name || !form.company || !form.review) {
-      alert("Please fill all required fields!");
+      setConfirmModal({
+        isOpen: true,
+        title: "❌ Error",
+        message: "Please fill all required fields!",
+        confirmText: "OK",
+        showCancel: false,
+        onConfirm: () => setConfirmModal({ isOpen: false }),
+      });
       return;
     }
     setSubmitting(true);
@@ -84,33 +104,83 @@ export default function AdminTestimonials() {
 
       if (editItem) {
         await adminUpdateTestimonial(editItem._id, fd);
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ Updated!",
+          message: "Testimonial successfully updated.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       } else {
         await adminCreateTestimonial(fd);
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ Added!",
+          message: "Testimonial successfully created.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       }
       setShowForm(false);
       fetchTestimonials();
     } catch {
-      alert("Failed to save!");
+      setConfirmModal({
+        isOpen: true,
+        title: "❌ Error",
+        message: "Failed to save. Please try again.",
+        confirmText: "OK",
+        showCancel: false,
+        onConfirm: () => setConfirmModal({ isOpen: false }),
+      });
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleDelete = async (item) => {
-    if (!window.confirm(`Delete "${item.name}" testimonial?`)) return;
-    setDeletingId(item._id);
-    try {
-      await adminDeleteTestimonial(item._id);
-      setTestimonials(prev => prev.filter(t => t._id !== item._id));
-    } catch {
-      alert("Delete failed!");
-    } finally {
-      setDeletingId(null);
-    }
+  const handleDelete = (item) => {
+    setConfirmModal({
+      isOpen: true,
+      title: "Delete Testimonial",
+      message: `Are you sure? "${item.name}" testimonial will be permanently deleted.`,
+      confirmText: "Delete",
+      showCancel: true,
+      onConfirm: async () => {
+        setDeletingId(item._id);
+        try {
+          await adminDeleteTestimonial(item._id);
+          setTestimonials(prev => prev.filter(t => t._id !== item._id));
+          setConfirmModal({ isOpen: false });
+        } catch {
+          setConfirmModal({
+            isOpen: true,
+            title: "❌ Error",
+            message: "Delete failed. Please try again.",
+            confirmText: "OK",
+            showCancel: false,
+            onConfirm: () => setConfirmModal({ isOpen: false }),
+          });
+        } finally {
+          setDeletingId(null);
+        }
+      },
+    });
   };
 
   return (
     <div className="p-6 bg-[#0A0A0F] min-h-screen text-white">
+
+      {/* ================= CONFIRM MODAL ================= */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        showCancel={confirmModal.showCancel}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ isOpen: false })}
+      />
 
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">

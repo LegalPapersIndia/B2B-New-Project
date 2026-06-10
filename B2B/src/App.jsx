@@ -37,8 +37,6 @@ import CategoryDetails from "./Pages/Category/CategoryDetails";
 import SubCategoryPage from "./Pages/SubCategory/SubCategoryPage";
 import ProductDetailsPage from "./Pages/Product/ProductDetailsPage";
 
-// import SellerProfileSetup from "./Pages/seller/SellerProfileSetup";
-// import SellerWaiting from "./Pages/seller/SellerWaiting";
 import Subscription from "./Pages/seller/Subscription";
 import HubPage from "./Pages/HubPage";
 import SearchPage from "./Pages/SearchPage";
@@ -46,7 +44,8 @@ import SellerPublicProfile from "./Pages/SellerPublicProfile";
 import BlogDetails from "./Pages/BlogDetails";
 
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
-import ResetPasswordPage  from "./Pages/ResetPasswordPage";
+import ResetPasswordPage from "./Pages/ResetPasswordPage";
+import SellerProfilePage from "./Pages/Seller/SellerProfilePage";
 
 function App() {
   return (
@@ -82,21 +81,15 @@ function App() {
             path="/manufacturing-hubs"
             element={<ManufacturingHubsAll />}
           />
-          {/* <Route path="/product/:id" element={<ProductDetails />} /> */}
-          {/* 
-          <Route
-            path="/seller/profile-setup"
-            element={<SellerProfileSetup />}
-          /> */}
-          {/* <Route path="/seller/waiting-approval" element={<SellerWaiting />} /> */}
+      
           // PUBLIC ROUTES mein add karo
           <Route path="/hub/:city" element={<HubPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/seller-profile/:id" element={<SellerPublicProfile />} />
           <Route path="/blog/:slug" element={<BlogDetails />} />
-
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-<Route path="/reset-password"  element={<ResetPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/seller/:sellerId" element={<SellerProfilePage />} />
         </Route>
 
         <Route

@@ -1,7 +1,10 @@
+
+
 // pages/admin/Blogs.jsx
 
 import { useEffect, useState } from "react";
 import { getAllBlogsAdmin, deleteBlog, createBlog, updateBlog } from "../../api/blogApi";
+import ConfirmModal from "../../components/common/ConfirmModal";
 
 export default function Blogs() {
   const [blogs, setBlogs]           = useState([]);
@@ -20,6 +23,16 @@ export default function Blogs() {
   const [submitting, setSubmitting] = useState(false);
 
   const categories = ["Sourcing Tips", "Market Trends", "Negotiation", "Platform Guide"];
+
+  // ================= CONFIRM MODAL =================
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmText: "OK",
+    showCancel: false,
+    onConfirm: null,
+  });
 
   // ─────────────────────────────────────────
   // FETCH
@@ -43,18 +56,34 @@ export default function Blogs() {
   // ─────────────────────────────────────────
   // DELETE
   // ─────────────────────────────────────────
-  const handleDelete = async (blog) => {
-    if (!window.confirm(`Delete "${blog.title}"?`)) return;
-    try {
-      setDeletingId(blog._id);
-      await deleteBlog(blog._id);
-      setBlogs(prev => prev.filter(b => b._id !== blog._id));
-    } catch (err) {
-      console.error(err);
-      alert("Delete failed!");
-    } finally {
-      setDeletingId(null);
-    }
+  const handleDelete = (blog) => {
+    setConfirmModal({
+      isOpen: true,
+      title: "Delete Blog",
+      message: `Are you sure? "${blog.title}" will be permanently deleted.`,
+      confirmText: "Delete",
+      showCancel: true,
+      onConfirm: async () => {
+        try {
+          setDeletingId(blog._id);
+          await deleteBlog(blog._id);
+          setBlogs(prev => prev.filter(b => b._id !== blog._id));
+          setConfirmModal({ isOpen: false });
+        } catch (err) {
+          console.error(err);
+          setConfirmModal({
+            isOpen: true,
+            title: "❌ Error",
+            message: "Delete failed. Please try again.",
+            confirmText: "OK",
+            showCancel: false,
+            onConfirm: () => setConfirmModal({ isOpen: false }),
+          });
+        } finally {
+          setDeletingId(null);
+        }
+      },
+    });
   };
 
   // ─────────────────────────────────────────
@@ -99,7 +128,14 @@ export default function Blogs() {
   // ─────────────────────────────────────────
   const handleSubmit = async () => {
     if (!form.title || !form.excerpt || !form.content || !form.category || !form.author) {
-      alert("Please fill all required fields!");
+      setConfirmModal({
+        isOpen: true,
+        title: "❌ Error",
+        message: "Please fill all required fields!",
+        confirmText: "OK",
+        showCancel: false,
+        onConfirm: () => setConfirmModal({ isOpen: false }),
+      });
       return;
     }
     try {
@@ -111,14 +147,37 @@ export default function Blogs() {
       if (editBlog) {
         const res = await updateBlog(editBlog._id, formData);
         setBlogs(prev => prev.map(b => b._id === editBlog._id ? res.data.blog : b));
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ Updated!",
+          message: "Blog successfully updated.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       } else {
         const res = await createBlog(formData);
         setBlogs(prev => [res.data.blog, ...prev]);
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ Blog Created!",
+          message: "Blog successfully created.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       }
       setShowForm(false);
     } catch (err) {
       console.error(err);
-      alert("Failed to save blog!");
+      setConfirmModal({
+        isOpen: true,
+        title: "❌ Error",
+        message: "Failed to save blog. Please try again.",
+        confirmText: "OK",
+        showCancel: false,
+        onConfirm: () => setConfirmModal({ isOpen: false }),
+      });
     } finally {
       setSubmitting(false);
     }
@@ -129,6 +188,17 @@ export default function Blogs() {
   // ─────────────────────────────────────────
   return (
     <div className="p-6 bg-[#0A0A0F] min-h-screen text-white">
+
+      {/* ================= CONFIRM MODAL ================= */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        showCancel={confirmModal.showCancel}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ isOpen: false })}
+      />
 
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">

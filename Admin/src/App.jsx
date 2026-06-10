@@ -24,6 +24,7 @@ import AdminTestimonials from "./pages/admin/AdminTestimonials";
 
 import BulkUpload from "./pages/admin/Bulkupload";
 import AdminMarketplaceStats from "./pages/admin/AdminMarketplaceStats";
+import AdminHRUsers from "./pages/admin/AdminHRUsers"; // ← NEW
 
 export default function App() {
   return (
@@ -59,9 +60,12 @@ export default function App() {
             <Route path="/admin/testimonials" element={<AdminTestimonials />} />
              <Route path="/admin/bulk-upload" element={<BulkUpload />} />
              <Route path="/admin/marketplace-stats" element={<AdminMarketplaceStats />} />
+              <Route path="/admin/hr-users"     element={<AdminHRUsers />} /> {/* ← NEW */}
         </Route>
 
       </Routes>
     </BrowserRouter>
   );
 }
+
+

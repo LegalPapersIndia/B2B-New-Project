@@ -1,19 +1,3 @@
-// import axios from "axios";
-
-// const API = import.meta.env.VITE_API_URL;
-
-// // ================= GET ALL SUBCATEGORIES =================
-// export const getSubCategories =
-//   async () => {
-//     const res = await axios.get(
-//       `${API}/subcategories`
-//     );
-
-//     return res.data;
-//   };
-
-
-
 
 import axios from "axios";
 

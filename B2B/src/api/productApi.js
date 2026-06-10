@@ -134,3 +134,9 @@ export const updateProduct = async (id, formData) => {
   return response.data;
 };
  
+
+// PUBLIC — Seller ke saare products
+export const getProductsBySeller = async (sellerId) => {
+  const response = await axios.get(`${API}/products/seller/${sellerId}`);
+  return response.data;
+};

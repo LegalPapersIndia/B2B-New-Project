@@ -1,89 +1,4 @@
 
-// import express from "express";
-// import cors from "cors";
-// import dotenv from "dotenv";
-
-// import connectDB from "./config/db.js";
-// import cloudinaryConnect from "./config/cloudinary.js";
-
-// import authRoutes from "./routes/authRoutes.js";
-// import sellerRoutes from "./routes/sellerRoutes.js";
-// import adminRoutes from "./routes/adminRoutes.js";
-// import categoryRoutes from "./routes/categoryRoutes.js";
-// import subCategoryRoutes from "./routes/subCategoryRoutes.js";
-// import productRoutes from "./routes/product.routes.js";
-// import sellerAuthRoutes from "./routes/sellerAuthRoutes.js";
-
-// import fs from "fs";
-
-// if (!fs.existsSync("uploads")) {
-//   fs.mkdirSync("uploads");
-// } 
-// dotenv.config();
-
-// const app = express();
-
-
-// // Database Connection
-// connectDB();
-
-
-// // Cloudinary Connection
-// cloudinaryConnect();
-
-
-// // Middleware
-// // app.use(cors());
-// app.use(
-//   cors({
-//     origin: [
-//       "http://localhost:5173",
-//       "http://localhost:5174",
-//     ],
-//     credentials: true,
-//   })
-// );
-// app.use(express.json());
-
-
-// // Test Route
-// app.get("/", (req, res) => {
-//   res.send("B2B Backend Running...");
-// });
-
-
-// // ================= ROUTES =================
-
-// // Auth Routes
-// app.use("/api/auth", authRoutes);
-
-// // Seller Routes
-// app.use("/api/seller", sellerRoutes);
-
-// // Admin Routes
-// app.use("/api/admin", adminRoutes);
-
-// // Category Routes
-// app.use("/api/categories", categoryRoutes);
-
-// app.use(
-//   "/api/subcategories",
-//   subCategoryRoutes
-// );
-
-// app.use("/api/products", productRoutes);
-
-// app.use("/api/seller", sellerAuthRoutes);
-// // ================= SERVER =================
-
-// const PORT = process.env.PORT || 5000;
-
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`);
-// });
-
-
-
 
 // app.js
 
@@ -119,6 +34,7 @@ import bulkUploadRouter from "./routes/admin/bulkUpload.js";
 import marketplaceStatRoutes from "./routes/marketplaceStat.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import Notification from "./models/Notification.model.js"; 
+import hrUserRoutes from "./routes/hrUserRoutes.js";
 
 dotenv.config();
 
@@ -274,6 +190,8 @@ app.use("/api/admin", bulkUploadRouter);
 app.use("/api/marketplace-stats", marketplaceStatRoutes);
 
 app.use("/api/notifications", notificationRoutes);
+
+app.use("/api/hr-users", hrUserRoutes);
 
 // ─────────────────────────────────────────
 // SERVER

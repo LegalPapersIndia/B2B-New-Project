@@ -1,19 +1,3 @@
-// import multer from "multer";
-
-// // ==========================
-// // STORAGE
-// // ==========================
-// const storage = multer.diskStorage({});
-
-// // ==========================
-// // MULTER
-// // ==========================
-// const upload = multer({
-//   storage,
-// });
-
-// export default upload;
-
 
 
 // middleware/upload.js

@@ -30,12 +30,12 @@ export const adminLogin = async (req, res) => {
     }
 
     // ROLE CHECK
-    if (user.role !== "admin") {
-      return res.status(403).json({
-        success: false,
-        message: "Access denied. Admins only.",
-      });
-    }
+   if (user.role !== "admin" && user.role !== "hr") {
+  return res.status(403).json({
+    success: false,
+    message: "Access denied.",
+  });
+}
 
     // PASSWORD CHECK
     const isMatch = await bcrypt.compare(password, user.password);
@@ -46,7 +46,7 @@ export const adminLogin = async (req, res) => {
         message: "Invalid credentials",
       });
     }
-
+    
     // TOKEN — same JWT_SECRET use ho raha hai
     const token = jwt.sign(
       { id: user._id },

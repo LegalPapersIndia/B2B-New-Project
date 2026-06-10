@@ -1,3 +1,5 @@
+
+
 // pages/admin/AdminCareers.jsx
 
 import { useEffect, useState } from "react";
@@ -5,6 +7,7 @@ import {
   adminGetJobs, adminCreateJob, adminUpdateJob,
   adminDeleteJob, adminGetApplications, adminUpdateAppStatus,
 } from "../../api/careerApi";
+import ConfirmModal from "../../components/common/ConfirmModal";
 
 const EMPTY_FORM = {
   title: "", department: "", location: "", type: "Full-time",
@@ -28,6 +31,16 @@ export default function AdminCareers() {
   const [viewApps,    setViewApps]    = useState(null);
   const [appsLoading, setAppsLoading] = useState(false);
   const [deletingId,  setDeletingId]  = useState(null);
+
+  // ================= CONFIRM MODAL =================
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmText: "OK",
+    showCancel: false,
+    onConfirm: null,
+  });
 
   const fetchJobs = async () => {
     setLoading(true);
@@ -67,7 +80,14 @@ export default function AdminCareers() {
 
   const handleSave = async () => {
     if (!form.title || !form.department || !form.location || !form.experience || !form.description) {
-      alert("Please fill all required fields!");
+      setConfirmModal({
+        isOpen: true,
+        title: "❌ Error",
+        message: "Please fill all required fields!",
+        confirmText: "OK",
+        showCancel: false,
+        onConfirm: () => setConfirmModal({ isOpen: false }),
+      });
       return;
     }
     setSaving(true);
@@ -78,29 +98,68 @@ export default function AdminCareers() {
       };
       if (editJob) {
         await adminUpdateJob(editJob._id, payload);
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ Updated!",
+          message: "Job successfully updated.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       } else {
         await adminCreateJob(payload);
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ Job Posted!",
+          message: "Job successfully created.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       }
       setShowForm(false);
       fetchJobs();
     } catch {
-      alert("Something went wrong.");
+      setConfirmModal({
+        isOpen: true,
+        title: "❌ Error",
+        message: "Something went wrong. Please try again.",
+        confirmText: "OK",
+        showCancel: false,
+        onConfirm: () => setConfirmModal({ isOpen: false }),
+      });
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async (job) => {
-    if (!window.confirm(`Delete "${job.title}"?`)) return;
-    setDeletingId(job._id);
-    try {
-      await adminDeleteJob(job._id);
-      setJobs(prev => prev.filter(j => j._id !== job._id));
-    } catch {
-      alert("Delete failed!");
-    } finally {
-      setDeletingId(null);
-    }
+  const handleDelete = (job) => {
+    setConfirmModal({
+      isOpen: true,
+      title: "Delete Job",
+      message: `Are you sure? "${job.title}" will be permanently deleted.`,
+      confirmText: "Delete",
+      showCancel: true,
+      onConfirm: async () => {
+        setDeletingId(job._id);
+        try {
+          await adminDeleteJob(job._id);
+          setJobs(prev => prev.filter(j => j._id !== job._id));
+          setConfirmModal({ isOpen: false });
+        } catch {
+          setConfirmModal({
+            isOpen: true,
+            title: "❌ Error",
+            message: "Delete failed. Please try again.",
+            confirmText: "OK",
+            showCancel: false,
+            onConfirm: () => setConfirmModal({ isOpen: false }),
+          });
+        } finally {
+          setDeletingId(null);
+        }
+      },
+    });
   };
 
   const handleToggle = async (job) => {
@@ -130,6 +189,17 @@ export default function AdminCareers() {
 
   return (
     <div className="p-6 bg-[#0A0A0F] min-h-screen text-white">
+
+      {/* ================= CONFIRM MODAL ================= */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        showCancel={confirmModal.showCancel}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ isOpen: false })}
+      />
 
       {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
@@ -408,5 +478,3 @@ export default function AdminCareers() {
     </div>
   );
 }
-
-

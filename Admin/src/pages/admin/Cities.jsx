@@ -1,7 +1,10 @@
+
+
 // src/pages/admin/Cities.jsx
 
 import React, { useEffect, useState } from "react";
 import { createCity, getCities, updateCity, deleteCity } from "../../api/cityApi";
+import ConfirmModal from "../../components/common/ConfirmModal";
 
 export default function Cities() {
 
@@ -10,8 +13,18 @@ export default function Cities() {
   const [editingId, setEditingId] = useState(null);
   const [image,     setImage]     = useState(null);
   const [formData,  setFormData]  = useState({ name: "", slug: "" });
-const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // ================= CONFIRM MODAL =================
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    confirmText: "OK",
+    showCancel: false,
+    onConfirm: null,
+  });
 
   // ── FETCH ──
   useEffect(() => { fetchCities(); }, []);
@@ -23,14 +36,13 @@ const itemsPerPage = 10;
     } catch (err) {
       console.log(err);
     }
-   
   };
 
   const totalPages = Math.ceil(cities.length / itemsPerPage);
-const paginatedCities = cities.slice(
-  (currentPage - 1) * itemsPerPage,
-  currentPage * itemsPerPage
-);
+  const paginatedCities = cities.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // ── HANDLE CHANGE ──
   const handleChange = (e) => {
@@ -49,10 +61,24 @@ const paginatedCities = cities.slice(
 
       if (editingId) {
         const res = await updateCity(editingId, data);
-        alert(res.message || "Updated!");
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ Updated!",
+          message: res.message || "City successfully updated.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       } else {
         const res = await createCity(data);
-        alert(res.message || "Created!");
+        setConfirmModal({
+          isOpen: true,
+          title: "✅ City Added!",
+          message: res.message || "City successfully created.",
+          confirmText: "OK",
+          showCancel: false,
+          onConfirm: () => setConfirmModal({ isOpen: false }),
+        });
       }
 
       setFormData({ name: "", slug: "" });
@@ -60,21 +86,44 @@ const paginatedCities = cities.slice(
       setEditingId(null);
       fetchCities();
     } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong");
+      setConfirmModal({
+        isOpen: true,
+        title: "❌ Error",
+        message: err.response?.data?.message || "Something went wrong.",
+        confirmText: "OK",
+        showCancel: false,
+        onConfirm: () => setConfirmModal({ isOpen: false }),
+      });
     } finally {
       setLoading(false);
     }
   };
 
   // ── DELETE ──
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this city?")) return;
-    try {
-      await deleteCity(id);
-      fetchCities();
-    } catch (err) {
-      alert("Delete failed");
-    }
+  const handleDelete = (id) => {
+    setConfirmModal({
+      isOpen: true,
+      title: "Delete City",
+      message: "Are you sure? This city will be permanently deleted.",
+      confirmText: "Delete",
+      showCancel: true,
+      onConfirm: async () => {
+        try {
+          await deleteCity(id);
+          setConfirmModal({ isOpen: false });
+          fetchCities();
+        } catch (err) {
+          setConfirmModal({
+            isOpen: true,
+            title: "❌ Error",
+            message: "Delete failed. Please try again.",
+            confirmText: "OK",
+            showCancel: false,
+            onConfirm: () => setConfirmModal({ isOpen: false }),
+          });
+        }
+      },
+    });
   };
 
   // ── EDIT ──
@@ -92,6 +141,17 @@ const paginatedCities = cities.slice(
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white p-4 sm:p-6 w-full">
+
+      {/* ================= CONFIRM MODAL ================= */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        message={confirmModal.message}
+        confirmText={confirmModal.confirmText}
+        showCancel={confirmModal.showCancel}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal({ isOpen: false })}
+      />
 
       {/* HEADER */}
       <div className="mb-6">
@@ -270,43 +330,44 @@ const paginatedCities = cities.slice(
             </tbody>
           </table>
         </div>
+
         {/* PAGINATION */}
-{totalPages > 1 && (
-  <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
-    <p className="text-white/40 text-sm">
-      Showing {((currentPage - 1) * itemsPerPage) + 1}–{Math.min(currentPage * itemsPerPage, cities.length)} of {cities.length}
-    </p>
-    <div className="flex items-center gap-2">
-      <button
-        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-        disabled={currentPage === 1}
-        className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
-      >
-        ← Prev
-      </button>
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-        <button
-          key={page}
-          onClick={() => setCurrentPage(page)}
-          className={`w-8 h-8 rounded-lg text-xs font-medium transition
-            ${currentPage === page
-              ? "bg-blue-600 text-white"
-              : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
-            }`}
-        >
-          {page}
-        </button>
-      ))}
-      <button
-        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-        disabled={currentPage === totalPages}
-        className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
-      >
-        Next →
-      </button>
-    </div>
-  </div>
-)}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+            <p className="text-white/40 text-sm">
+              Showing {((currentPage - 1) * itemsPerPage) + 1}–{Math.min(currentPage * itemsPerPage, cities.length)} of {cities.length}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+              >
+                ← Prev
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`w-8 h-8 rounded-lg text-xs font-medium transition
+                    ${currentPage === page
+                      ? "bg-blue-600 text-white"
+                      : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
+                    }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
