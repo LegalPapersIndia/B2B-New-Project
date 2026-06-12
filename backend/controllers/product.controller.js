@@ -34,12 +34,13 @@ export const createProduct = async (req, res) => {
     }
 
     // IMAGE CHECK
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "At least 1 image is required",
-      });
-    }
+   const isBulkUpload = req.body.bulkUpload === "true";
+if (!isBulkUpload && (!req.files || req.files.length === 0)) {
+  return res.status(400).json({
+    success: false,
+    message: "At least 1 image is required",
+  });
+}
 
     // ─────────────────────────────────────────
     // SUBSCRIPTION CHECK
@@ -65,18 +66,17 @@ const productStatus = seller.subscriptionActive
 );
 
     // CLOUDINARY UPLOAD
-    const uploadedImages = await Promise.all(
-      req.files.map((file) =>
-        uploadToCloudinary(file.buffer, "b2b/products")
-      )
-    );
-
-    // FORMAT IMAGES
-    const images = uploadedImages.map((result) => ({
-      url: result.secure_url,
-      public_id: result.public_id,
-    }));
-
+  const images = [];
+if (req.files && req.files.length > 0) {
+  const uploadedImages = await Promise.all(
+    req.files.map((file) =>
+      uploadToCloudinary(file.buffer, "b2b/products")
+    )
+  );
+  uploadedImages.forEach((result) => {
+    images.push({ url: result.secure_url, public_id: result.public_id });
+  });
+}
     // UNIQUE SLUG
     const baseSlug = slugify(title, { lower: true, strict: true });
     const uniqueSlug = `${baseSlug}-${Date.now()}`;

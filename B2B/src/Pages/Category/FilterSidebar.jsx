@@ -137,7 +137,7 @@ export default function FilterSidebar({
             )}
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
             {!loadingSubCategories &&
             relatedCategories.length > 0 ? (
               relatedCategories.map((item) => (

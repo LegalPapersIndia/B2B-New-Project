@@ -8,7 +8,8 @@ import {
     deleteRequirement,            
   deleteMultipleRequirements,
   deleteRequirementAdmin, 
-  deleteMultipleRequirementsAdmin
+  deleteMultipleRequirementsAdmin,
+   updateRequirementStatus, 
 } from "../controllers/requirement.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -33,5 +34,8 @@ router.post("/delete-multiple", authMiddleware, deleteMultipleRequirements);
 
 router.delete("/admin/:id", adminAuthMiddleware, deleteRequirementAdmin);
 router.post("/admin/delete-multiple", adminAuthMiddleware, deleteMultipleRequirementsAdmin);
+
+// SELLER — Status update
+router.put("/:id/status", authMiddleware, updateRequirementStatus);
 
 export default router;

@@ -50,10 +50,10 @@ export const postRequirement = async (req, res) => {
     }
 
     // SUBSCRIBED SELLERS FIND
-    const categoryProducts = await Product.find({
-      category,
-      status: "approved",
-    }).distinct("seller");
+    const productQuery = { category, status: "approved" };
+if (subCategory) productQuery.subcategory = subCategory; // ← sirf ye add hua
+
+const categoryProducts = await Product.find(productQuery).distinct("seller");
 
  // Buyer ki location se city/state nikalo
 const locationParts = location
@@ -69,25 +69,27 @@ const subscribedSellers = await Seller.find({
 }).select("name email subscriptionPlan city state");
 
 // Location ke hisaab se sort — same city/state wale upar
-const sortedByLocation = subscribedSellers.sort((a, b) => {
-  const aMatch =
-    (buyerCity  && a.city?.toLowerCase()  === buyerCity.toLowerCase())  ? 1 : 0 +
-    (buyerState && a.state?.toLowerCase() === buyerState.toLowerCase()) ? 1 : 0;
-  const bMatch =
-    (buyerCity  && b.city?.toLowerCase()  === buyerCity.toLowerCase())  ? 1 : 0 +
-    (buyerState && b.state?.toLowerCase() === buyerState.toLowerCase()) ? 1 : 0;
-  return bMatch - aMatch;
-});
+const getTier = (seller) => {
+  const sameCity  = buyerCity  && seller.city?.toLowerCase()  === buyerCity.toLowerCase();
+  const sameState = buyerState && seller.state?.toLowerCase() === buyerState.toLowerCase();
+  if (sameCity)  return 1; // Same City
+  if (sameState) return 2; // Same State
+  return 3;                // Rest of India
+};
 
     // PLAN PRIORITY SE SORT
-  const sortedSellers = sortedByLocation.sort((a, b) => {
-      const pa = PLAN_PRIORITY[a.subscriptionPlan] || 99;
-      const pb = PLAN_PRIORITY[b.subscriptionPlan] || 99;
-      return pa - pb;
-    });
+ const sortedSellers = [...subscribedSellers].sort((a, b) => {
+  const tierA = getTier(a);
+  const tierB = getTier(b);
+  if (tierA !== tierB) return tierA - tierB; // pehle tier compare karo
+  // same tier mein plan priority
+  const pa = PLAN_PRIORITY[a.subscriptionPlan] || 99;
+  const pb = PLAN_PRIORITY[b.subscriptionPlan] || 99;
+  return pa - pb;
+});
 
     // MAX 20 SELLERS
-    const topSellers = sortedSellers.slice(0, 20);
+    const topSellers = sortedSellers;
 
     // ✅ MATCHED SELLERS — sentAt alag alag time
     const matchedSellers = topSellers.map((seller) => {
@@ -135,6 +137,40 @@ const sortedByLocation = subscribedSellers.sort((a, b) => {
 // ─────────────────────────────────────────
 // GET MY REQUIREMENTS (Seller)
 // ─────────────────────────────────────────
+// export const getMyRequirements = async (req, res) => {
+//   try {
+//     const now = new Date();
+
+//     // ✅ SIRF WO DIKHAO JINKA sentAt TIME AA GAYA
+//     const requirements = await Requirement.find({
+//       matchedSellers: {
+//         $elemMatch: {
+//           seller: req.user._id,
+//           sentAt: { $lte: now },
+//         },
+//       },
+//       status: "active",
+//     })
+//       .populate("category",    "name")
+//       .populate("subCategory", "name")
+//       .sort({ createdAt: -1 });
+
+//     return res.status(200).json({
+//       success: true,
+//       count: requirements.length,
+//       requirements,
+//     });
+
+//   } catch (error) {
+//     console.error("getMyRequirements error:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Failed to fetch requirements",
+//     });
+//   }
+// };
+
+
 export const getMyRequirements = async (req, res) => {
   try {
     const now = new Date();
@@ -147,16 +183,27 @@ export const getMyRequirements = async (req, res) => {
           sentAt: { $lte: now },
         },
       },
-      status: "active",
+      // status: "active" — hata diya taaki status change pe disappear na ho
     })
       .populate("category",    "name")
       .populate("subCategory", "name")
       .sort({ createdAt: -1 });
 
+    // Har requirement mein is seller ka sellerStatus inject karo
+    const result = requirements.map((req_) => {
+      const matched = req_.matchedSellers.find(
+        (ms) => ms.seller.toString() === req.user._id.toString()
+      );
+      return {
+        ...req_.toObject(),
+        status: matched?.sellerStatus || "new",
+      };
+    });
+
     return res.status(200).json({
       success: true,
-      count: requirements.length,
-      requirements,
+      count: result.length,
+      requirements: result,
     });
 
   } catch (error) {
@@ -272,5 +319,36 @@ export const deleteMultipleRequirementsAdmin = async (req, res) => {
     return res.status(200).json({ success: true, message: `${ids.length} deleted` });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Delete failed" });
+  }
+};
+
+
+
+export const updateRequirementStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    if (!["new", "viewed", "contacted", "converted", "rejected"].includes(status)) {
+      return res.status(400).json({ success: false, message: "Invalid status" });
+    }
+
+    // Global status nahi — sirf is seller ka status update karo
+    const requirement = await Requirement.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        "matchedSellers.seller": req.user._id,
+      },
+      {
+        $set: { "matchedSellers.$.sellerStatus": status },
+      },
+      { new: true }
+    );
+
+    if (!requirement)
+      return res.status(404).json({ success: false, message: "Not found" });
+
+    res.json({ success: true, requirement });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

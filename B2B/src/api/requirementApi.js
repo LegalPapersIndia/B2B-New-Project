@@ -37,3 +37,14 @@ export const deleteMultipleRequirements = async (ids) => {
   });
   return response.data;
 };
+
+
+
+export const updateRequirementStatus = async (id, status) => {
+  const response = await axios.put(
+    `${API}/requirements/${id}/status`,
+    { status },
+    { headers: authHeader() }
+  );
+  return response.data;
+};

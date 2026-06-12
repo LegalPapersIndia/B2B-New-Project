@@ -37,17 +37,18 @@ const requirementSchema = new mongoose.Schema(
     // ─────────────────────────────────────────
     // SELLERS JO MATCH HAIN
     // ─────────────────────────────────────────
-    matchedSellers: [
-      {
-        seller: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Seller",
-        },
-        plan:      { type: String }, // gold, premium, basic
-        sentAt:    { type: Date, default: Date.now },
-        isViewed:  { type: Boolean, default: false },
-      },
-    ],
+  matchedSellers: [
+  {
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seller",
+    },
+    plan:         { type: String },
+    sentAt:       { type: Date, default: Date.now },
+    isViewed:     { type: Boolean, default: false },
+    sellerStatus: { type: String, enum: ["new", "viewed", "contacted", "converted", "rejected"], default: "new" }, // ← ADD
+  },
+],
 
     // ─────────────────────────────────────────
     // STATUS

@@ -46,6 +46,8 @@ import BlogDetails from "./Pages/BlogDetails";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 import ResetPasswordPage from "./Pages/ResetPasswordPage";
 import SellerProfilePage from "./Pages/seller/SellerProfilePage";
+import BulkUploadProduct from "./Pages/seller/BulkUploadProduct";
+import AllCategories from "./Pages/Category/AllCategories";
 
 function App() {
   return (
@@ -81,8 +83,7 @@ function App() {
             path="/manufacturing-hubs"
             element={<ManufacturingHubsAll />}
           />
-      
-          // PUBLIC ROUTES mein add karo
+          // PUBLIC ROUTES mein add 
           <Route path="/hub/:city" element={<HubPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/seller-profile/:id" element={<SellerPublicProfile />} />
@@ -90,6 +91,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/seller/:sellerId" element={<SellerProfilePage />} />
+          <Route path="/categories" element={<AllCategories />} />
         </Route>
 
         <Route
@@ -106,6 +108,7 @@ function App() {
           <Route path="leads" element={<SellerLeads />} />
           <Route path="profile" element={<SellerProfile />} />
           <Route path="/seller/subscription" element={<Subscription />} />
+          <Route path="/seller/bulk-upload" element={<BulkUploadProduct />} />
         </Route>
       </Routes>
     </BrowserRouter>
