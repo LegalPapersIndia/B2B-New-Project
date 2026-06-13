@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+@keyframes spin-border {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.spin-border-active {
+  animation: spin-border 1.5s linear infinite;
+}

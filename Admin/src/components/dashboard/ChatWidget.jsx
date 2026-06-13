@@ -8,7 +8,7 @@ export default function ChatWidget({ stats }) {
   const [messages, setMessages] = useState([
     {
       role: "bot",
-      text: "Namaste! Main aapka B2B Admin Assistant hoon. Dashboard ke baare mein kuch poochein.",
+      text: "Hello! I am your LPI-B2B admin assistant. Ask me anything about the dashboard.",
       time: new Date(),
     },
   ]);
