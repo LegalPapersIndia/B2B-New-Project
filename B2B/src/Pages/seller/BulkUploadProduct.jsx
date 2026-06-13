@@ -371,12 +371,12 @@ const BulkUploadProduct = () => {
         <AlertPopup type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
       )}
 
-      <main className="flex-1 p-6 overflow-y-auto">
-        <div className="bg-white rounded-[30px] shadow-md border border-gray-100 overflow-hidden">
+      <main className="flex-1 p-3 sm:p-6 overflow-y-auto">
+        <div className="bg-white rounded-[20px] sm:rounded-[30px] shadow-md border border-gray-100 overflow-hidden">
 
           {/* HEADER */}
-          <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-8 py-6">
-            <h2 className="text-2xl font-bold flex items-center gap-3">
+          <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-8 py-5 sm:py-6">
+            <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-3">
               <FaTable /> Bulk Upload Products
             </h2>
             <p className="text-blue-100 text-sm mt-1">
@@ -384,12 +384,12 @@ const BulkUploadProduct = () => {
             </p>
           </div>
 
-          <div className="p-8 space-y-8">
+          <div className="p-4 sm:p-8 space-y-8">
 
             {/* SUBSCRIPTION BANNER */}
             {!isSubscribed && (
               <div className="relative overflow-hidden bg-gradient-to-br from-[#0f172a] to-[#1e3a5f] rounded-3xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-lg">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center flex-shrink-0">
                     <FaCrown className="text-white text-xl" />
                   </div>
@@ -402,7 +402,7 @@ const BulkUploadProduct = () => {
                 </div>
                 <button
                   onClick={() => navigate("/seller/subscription")}
-                  className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-2xl font-bold shadow transition"
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-2xl font-bold shadow transition w-full md:w-auto"
                 >
                   <FaCrown className="inline mr-2" />Subscribe Now
                 </button>
@@ -410,7 +410,7 @@ const BulkUploadProduct = () => {
             )}
 
             {/* STEP 1: DOWNLOAD TEMPLATE */}
-            <div className="border border-dashed border-blue-200 rounded-3xl p-6 bg-blue-50">
+            <div className="border border-dashed border-blue-200 rounded-3xl p-4 sm:p-6 bg-blue-50">
               <div className="flex items-start gap-4">
                 <div className="h-10 w-10 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-blue-700 font-bold">1</span>
@@ -423,7 +423,7 @@ const BulkUploadProduct = () => {
                   <div className="flex flex-wrap gap-3 mt-4">
                     <button
                       onClick={downloadTemplate}
-                      className="flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-2xl font-semibold shadow transition"
+                      className="flex items-center justify-center gap-2 bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-2xl font-semibold shadow transition w-full sm:w-auto"
                     >
                       <FaDownload /> Download Template (.xlsx)
                     </button>
@@ -440,7 +440,7 @@ const BulkUploadProduct = () => {
             </div>
 
             {/* STEP 2: UPLOAD */}
-            <div className="border border-dashed border-gray-200 rounded-3xl p-6">
+            <div className="border border-dashed border-gray-200 rounded-3xl p-4 sm:p-6">
               <div className="flex items-start gap-4">
                 <div className="h-10 w-10 bg-gray-100 rounded-2xl flex items-center justify-center flex-shrink-0 mt-1">
                   <span className="text-gray-700 font-bold">2</span>
@@ -452,14 +452,14 @@ const BulkUploadProduct = () => {
                     onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
-                    className={`mt-4 border-2 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center cursor-pointer transition ${
+                    className={`mt-4 border-2 border-dashed rounded-3xl p-6 sm:p-10 flex flex-col items-center justify-center cursor-pointer transition text-center ${
                       dragOver
                         ? "border-orange-500 bg-orange-50"
                         : "border-gray-300 hover:border-orange-500 bg-gray-50 hover:bg-orange-50"
                     }`}
                   >
                     <FaCloudUploadAlt className="text-5xl text-orange-500 mb-3" />
-                    <p className="font-semibold text-gray-700">
+                    <p className="font-semibold text-gray-700 break-all">
                       {fileName ? `📄 ${fileName}` : "Click or drag & drop your Excel file here"}
                     </p>
                     <p className="text-sm text-gray-400 mt-1">.xlsx or .xls — Max 500 products</p>
@@ -479,7 +479,7 @@ const BulkUploadProduct = () => {
               <div>
                 {/* Summary bar */}
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <h3 className="font-bold text-gray-800 text-lg flex items-center gap-2">
                       <FaTable className="text-blue-600" /> Preview ({rows.length} rows)
                     </h3>
@@ -504,7 +504,7 @@ const BulkUploadProduct = () => {
 
                 {/* Table */}
                 <div className="overflow-x-auto rounded-3xl border border-gray-200">
-                  <table className="w-full text-sm">
+                  <table className="w-full text-sm min-w-[900px]">
                     <thead>
                       <tr className="bg-gray-50 text-gray-600 text-xs uppercase">
                         <th className="px-4 py-3 text-left font-semibold">#</th>
@@ -572,11 +572,11 @@ const BulkUploadProduct = () => {
 
                 {/* Submit button */}
                 {!submitted && (
-                  <div className="flex gap-4 mt-6">
+                  <div className="flex flex-col sm:flex-row gap-4 mt-6">
                     <button
                       onClick={handleSubmit}
                       disabled={loading || validCount === 0}
-                      className="flex items-center gap-2 bg-[#F54900] hover:bg-[#d63f00] disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-2xl font-bold shadow transition"
+                      className="flex items-center justify-center gap-2 bg-[#F54900] hover:bg-[#d63f00] disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-2xl font-bold shadow transition w-full sm:w-auto"
                     >
                       {loading ? (
                         <><FaSpinner className="animate-spin" /> Submitting...</>
@@ -586,7 +586,7 @@ const BulkUploadProduct = () => {
                     </button>
                     <button
                       onClick={() => navigate(-1)}
-                      className="border px-8 py-4 rounded-2xl font-semibold hover:border-blue-800 hover:text-blue-800 transition"
+                      className="border px-8 py-4 rounded-2xl font-semibold hover:border-blue-800 hover:text-blue-800 transition w-full sm:w-auto"
                     >
                       Cancel
                     </button>
@@ -595,16 +595,16 @@ const BulkUploadProduct = () => {
 
                 {/* Post submit actions */}
                 {submitted && (
-                  <div className="flex flex-wrap gap-4 mt-6">
+                  <div className="flex flex-col sm:flex-row gap-4 mt-6">
                     <button
                       onClick={() => navigate("/seller/products")}
-                      className="bg-blue-800 hover:bg-blue-900 text-white px-8 py-4 rounded-2xl font-bold shadow transition"
+                      className="bg-blue-800 hover:bg-blue-900 text-white px-8 py-4 rounded-2xl font-bold shadow transition w-full sm:w-auto"
                     >
                       View My Products
                     </button>
                     <button
                       onClick={() => { setRows([]); setFileName(""); setSubmitted(false); }}
-                      className="border px-8 py-4 rounded-2xl font-semibold hover:border-blue-800 hover:text-blue-800 transition"
+                      className="border px-8 py-4 rounded-2xl font-semibold hover:border-blue-800 hover:text-blue-800 transition w-full sm:w-auto"
                     >
                       Upload Another File
                     </button>

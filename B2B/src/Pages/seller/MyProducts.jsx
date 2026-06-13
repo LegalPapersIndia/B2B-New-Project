@@ -1,5 +1,3 @@
-
-
 // src/pages/seller/MyProducts.jsx
 
 import React, { useState, useEffect } from "react";
@@ -144,7 +142,7 @@ const MyProducts = () => {
   // RENDER
   // ─────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-3 sm:p-6">
 
       {/* ERROR */}
       {error && (
@@ -154,17 +152,17 @@ const MyProducts = () => {
       )}
 
       {/* TABLE CARD */}
-      <div className="bg-white rounded-3xl shadow-md overflow-hidden border border-gray-100">
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-md overflow-hidden border border-gray-100">
 
         {/* HEADER */}
-        <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">My Products</h2>
-          <span className="text-blue-200 text-sm">{products.length} products</span>
+        <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
+          <h2 className="text-lg sm:text-xl font-semibold">My Products</h2>
+          <span className="text-blue-200 text-xs sm:text-sm whitespace-nowrap">{products.length} products</span>
         </div>
 
         {/* EMPTY STATE */}
         {products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-20 text-gray-400 px-4 text-center">
             <FaBoxOpen className="text-6xl mb-4 text-gray-300" />
             <p className="text-lg font-medium">No products yet</p>
             <p className="text-sm mt-1">Add your first product to get started</p>
@@ -174,7 +172,7 @@ const MyProducts = () => {
           <>
             {/* TABLE */}
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
+              <table className="w-full text-sm text-left min-w-[700px]">
 
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
@@ -287,11 +285,11 @@ const MyProducts = () => {
 
             {/* ── PAGINATION ── */}
             {totalPages > 1 && (
-              <div className="px-6 py-4 border-t flex items-center justify-between text-sm">
+              <div className="px-4 sm:px-6 py-4 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
                 <p className="text-gray-500">
                   Showing {startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, products.length)} of {products.length} products
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <button
                     onClick={() => setCurrentPage((p) => p - 1)}
                     disabled={currentPage === 1}
@@ -333,12 +331,12 @@ const MyProducts = () => {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden">
 
-            <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-6 py-4 flex justify-between items-center">
+            <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-6 py-4 flex justify-between items-center">
               <h2 className="text-lg font-semibold">Product Details</h2>
               <button onClick={() => setSelectedProduct(null)} className="text-white hover:text-blue-200 text-xl font-bold">✕</button>
             </div>
 
-            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 space-y-4 max-h-[70vh] overflow-y-auto">
 
               {selectedProduct.images?.length > 0 && (
                 <div className="flex gap-3 flex-wrap">
@@ -401,7 +399,7 @@ const MyProducts = () => {
 
             </div>
 
-            <div className="px-6 py-4 border-t flex justify-end">
+            <div className="px-4 sm:px-6 py-4 border-t flex justify-end">
               <button
                 onClick={() => setSelectedProduct(null)}
                 className="px-5 py-2 border rounded-xl text-sm hover:border-blue-800 hover:text-blue-800 transition"

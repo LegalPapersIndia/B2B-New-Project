@@ -115,13 +115,13 @@ export default function CategoryDetails() {
               {category.desc}
             </p>
 
-            <div className="flex flex-wrap gap-4 mt-7">
-              <button className="bg-orange-600 hover:bg-orange-700 transition px-6 py-3 rounded-2xl font-semibold">
-                Get Best Price
-              </button>
-              <button className="bg-white text-black hover:bg-gray-200 transition px-6 py-3 rounded-2xl font-semibold">
-                Contact Suppliers
-              </button>
+          <div className="flex flex-wrap gap-4 mt-7"> {/*  UPDATED - buttons removed, stats shown */}
+              <span className="bg-white/10 backdrop-blur-sm border border-white/20 px-6 py-3 rounded-2xl font-semibold">
+                {subCategories.length} Subcategories
+              </span>
+              <span className="bg-white/10 backdrop-blur-sm border border-white/20 px-6 py-3 rounded-2xl font-semibold">
+                {category.productCount || 0}+ Products
+              </span>
             </div>
 
           </div>

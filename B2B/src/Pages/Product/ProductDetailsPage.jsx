@@ -81,16 +81,17 @@ export default function ProductDetailsPage() {
       <div className="min-h-screen bg-gray-50">
 
         {/* BREADCRUMB */}
-        <div className="bg-white border-b border-gray-200">
+        {/* BREADCRUMB */}
+        <div className="bg-gradient-to-r from-blue-950 to-blue-900 border-b border-gray-200"> {/* ✅ UPDATED */}
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center gap-2 text-sm flex-wrap">
-              <Link to="/" className="text-gray-500 hover:text-blue-800 transition">Home</Link>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
-              <Link to={`/category/${categorySlug}`} className="text-gray-500 hover:text-blue-800 capitalize transition">{categorySlug?.replace(/-/g, " ")}</Link>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
-              <Link to={`/category/${categorySlug}/subcategory/${subcategorySlug}`} className="text-gray-500 hover:text-blue-800 capitalize transition">{subcategorySlug?.replace(/-/g, " ")}</Link>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
-              <span className="text-gray-900 font-medium line-clamp-1">{product.title}</span>
+              <Link to="/" className="text-blue-300/70 hover:text-white transition">Home</Link> {/* ✅ UPDATED */}
+              <ChevronRight className="w-4 h-4 text-blue-300/50" /> {/* ✅ UPDATED */}
+              <Link to={`/category/${categorySlug}`} className="text-blue-300/70 hover:text-white capitalize transition">{categorySlug?.replace(/-/g, " ")}</Link> {/* ✅ UPDATED */}
+              <ChevronRight className="w-4 h-4 text-blue-300/50" /> {/* ✅ UPDATED */}
+              <Link to={`/category/${categorySlug}/subcategory/${subcategorySlug}`} className="text-blue-300/70 hover:text-white capitalize transition">{subcategorySlug?.replace(/-/g, " ")}</Link> {/* ✅ UPDATED */}
+              <ChevronRight className="w-4 h-4 text-blue-300/50" /> {/* ✅ UPDATED */}
+              <span className="text-white font-medium line-clamp-1">{product.title}</span> {/* ✅ UPDATED */}
             </div>
           </div>
         </div>
@@ -249,7 +250,7 @@ export default function ProductDetailsPage() {
             </div>
           )}
 
-          {/* ── SUPPLIER INFO — ab Link hai, modal nahi ── */}
+         
           <Link
             to={`/seller/${product.seller?._id}`}
             className="mt-6 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 flex items-center gap-4 hover:shadow-md transition group "
@@ -282,7 +283,7 @@ export default function ProductDetailsPage() {
           </Link>
 
           {/* ── RELATED PRODUCTS ── */}
-          {relatedProducts.length > 0 && (
+         {relatedProducts.length > 0 && (
             <div className="mt-8">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="text-2xl font-bold text-slate-900">
@@ -293,49 +294,49 @@ export default function ProductDetailsPage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"> {/* ✅ UPDATED - more columns, smaller gap */}
                 {relatedProducts.map((p) => (
-                  <div key={p._id} className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col">
+                  <div key={p._id} className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col"> {/* ✅ UPDATED - shadow-2xl -> shadow-xl */}
 
                     <div className="relative overflow-hidden">
                       {p.images?.[0]?.url ? (
                         <img
                           src={p.images[0].url}
                           alt={p.title}
-                          className="h-52 w-full object-contain bg-gray-50 group-hover:scale-105 transition duration-700"
+                          className="h-36 w-full object-contain bg-gray-50 group-hover:scale-105 transition duration-700" /* ✅ UPDATED - h-52 -> h-36 */
                         />
                       ) : (
-                        <div className="h-52 w-full bg-gray-100 flex items-center justify-center text-gray-300">No Image</div>
+                        <div className="h-36 w-full bg-gray-100 flex items-center justify-center text-gray-300 text-xs">No Image</div> /* ✅ UPDATED - h-52 -> h-36 */
                       )}
-                      <div className="absolute top-3 left-3 bg-blue-800 text-white text-xs px-2 py-1 rounded-full">Featured</div>
+                      <div className="absolute top-2 left-2 bg-blue-800 text-white text-[10px] px-2 py-0.5 rounded-full">Featured</div> {/* ✅ UPDATED - smaller badge */}
                     </div>
 
-                    <div className="p-5 flex flex-col flex-1">
-                      <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-800 line-clamp-2 transition">
+                    <div className="p-3 flex flex-col flex-1"> {/* ✅ UPDATED - p-5 -> p-3 */}
+                      <h3 className="text-sm font-bold text-slate-900 mb-1 group-hover:text-blue-800 line-clamp-2 transition"> {/* ✅ UPDATED - text-lg -> text-sm */}
                         {p.title}
                       </h3>
-                      <p className="text-slate-600 text-sm mb-1">
+                      <p className="text-slate-500 text-xs mb-1 line-clamp-1"> {/* ✅ UPDATED - text-sm -> text-xs */}
                         {p.seller?.companyName || p.seller?.name || "—"}
                       </p>
                       {(p.seller?.city || p.seller?.state) && (
-                        <div className="flex items-center gap-1.5 text-slate-500 text-sm mb-4">
-                          <MapPin className="w-4 h-4 text-orange-600 flex-shrink-0" />
-                          {[p.seller?.city, p.seller?.state].filter(Boolean).join(", ")}
+                        <div className="flex items-center gap-1 text-slate-400 text-xs mb-2"> {/* ✅ UPDATED - smaller, less margin */}
+                          <MapPin className="w-3 h-3 text-orange-600 flex-shrink-0" />
+                          <span className="line-clamp-1">{[p.seller?.city, p.seller?.state].filter(Boolean).join(", ")}</span>
                         </div>
                       )}
                       <div className="mt-auto">
-                        <div className="mb-4">
-                          <span className="text-2xl font-bold text-blue-800">
+                        <div className="mb-2"> {/* ✅ UPDATED - mb-4 -> mb-2 */}
+                          <span className="text-lg font-bold text-blue-800"> {/* ✅ UPDATED - text-2xl -> text-lg */}
                             ₹{p.price?.toLocaleString()}
                           </span>
-                          <span className="text-gray-400 text-sm ml-1">/ {p.unit}</span>
+                          <span className="text-gray-400 text-xs ml-1">/ {p.unit}</span>
                         </div>
-                        <p className="text-xs text-gray-400 mb-4">MOQ: {p.moq} {p.unit}</p>
+                        <p className="text-[11px] text-gray-400 mb-2">MOQ: {p.moq} {p.unit}</p> {/* ✅ UPDATED - mb-4 -> mb-2, text-xs -> text-[11px] */}
                         <Link
                           to={`/category/${categorySlug}/subcategory/${subcategorySlug}/product/${p.slug}`}
-                          className="w-full bg-orange-600 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold transition flex items-center justify-center gap-2"
+                          className="w-full bg-orange-600 hover:bg-blue-800 text-white py-2 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-1.5" /* ✅ UPDATED - py-3 -> py-2, text-sm */
                         >
-                          <ShoppingBag className="w-4 h-4" />
+                          <ShoppingBag className="w-3.5 h-3.5" /> {/* ✅ UPDATED - smaller icon */}
                           View Details
                         </Link>
                       </div>
