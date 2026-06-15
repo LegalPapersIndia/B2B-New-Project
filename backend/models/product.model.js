@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema(
       required: [true, "Description is required"],
     },
 
+    keyFeatures: {
+  type: String,
+  default: "",
+},
     // ─────────────────────────────────────────
     // CATEGORY
     // ─────────────────────────────────────────

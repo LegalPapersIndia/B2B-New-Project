@@ -23,6 +23,7 @@ export const createProduct = async (req, res) => {
       unit,
       brand,
       stock,
+       keyFeatures,
     } = req.body;
 
     // VALIDATION
@@ -87,6 +88,7 @@ if (req.files && req.files.length > 0) {
       slug: uniqueSlug,
       shortDesc,
       description,
+       keyFeatures: keyFeatures || "",
       category,
       subcategory,
       price,
@@ -569,7 +571,6 @@ export const getProductsByCity = async (req, res) => {
 };
 
 
-
 export const updateProduct = async (req, res) => {
   try {
     const product = await Product.findOne({
@@ -588,6 +589,9 @@ export const updateProduct = async (req, res) => {
       title,
       shortDesc,
       description,
+      keyFeatures,
+      category,
+      subcategory,
       price,
       moq,
       unit,
@@ -599,6 +603,9 @@ export const updateProduct = async (req, res) => {
     if (title)       product.title       = title;
     if (shortDesc)   product.shortDesc   = shortDesc;
     if (description) product.description = description;
+    if (keyFeatures !== undefined) product.keyFeatures = keyFeatures;
+    if (category)    product.category    = category;
+    if (subcategory) product.subcategory = subcategory;
     if (price)       product.price       = price;
     if (moq)         product.moq         = moq;
     if (unit)        product.unit        = unit;
@@ -630,6 +637,11 @@ export const updateProduct = async (req, res) => {
     }
 
     await product.save();
+
+    await product.populate([
+      { path: "category", select: "name slug" },
+      { path: "subcategory", select: "name slug" },
+    ]);
 
     return res.status(200).json({
       success: true,

@@ -6,5 +6,6 @@
 }
 
 .spin-border-active {
-  animation: spin-border 1.5s linear infinite;
+  animation: spin-border 2s linear infinite;
 }
+

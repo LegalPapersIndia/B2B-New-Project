@@ -9,27 +9,26 @@ import EditProductModal from "../../components/seller/EditProductModal";
 const ITEMS_PER_PAGE = 10;
 
 const MyProducts = () => {
-
   // ─────────────────────────────────────────
   // STATES
   // ─────────────────────────────────────────
-  const [products, setProducts]           = useState([]);
-  const [loading, setLoading]             = useState(true);
-  const [error, setError]                 = useState("");
-  const [deletingId, setDeletingId]       = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [editProduct, setEditProduct]     = useState(null);
+  const [editProduct, setEditProduct] = useState(null);
 
   // PAGINATION
-  const [currentPage, setCurrentPage]     = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // ALERT POPUP
   const [alert, setAlert] = useState({
-    show:    false,
-    type:    "error",
+    show: false,
+    type: "error",
     message: "",
-    mode:    "info",      // "info" | "confirm"
-    confirmId: null,      // delete ke liye id store
+    mode: "info", // "info" | "confirm"
+    confirmId: null, // delete ke liye id store
   });
 
   // ─────────────────────────────────────────
@@ -58,8 +57,8 @@ const MyProducts = () => {
   // ─────────────────────────────────────────
   // PAGINATION LOGIC
   // ─────────────────────────────────────────
-  const totalPages   = Math.ceil(products.length / ITEMS_PER_PAGE);
-  const startIndex   = (currentPage - 1) * ITEMS_PER_PAGE;
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentItems = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   // ─────────────────────────────────────────
@@ -67,10 +66,11 @@ const MyProducts = () => {
   // ─────────────────────────────────────────
   const handleDeleteClick = (id) => {
     setAlert({
-      show:      true,
-      type:      "warning",
-      message:   "Are you sure you want to delete this product? This action cannot be undone.",
-      mode:      "confirm",
+      show: true,
+      type: "warning",
+      message:
+        "Are you sure you want to delete this product? This action cannot be undone.",
+      mode: "confirm",
       confirmId: id,
     });
   };
@@ -78,7 +78,13 @@ const MyProducts = () => {
   // DELETE — Step 2: confirmed
   const handleDeleteConfirm = async () => {
     const id = alert.confirmId;
-    setAlert({ show: false, type: "error", message: "", mode: "info", confirmId: null });
+    setAlert({
+      show: false,
+      type: "error",
+      message: "",
+      mode: "info",
+      confirmId: null,
+    });
 
     try {
       setDeletingId(id);
@@ -90,25 +96,43 @@ const MyProducts = () => {
         const newPages = Math.ceil(newTotal / ITEMS_PER_PAGE);
         if (currentPage > newPages && newPages > 0) setCurrentPage(newPages);
       } else {
-        setAlert({ show: true, type: "error", message: data.message || "Delete failed", mode: "info", confirmId: null });
+        setAlert({
+          show: true,
+          type: "error",
+          message: data.message || "Delete failed",
+          mode: "info",
+          confirmId: null,
+        });
       }
     } catch (err) {
       console.error(err);
-      setAlert({ show: true, type: "error", message: "Server error. Please try again.", mode: "info", confirmId: null });
+      setAlert({
+        show: true,
+        type: "error",
+        message: "Server error. Please try again.",
+        mode: "info",
+        confirmId: null,
+      });
     } finally {
       setDeletingId(null);
     }
   };
 
   const closeAlert = () =>
-    setAlert({ show: false, type: "error", message: "", mode: "info", confirmId: null });
+    setAlert({
+      show: false,
+      type: "error",
+      message: "",
+      mode: "info",
+      confirmId: null,
+    });
 
   // ─────────────────────────────────────────
   // EDIT — product updated callback
   // ─────────────────────────────────────────
   const handleProductUpdated = (updatedProduct) => {
     setProducts((prev) =>
-      prev.map((p) => (p._id === updatedProduct._id ? updatedProduct : p))
+      prev.map((p) => (p._id === updatedProduct._id ? updatedProduct : p)),
     );
   };
 
@@ -117,10 +141,14 @@ const MyProducts = () => {
   // ─────────────────────────────────────────
   const getStatusStyle = (status) => {
     switch (status) {
-      case "approved": return "bg-green-100 text-green-700";
-      case "pending":  return "bg-yellow-100 text-yellow-700";
-      case "rejected": return "bg-red-100 text-red-700";
-      default:         return "bg-gray-100 text-gray-700";
+      case "approved":
+        return "bg-green-100 text-green-700";
+      case "pending":
+        return "bg-yellow-100 text-yellow-700";
+      case "rejected":
+        return "bg-red-100 text-red-700";
+      default:
+        return "bg-gray-100 text-gray-700";
     }
   };
 
@@ -143,7 +171,6 @@ const MyProducts = () => {
   // ─────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-100 p-3 sm:p-6">
-
       {/* ERROR */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 px-5 py-3 rounded-2xl text-sm mb-4">
@@ -153,11 +180,12 @@ const MyProducts = () => {
 
       {/* TABLE CARD */}
       <div className="bg-white rounded-2xl sm:rounded-3xl shadow-md overflow-hidden border border-gray-100">
-
         {/* HEADER */}
         <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
           <h2 className="text-lg sm:text-xl font-semibold">My Products</h2>
-          <span className="text-blue-200 text-xs sm:text-sm whitespace-nowrap">{products.length} products</span>
+          <span className="text-blue-200 text-xs sm:text-sm whitespace-nowrap">
+            {products.length} products
+          </span>
         </div>
 
         {/* EMPTY STATE */}
@@ -165,15 +193,15 @@ const MyProducts = () => {
           <div className="flex flex-col items-center justify-center py-20 text-gray-400 px-4 text-center">
             <FaBoxOpen className="text-6xl mb-4 text-gray-300" />
             <p className="text-lg font-medium">No products yet</p>
-            <p className="text-sm mt-1">Add your first product to get started</p>
+            <p className="text-sm mt-1">
+              Add your first product to get started
+            </p>
           </div>
         ) : (
-
           <>
             {/* TABLE */}
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left min-w-[700px]">
-
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
                     <th className="p-4">Image</th>
@@ -188,8 +216,10 @@ const MyProducts = () => {
 
                 <tbody>
                   {currentItems.map((item) => (
-                    <tr key={item._id} className="border-b hover:bg-gray-50 transition">
-
+                    <tr
+                      key={item._id}
+                      className="border-b hover:bg-gray-50 transition"
+                    >
                       {/* IMAGE */}
                       <td className="p-4">
                         {item.images?.[0]?.url ? (
@@ -207,15 +237,21 @@ const MyProducts = () => {
 
                       {/* TITLE */}
                       <td className="p-4">
-                        <p className="font-medium text-gray-800">{item.title}</p>
-                        {item.brand && <p className="text-xs text-gray-400">{item.brand}</p>}
+                        <p className="font-medium text-gray-800">
+                          {item.title}
+                        </p>
+                        {item.brand && (
+                          <p className="text-xs text-gray-400">{item.brand}</p>
+                        )}
                       </td>
 
                       {/* CATEGORY */}
                       <td className="p-4 text-gray-600">
                         <p>{item.category?.name || "—"}</p>
                         {item.subcategory?.name && (
-                          <p className="text-xs text-gray-400">{item.subcategory.name}</p>
+                          <p className="text-xs text-gray-400">
+                            {item.subcategory.name}
+                          </p>
                         )}
                       </td>
 
@@ -231,7 +267,9 @@ const MyProducts = () => {
 
                       {/* STATUS */}
                       <td className="p-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${getStatusStyle(item.status)}`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${getStatusStyle(item.status)}`}
+                        >
                           {item.status}
                         </span>
                         {item.status === "rejected" && item.rejectionReason && (
@@ -244,7 +282,6 @@ const MyProducts = () => {
                       {/* ACTIONS */}
                       <td className="p-4">
                         <div className="flex justify-center gap-3">
-
                           {/* VIEW */}
                           <button
                             onClick={() => setSelectedProduct(item)}
@@ -272,14 +309,11 @@ const MyProducts = () => {
                           >
                             <FaTrash />
                           </button>
-
                         </div>
                       </td>
-
                     </tr>
                   ))}
                 </tbody>
-
               </table>
             </div>
 
@@ -287,7 +321,9 @@ const MyProducts = () => {
             {totalPages > 1 && (
               <div className="px-4 sm:px-6 py-4 border-t flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
                 <p className="text-gray-500">
-                  Showing {startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, products.length)} of {products.length} products
+                  Showing {startIndex + 1}–
+                  {Math.min(startIndex + ITEMS_PER_PAGE, products.length)} of{" "}
+                  {products.length} products
                 </p>
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
@@ -298,19 +334,22 @@ const MyProducts = () => {
                     ← Prev
                   </button>
 
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-9 h-9 rounded-xl border text-sm font-medium transition
-                        ${currentPage === page
-                          ? "bg-blue-800 text-white border-blue-800"
-                          : "border-gray-200 text-gray-600 hover:border-blue-800 hover:text-blue-800"
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-9 h-9 rounded-xl border text-sm font-medium transition
+                        ${
+                          currentPage === page
+                            ? "bg-blue-800 text-white border-blue-800"
+                            : "border-gray-200 text-gray-600 hover:border-blue-800 hover:text-blue-800"
                         }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
+                      >
+                        {page}
+                      </button>
+                    ),
+                  )}
 
                   <button
                     onClick={() => setCurrentPage((p) => p + 1)}
@@ -330,18 +369,26 @@ const MyProducts = () => {
       {selectedProduct && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden">
-
             <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white px-4 sm:px-6 py-4 flex justify-between items-center">
               <h2 className="text-lg font-semibold">Product Details</h2>
-              <button onClick={() => setSelectedProduct(null)} className="text-white hover:text-blue-200 text-xl font-bold">✕</button>
+              <button
+                onClick={() => setSelectedProduct(null)}
+                className="text-white hover:text-blue-200 text-xl font-bold"
+              >
+                ✕
+              </button>
             </div>
 
             <div className="p-4 sm:p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-
               {selectedProduct.images?.length > 0 && (
                 <div className="flex gap-3 flex-wrap">
                   {selectedProduct.images.map((img, i) => (
-                    <img key={i} src={img.url} alt={`img-${i}`} className="h-20 w-20 object-cover rounded-xl border" />
+                    <img
+                      key={i}
+                      src={img.url}
+                      alt={`img-${i}`}
+                      className="h-20 w-20 object-cover rounded-xl border"
+                    />
                   ))}
                 </div>
               )}
@@ -353,25 +400,35 @@ const MyProducts = () => {
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Status</p>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${getStatusStyle(selectedProduct.status)}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${getStatusStyle(selectedProduct.status)}`}
+                  >
                     {selectedProduct.status}
                   </span>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Category</p>
-                  <p className="font-medium">{selectedProduct.category?.name || "—"}</p>
+                  <p className="font-medium">
+                    {selectedProduct.category?.name || "—"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Sub Category</p>
-                  <p className="font-medium">{selectedProduct.subcategory?.name || "—"}</p>
+                  <p className="font-medium">
+                    {selectedProduct.subcategory?.name || "—"}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Price</p>
-                  <p className="font-medium">₹{selectedProduct.price?.toLocaleString()}</p>
+                  <p className="font-medium">
+                    ₹{selectedProduct.price?.toLocaleString()}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs mb-1">MOQ</p>
-                  <p className="font-medium">{selectedProduct.moq} {selectedProduct.unit}</p>
+                  <p className="font-medium">
+                    {selectedProduct.moq} {selectedProduct.unit}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Brand</p>
@@ -386,17 +443,36 @@ const MyProducts = () => {
               {selectedProduct.description && (
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Description</p>
-                  <p className="text-sm text-gray-700 leading-relaxed">{selectedProduct.description}</p>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {selectedProduct.description}
+                  </p>
                 </div>
               )}
-
-              {selectedProduct.status === "rejected" && selectedProduct.rejectionReason && (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-3">
-                  <p className="text-xs text-red-400 mb-1">Rejection Reason</p>
-                  <p className="text-sm text-red-600">{selectedProduct.rejectionReason}</p>
+              {selectedProduct.keyFeatures && (
+                <div>
+                  <p className="text-gray-400 text-xs mb-1">Key Features</p>
+                  <ul className="text-sm text-gray-700 leading-relaxed list-disc pl-5 space-y-1">
+                    {selectedProduct.keyFeatures
+                      .split("\n")
+                      .map((line) => line.trim())
+                      .filter(Boolean)
+                      .map((feature, i) => (
+                        <li key={i}>{feature}</li>
+                      ))}
+                  </ul>
                 </div>
               )}
-
+              {selectedProduct.status === "rejected" &&
+                selectedProduct.rejectionReason && (
+                  <div className="bg-red-50 border border-red-200 rounded-xl p-3">
+                    <p className="text-xs text-red-400 mb-1">
+                      Rejection Reason
+                    </p>
+                    <p className="text-sm text-red-600">
+                      {selectedProduct.rejectionReason}
+                    </p>
+                  </div>
+                )}
             </div>
 
             <div className="px-4 sm:px-6 py-4 border-t flex justify-end">
@@ -447,7 +523,6 @@ const MyProducts = () => {
           )}
         </AlertPopup>
       )}
-
     </div>
   );
 };
