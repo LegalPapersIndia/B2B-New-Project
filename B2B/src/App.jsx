@@ -48,7 +48,7 @@ import ResetPasswordPage from "./Pages/ResetPasswordPage";
 import SellerProfilePage from "./Pages/seller/SellerProfilePage";
 import BulkUploadProduct from "./Pages/seller/BulkUploadProduct";
 import AllCategories from "./Pages/Category/AllCategories";
-import SellerMyRequirement from "./Pages/seller/SellerMyRequirement";
+import SellerMyRequirement from "./Pages/seller/Sellermyrequirement";
 
 function App() {
   return (
