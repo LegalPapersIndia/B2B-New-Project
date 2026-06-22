@@ -50,6 +50,12 @@ const requirementSchema = new mongoose.Schema(
   },
 ],
 
+postedBySeller: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "Seller",
+  default: null,
+},
+
     // ─────────────────────────────────────────
     // STATUS
     // ─────────────────────────────────────────

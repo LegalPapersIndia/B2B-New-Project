@@ -23,4 +23,3 @@ export const forgotPasswordApi = (email) =>
 export const resetPasswordApi = (data) =>
   API.post("/seller/reset-password", data);
  
-

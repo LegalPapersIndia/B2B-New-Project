@@ -315,3 +315,86 @@ export const getMySubscription = async (req, res) => {
     return res.status(500).json({ success: false, message: "Failed to fetch subscription" });
   }
 };
+
+
+// ─────────────────────────────────────────
+// ADMIN — MANUALLY ASSIGN PLAN TO SELLER
+// ─────────────────────────────────────────
+export const adminAssignPlan = async (req, res) => {
+  try {
+    const { sellerId } = req.params;
+    const { plan } = req.body;
+
+    // VALIDATION
+    if (!plan || !["basic", "premium", "gold"].includes(plan)) {
+      return res.status(400).json({ success: false, message: "Invalid plan" });
+    }
+
+    const seller = await Seller.findById(sellerId);
+    if (!seller) {
+      return res.status(404).json({ success: false, message: "Seller not found" });
+    }
+
+    // ✅ DURATION + AMOUNT — DB se same Plan collection se (jaisa verifyPayment karta hai)
+    const planData = await Plan.findOne({ key: plan });
+    if (!planData) {
+      return res.status(400).json({ success: false, message: "Plan not configured" });
+    }
+    const duration = planData.duration ?? 30;
+
+    // ✅ DATES CALCULATE — same formula jo verifyPayment mein hai
+    const startDate  = new Date();
+    const expireDate = new Date();
+    expireDate.setDate(expireDate.getDate() + duration);
+
+    // ✅ SUBSCRIPTION RECORD CREATE — payment ke bina
+    const subscription = await Subscription.create({
+      seller:        sellerId,
+      plan,
+      amount:        planData.amount,
+      paymentStatus: "admin_assigned",
+      isActive:      true,
+      startDate,
+      expireDate,
+    });
+
+    // ✅ SELLER UPDATE — same jaisa verifyPayment karta hai
+    await Seller.findByIdAndUpdate(sellerId, {
+      subscriptionActive: true,
+      accountStatus:      "active",
+      subscriptionPlan:   plan,
+      subscriptionExpire: expireDate,
+    });
+
+    // ✅ PRODUCTS UPDATE — same jaisa verifyPayment karta hai
+    const Product = (await import("../models/product.model.js")).default;
+    const isFeatured = plan === "gold";
+
+    await Product.updateMany(
+      { seller: sellerId, status: "pending" },
+      { status: "approved", featured: isFeatured }
+    );
+
+    await Product.updateMany(
+      { seller: sellerId, status: "approved" },
+      { featured: isFeatured }
+    );
+
+    // ✅ NOTIFICATION
+    await Notification.create({
+      type: "new_subscription",
+      message: `Admin assigned ${plan} plan to seller`,
+      data: { sellerId, plan },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `${plan} plan assigned successfully to seller!`,
+      subscription,
+    });
+
+  } catch (error) {
+    console.error("adminAssignPlan error:", error);
+    return res.status(500).json({ success: false, message: "Failed to assign plan" });
+  }
+};

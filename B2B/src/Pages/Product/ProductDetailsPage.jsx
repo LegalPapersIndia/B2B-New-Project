@@ -512,13 +512,7 @@ export default function ProductDetailsPage() {
 
               {/* COMPANY */}
               <p className="text-slate-600 text-sm mb-1 font-medium">
-                {product.seller?.companyWebsite ? (
-                  <a href={product.seller.companyWebsite} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
-                    {product.seller?.companyName || product.seller?.name || "—"}
-                  </a>
-                ) : (
-                  <span className="text-slate-600">{product.seller?.companyName || product.seller?.name || "—"}</span>
-                )}
+                <span className="text-slate-600">{product.seller?.companyName || product.seller?.name || "—"}</span>
               </p>
 
               {/* LOCATION */}

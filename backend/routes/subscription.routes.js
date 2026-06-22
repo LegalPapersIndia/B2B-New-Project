@@ -8,6 +8,8 @@ import {
   createOrder,
   verifyPayment,
   getMySubscription,
+  adminAssignPlan,
+
 } from "../controllers/subscription.controller.js";
 import Plan from "../models/Plan.model.js";
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -48,6 +50,11 @@ router.get("/admin/plans", adminAuthMiddleware, async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
+// ─────────────────────────────────────────
+// ADMIN — Manually plan assign karo seller ko
+// ─────────────────────────────────────────
+router.post("/admin/assign-plan/:sellerId", adminAuthMiddleware, adminAssignPlan);
 
 // UPDATE PLAN — price + duration
 router.put("/admin/plans/:id", adminAuthMiddleware, async (req, res) => {

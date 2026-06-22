@@ -457,15 +457,9 @@ export default function SubCategoryPage() {
                       <div className="p-4">
                         <h2 className="font-semibold text-gray-900 line-clamp-1">{product.title}</h2>
 
-                        <p className="text-sm text-blue-700 font-medium mt-1">
-                          {product.seller?.companyWebsite ? (
-                            <a href={product.seller.companyWebsite} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                              {product.seller?.companyName || product.seller?.name || "—"}
-                            </a>
-                          ) : (
-                            <span>{product.seller?.companyName || product.seller?.name || "—"}</span>
-                          )}
-                        </p>
+                        <p className="mt-1 text-sm font-medium text-slate-600">
+  {product.seller?.companyName || product.seller?.name || "—"}
+</p>
 
                         {(product.seller?.city || product.seller?.state) && (
                           <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">

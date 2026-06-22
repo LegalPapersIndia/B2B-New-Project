@@ -51,7 +51,7 @@ const ActionSidebar = () => {
                 className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-2xl flex justify-center gap-2 shadow-sm hover:shadow-lg"
               >
                 <LogIn size={18} />
-                Login
+                  Start Selling
               </Link>
             </motion.div>
 

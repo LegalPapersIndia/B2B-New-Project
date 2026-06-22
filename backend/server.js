@@ -35,6 +35,8 @@ import marketplaceStatRoutes from "./routes/marketplaceStat.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import Notification from "./models/Notification.model.js"; 
 import hrUserRoutes from "./routes/hrUserRoutes.js";
+import howItWorksRoutes from "./routes/howItWorksRoutes.js";
+import whyChooseUsRoutes from "./routes/whyChooseUsRoutes.js";
 
 dotenv.config();
 
@@ -193,6 +195,9 @@ app.use("/api/notifications", notificationRoutes);
 
 app.use("/api/hr-users", hrUserRoutes);
 
+app.use("/api/how-it-works", howItWorksRoutes);
+
+app.use("/api/why-choose-us", whyChooseUsRoutes);
 // ─────────────────────────────────────────
 // SERVER
 // ─────────────────────────────────────────

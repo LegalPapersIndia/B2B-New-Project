@@ -38,3 +38,19 @@ export const deleteSeller = async (id) => {
     },
   });
 };
+
+// ─────────────────────────────────────────
+// ADMIN — MANUALLY ASSIGN PLAN TO SELLER
+// ─────────────────────────────────────────
+export const assignPlanToSeller = async (sellerId, plan) => {
+  const token = localStorage.getItem("adminToken");
+  return await API.post(
+    `/subscription/admin/assign-plan/${sellerId}`,
+    { plan },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};

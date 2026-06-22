@@ -2,6 +2,7 @@
 
 import Product from "../models/product.model.js";
 import Seller from "../models/Seller.js";
+import Lead from "../models/Lead.model.js";
 import { uploadToCloudinary, deleteFromCloudinary } from "../utils/cloudinary.utils.js";
 import slugify from "slugify";
 import SubCategory from "../models/subCategoryModel.js";
@@ -341,6 +342,9 @@ export const getSingleProduct = async (req, res) => {
       });
     }
 
+    // ✅ NEW — view count badhao (background mein, await nahi karna)
+    Product.updateOne({ _id: product._id }, { $inc: { views: 1 } }).exec();
+
     return res.status(200).json({
       success: true,
       product,
@@ -365,16 +369,32 @@ export const getAdminProducts = async (req, res) => {
     const filter = {};
     if (status && status !== "all") filter.status = status;
 
+    // ✅ NEW — Lead collection se product-wise enquiry count nikalo
+    const leadCounts = await Lead.aggregate([
+      { $group: { _id: "$productId", count: { $sum: 1 } } },
+    ]);
+    const enquiryMap = {};
+    leadCounts.forEach((item) => {
+      if (item._id) enquiryMap[item._id.toString()] = item.count;
+    });
+
     const products = await Product.find(filter)
       .populate("category", "name")
       .populate("subcategory", "name")
       .populate("seller", "name email subscriptionActive")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // ✅ NEW — har product ke saath enquiryCount attach karo
+    const productsWithStats = products.map((p) => ({
+      ...p,
+      enquiryCount: enquiryMap[p._id.toString()] || 0,
+    }));
 
     return res.status(200).json({
       success: true,
-      count: products.length,
-      products,
+      count: productsWithStats.length,
+      products: productsWithStats,
     });
 
   } catch (error) {
@@ -506,26 +526,39 @@ export const deleteProductAdmin = async (req, res) => {
 
 export const getFeaturedProducts = async (req, res) => {
   try {
-    const activeSellers = await Seller.find({
-      subscriptionActive: true,
-      subscriptionPlan: "gold",
-      accountStatus: "active",
-    }).select("_id");
+    //  NEW — Lead collection se product-wise enquiry count nikalo
+    const leadCounts = await Lead.aggregate([
+      { $group: { _id: "$productId", count: { $sum: 1 } } },
+    ]);
 
-    const sellerIds = activeSellers.map(s => s._id);
+    //  NEW — quick lookup map banayi: { productId: enquiryCount }
+    const enquiryMap = {};
+    leadCounts.forEach((item) => {
+      if (item._id) enquiryMap[item._id.toString()] = item.count;
+    });
 
+    //  UPDATED — subscription/gold filter hata diya, saare approved products laao
     const products = await Product.find({
       status: "approved",
       isActive: true,
-      seller: { $in: sellerIds },
     })
       .populate("seller", "name companyName companyWebsite city state subscriptionPlan")
       .populate("category", "name slug")
       .populate("subcategory", "name slug")
-      .sort({ createdAt: -1 })
-      .limit(10);
+      .lean();
 
-    return res.status(200).json({ success: true, products });
+    //  NEW — har product ka trending score calculate karo
+    const scored = products.map((p) => {
+      const enquiryCount = enquiryMap[p._id.toString()] || 0;
+      const score = (p.views || 0) + enquiryCount * 5;
+      return { ...p, enquiryCount, score };
+    });
+
+    // NEW — score ke hisaab se sort, top 10
+    scored.sort((a, b) => b.score - a.score);
+    const topProducts = scored.slice(0, 10);
+
+    return res.status(200).json({ success: true, products: topProducts });
 
   } catch (error) {
     console.error("getFeaturedProducts error:", error);
@@ -688,5 +721,41 @@ export const getProductsBySeller = async (req, res) => {
       success: false,
       message: "Failed to fetch seller products",
     });
+  }
+};
+
+
+// ─────────────────────────────────────────
+// GET SEARCH SUGGESTIONS (Public)
+// ─────────────────────────────────────────
+export const getSearchSuggestions = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || q.trim().length < 2) {
+      return res.status(200).json({ success: true, suggestions: [] });
+    }
+
+    const regex = new RegExp(q.trim(), "i");
+
+    const results = await Product.find({
+      status:   "approved",
+      isActive: true,
+      $or: [
+        { title: regex },
+        { brand: regex },
+      ],
+    })
+      .select("title brand")
+      .limit(8)
+      .lean();
+
+    const suggestions = [...new Set(results.map((r) => r.title))];
+
+    return res.status(200).json({ success: true, suggestions });
+
+  } catch (error) {
+    console.error("getSearchSuggestions error:", error);
+    return res.status(500).json({ success: false, suggestions: [] });
   }
 };

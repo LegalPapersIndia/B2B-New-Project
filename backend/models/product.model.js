@@ -119,6 +119,11 @@ const productSchema = new mongoose.Schema(
       default: false,
     },
 
+    views: {
+  type: Number,
+  default: 0,
+},
+
     // ─────────────────────────────────────────
     // SPECIFICATIONS
     // ─────────────────────────────────────────

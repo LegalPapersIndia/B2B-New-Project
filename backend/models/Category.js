@@ -105,12 +105,16 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    order: {
+  type: Number,
+  default: 0,
+},
 
     products: [productSchema],
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Category = mongoose.model("Category", categorySchema);

@@ -374,14 +374,17 @@ import {
   FaBars,
   FaTimes,
   FaSignOutAlt,
+   FaClipboardList,
 } from "react-icons/fa";
 
 const menuItems = [
   { name: "Dashboard",   path: "/seller/dashboard",   icon: FaThLarge   },
+  { name: "Profile",     path: "/seller/profile",     icon: FaUserCog    },
   { name: "Add Product", path: "/seller/add-product", icon: FaPlusCircle },
   { name: "My Products", path: "/seller/products",    icon: FaBoxOpen    },
   { name: "Leads",       path: "/seller/leads",       icon: FaUsers      },
-  { name: "Profile",     path: "/seller/profile",     icon: FaUserCog    },
+   { name: "My Requirement", path: "/seller/my-requirement", icon: FaClipboardList },
+  
 ];
 
 const SellerSidebar = () => {

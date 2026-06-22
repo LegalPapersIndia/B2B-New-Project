@@ -25,6 +25,8 @@ import AdminTestimonials from "./pages/admin/AdminTestimonials";
 import BulkUpload from "./pages/admin/Bulkupload";
 import AdminMarketplaceStats from "./pages/admin/AdminMarketplaceStats";
 import AdminHRUsers from "./pages/admin/AdminHRUsers"; // ← NEW
+import AdminHowItWorks from "./pages/admin/HowItWorks";
+import AdminWhyChooseUs from "./pages/admin/WhyChooseUs";
 
 export default function App() {
   return (
@@ -61,6 +63,8 @@ export default function App() {
              <Route path="/admin/bulk-upload" element={<BulkUpload />} />
              <Route path="/admin/marketplace-stats" element={<AdminMarketplaceStats />} />
               <Route path="/admin/hr-users"     element={<AdminHRUsers />} /> {/* ← NEW */}
+              <Route path="/admin/how-it-works" element={<AdminHowItWorks />} />
+              <Route path="/admin/why-choose-us" element={<AdminWhyChooseUs />} />
         </Route>
 
       </Routes>

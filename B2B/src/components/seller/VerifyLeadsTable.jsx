@@ -222,14 +222,14 @@ const VerifyLeadsTable = ({
           </div>
 
           {/* DELETE SELECTED */}
-          {selectedReqIds.length > 0 && (
+          {/* {selectedReqIds.length > 0 && (
             <button
               onClick={handleDeleteMultipleReqs}
               className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition"
             >
               <FaTrash /> Delete Selected ({selectedReqIds.length})
             </button>
-          )}
+          )} */}
           <span className="text-orange-100 text-sm">
             {requirements.length} leads
           </span>
@@ -391,13 +391,13 @@ const VerifyLeadsTable = ({
                           >
                             <FaEye />
                           </button>
-                          <button
+                          {/* <button
                             onClick={() => handleDeleteReq(req._id)}
                             className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition"
                             title="Delete"
                           >
                             <FaTrash />
-                          </button>
+                          </button> */}
                         </div>
                       </td>
                     </tr>

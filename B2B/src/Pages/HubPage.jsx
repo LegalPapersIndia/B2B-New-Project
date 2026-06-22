@@ -383,20 +383,9 @@ function ProductCard({ product, onInquiry }) {
       <div className="p-4">
         <h2 className="line-clamp-1 font-semibold text-gray-900">{product.title}</h2>
 
-        <p className="mt-1 text-sm font-medium text-blue-700">
-          {product.seller?.companyWebsite ? (
-            <a
-              href={product.seller.companyWebsite}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              {product.seller?.companyName || product.seller?.name || "—"}
-            </a>
-          ) : (
-            <span>{product.seller?.companyName || product.seller?.name || "—"}</span>
-          )}
-        </p>
+       <p className="mt-1 text-sm font-medium text-slate-600">
+  {product.seller?.companyName || product.seller?.name || "—"}
+</p>
 
         {(product.seller?.city || product.seller?.state) && (
           <p className="mt-0.5 text-xs text-gray-400">

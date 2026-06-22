@@ -48,6 +48,7 @@ import ResetPasswordPage from "./Pages/ResetPasswordPage";
 import SellerProfilePage from "./Pages/seller/SellerProfilePage";
 import BulkUploadProduct from "./Pages/seller/BulkUploadProduct";
 import AllCategories from "./Pages/Category/AllCategories";
+import SellerMyRequirement from "./Pages/seller/SellerMyRequirement";
 
 function App() {
   return (
@@ -109,6 +110,7 @@ function App() {
           <Route path="profile" element={<SellerProfile />} />
           <Route path="/seller/subscription" element={<Subscription />} />
           <Route path="/seller/bulk-upload" element={<BulkUploadProduct />} />
+          <Route path="my-requirement" element={<SellerMyRequirement />} />
         </Route>
       </Routes>
     </BrowserRouter>

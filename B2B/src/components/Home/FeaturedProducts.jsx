@@ -150,22 +150,9 @@ const FeaturedProducts = () => {
                     {product.title}
                   </h3>
 
-                  <p className="text-sm font-medium mb-1">
-                    {product.seller?.companyWebsite ? (
-                      <a
-                        href={product.seller.companyWebsite}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-700 hover:underline"
-                      >
-                        {product.seller?.companyName || product.seller?.name || "—"}
-                      </a>
-                    ) : (
-                      <span className="text-slate-600">
-                        {product.seller?.companyName || product.seller?.name || "—"}
-                      </span>
-                    )}
-                  </p>
+                 <p className="text-sm font-medium text-slate-600 mb-1">
+  {product.seller?.companyName || product.seller?.name || "—"}
+</p>
 
                   {(product.seller?.city || product.seller?.state) && (
                     <div className="flex items-center gap-1.5 text-slate-500 text-xs mb-3">

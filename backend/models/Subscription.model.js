@@ -33,11 +33,11 @@ const subscriptionSchema = new mongoose.Schema(
     // ─────────────────────────────────────────
     // RAZORPAY
     // ─────────────────────────────────────────
-    razorpayOrderId: {
-      type: String,
-      required: true,
-    },
-
+   razorpayOrderId: {
+  type: String,
+  required: false,
+  default: null,
+},
     razorpayPaymentId: {
       type: String,
       default: null,
@@ -51,11 +51,11 @@ const subscriptionSchema = new mongoose.Schema(
     // ─────────────────────────────────────────
     // STATUS
     // ─────────────────────────────────────────
-    paymentStatus: {
-      type: String,
-      enum: ["created", "paid", "failed"],
-      default: "created",
-    },
+   paymentStatus: {
+  type: String,
+  enum: ["created", "paid", "failed", "admin_assigned"],
+  default: "created",
+},
 
     // ─────────────────────────────────────────
     // VALIDITY

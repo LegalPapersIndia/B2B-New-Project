@@ -105,6 +105,7 @@ import {
   getFeaturedProducts,
   getProductsByCity,
    getProductsBySeller,
+   getSearchSuggestions,
 } from "../controllers/product.controller.js";
 
 import authMiddleware      from "../middleware/authMiddleware.js";
@@ -118,6 +119,7 @@ const router = express.Router();
 // ─────────────────────────────────────────
 router.get("/admin/all",        adminAuthMiddleware, getAdminProducts);
 router.get("/featured",         getFeaturedProducts);
+router.get("/suggestions",  getSearchSuggestions);
 
 // ─────────────────────────────────────────
 // SELLER ROUTES

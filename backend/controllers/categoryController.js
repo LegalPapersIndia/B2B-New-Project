@@ -182,6 +182,7 @@ export const createCategory = async (req, res) => {
       image: result.secure_url,
       icon: icon || "Box",
       showOnHome: showOnHome === "true" || showOnHome === true,
+        order: req.body.order ? Number(req.body.order) : 0,
     });
 
     res.status(201).json({
@@ -284,6 +285,9 @@ export const updateCategory = async (req, res) => {
     if (showOnHome !== undefined) {
       category.showOnHome = showOnHome === "true" || showOnHome === true;
     }
+    if (req.body.order !== undefined) {
+  category.order = Number(req.body.order);
+}
 
     await category.save();
 

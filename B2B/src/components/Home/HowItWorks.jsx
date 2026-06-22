@@ -1,40 +1,64 @@
 
-import React from "react";
+// src/components/HowItWorks.jsx
+import React, { useEffect, useState } from "react";
 import {
   Search,
   MessageSquareMore,
   BadgeDollarSign,
   Handshake,
+  ShoppingCart,
+  Star,
+  Shield,
+  Truck,
+  Package,
+  Users,
 } from "lucide-react";
+import { getAllSteps } from "../../api/howItWorksApi";
 
-const steps = [
-  {
-    id: "01",
-    icon: Search,
-    title: "Search Products",
-    desc: "Browse thousands of industrial and wholesale products from verified suppliers.",
-  },
-  {
-    id: "02",
-    icon: MessageSquareMore,
-    title: "Send Inquiry",
-    desc: "Submit your requirements and connect directly with trusted manufacturers.",
-  },
-  {
-    id: "03",
-    icon: BadgeDollarSign,
-    title: "Receive Quotes",
-    desc: "Get multiple competitive quotations from suppliers within minutes.",
-  },
-  {
-    id: "04",
-    icon: Handshake,
-    title: "Close Deals",
-    desc: "Compare offers, negotiate pricing, and finalize your business deals easily.",
-  },
-];
+// Icon name string → Lucide component mapping
+const ICON_MAP = {
+  Search,
+  MessageSquareMore,
+  BadgeDollarSign,
+  Handshake,
+  ShoppingCart,
+  Star,
+  Shield,
+  Truck,
+  Package,
+  Users,
+};
 
 export default function HowItWorks() {
+  const [steps, setSteps]   = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSteps = async () => {
+      try {
+        const data = await getAllSteps();
+        setSteps(data);
+      } catch (err) {
+        console.error("HowItWorks fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSteps();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="bg-white overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 py-12 flex justify-center">
+          <div className="w-8 h-8 border-2 border-orange-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </section>
+    );
+  }
+
+  if (steps.length === 0) return null;
+
   return (
     <section className="bg-white overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4 py-12">
@@ -44,12 +68,10 @@ export default function HowItWorks() {
           <div className="flex items-center gap-2 text-orange-600 font-bold text-xs uppercase tracking-widest mb-2">
             How Marketplace Works
           </div>
-
           <h2 className="text-4xl font-bold text-slate-900 tracking-tight">
             How It{" "}
             <span className="text-blue-800">Works</span>
           </h2>
-
           <p className="mt-2 text-slate-600 max-w-2xl">
             Connect buyers and suppliers in a few simple steps and grow your
             business faster with our B2B marketplace platform.
@@ -58,22 +80,20 @@ export default function HowItWorks() {
 
         {/* CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-
           {steps.map((step) => {
-            const Icon = step.icon;
+            const Icon = ICON_MAP[step.iconName] || Search;
 
             return (
               <div
-                key={step.id}
+                key={step._id}
                 className="group relative bg-white rounded-3xl p-7 border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden flex flex-col"
               >
-
                 {/* TOP LINE */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-orange-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-orange-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
 
                 {/* STEP NUMBER */}
                 <div className="absolute top-5 right-5 text-5xl font-bold text-gray-100 group-hover:text-orange-100 transition duration-500">
-                  {step.id}
+                  {step.stepNumber}
                 </div>
 
                 {/* ICON */}
@@ -92,12 +112,12 @@ export default function HowItWorks() {
                 </p>
 
                 {/* BLUR EFFECT */}
-                <div className="absolute -bottom-10 -right-10 w-28 h-28 bg-orange-100 rounded-full blur-3xl group-hover:bg-orange-200 transition-all duration-500"></div>
-
+                <div className="absolute -bottom-10 -right-10 w-28 h-28 bg-orange-100 rounded-full blur-3xl group-hover:bg-orange-200 transition-all duration-500" />
               </div>
             );
           })}
         </div>
+
       </div>
     </section>
   );

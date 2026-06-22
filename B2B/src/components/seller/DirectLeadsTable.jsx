@@ -162,12 +162,12 @@ const DirectLeadsTable = ({
           </div>
 
           {/* DELETE SELECTED */}
-          {selectedLeadIds.length > 0 && (
+          {/* {selectedLeadIds.length > 0 && (
             <button onClick={handleDeleteMultipleLeads}
               className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition">
               <FaTrash /> Delete Selected ({selectedLeadIds.length})
             </button>
-          )}
+          )} */}
           <span className="text-blue-200 text-sm">{leads.length} leads</span>
         </div>
       </div>
@@ -276,10 +276,10 @@ const DirectLeadsTable = ({
                           className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition" title="View">
                           <FaEye />
                         </button>
-                        <button onClick={() => handleDeleteLead(lead._id)}
+                        {/* <button onClick={() => handleDeleteLead(lead._id)}
                           className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition" title="Delete">
                           <FaTrash />
-                        </button>
+                        </button> */}
                       </div>
                     </td>
                   </tr>

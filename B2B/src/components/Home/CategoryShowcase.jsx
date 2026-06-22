@@ -193,7 +193,9 @@ export default function CategoryShowcase() {
   };
 
   // ✅ NEW - only categories marked showOnHome
-  const homeCategories = categories.filter((cat) => cat.showOnHome);
+  const homeCategories = categories
+  .filter((cat) => cat.showOnHome)
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-12 space-y-16 bg-gray-50">

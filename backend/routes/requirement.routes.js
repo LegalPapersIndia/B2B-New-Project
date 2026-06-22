@@ -10,6 +10,8 @@ import {
   deleteRequirementAdmin, 
   deleteMultipleRequirementsAdmin,
    updateRequirementStatus, 
+    postRequirementBySeller,
+  getMyPostedRequirements,
 } from "../controllers/requirement.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -37,5 +39,11 @@ router.post("/admin/delete-multiple", adminAuthMiddleware, deleteMultipleRequire
 
 // SELLER — Status update
 router.put("/:id/status", authMiddleware, updateRequirementStatus);
+
+// SELLER — Khud requirement post kare (buyer bankar)
+router.post("/seller/post", authMiddleware, postRequirementBySeller);
+
+// SELLER — Apni khud post ki hui requirements dekhe
+router.get("/seller/my-posted", authMiddleware, getMyPostedRequirements);
 
 export default router;

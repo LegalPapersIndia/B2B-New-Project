@@ -56,7 +56,7 @@ export default function ManufacturingHubs() {
               Industrial Cities
             </div>
             <h2 className="text-4xl font-bold text-slate-900 tracking-tight">
-              Manufacturing <span className="text-blue-800">Hubs</span>
+              Top Manufacturing <span className="text-blue-800">City</span>
             </h2>
             <p className="mt-2 text-slate-600 max-w-2xl">
               Explore top industrial cities with verified suppliers across India.

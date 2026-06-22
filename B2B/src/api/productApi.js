@@ -140,3 +140,12 @@ export const getProductsBySeller = async (sellerId) => {
   const response = await axios.get(`${API}/products/seller/${sellerId}`);
   return response.data;
 };
+
+
+// GET SEARCH SUGGESTIONS
+export const getSearchSuggestions = async (q) => {
+  const response = await axios.get(`${API}/products/suggestions`, {
+    params: { q },
+  });
+  return response.data;
+};

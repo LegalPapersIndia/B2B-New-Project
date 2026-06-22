@@ -352,3 +352,157 @@ export const updateRequirementStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+
+// ─────────────────────────────────────────
+// POST REQUIREMENT (Seller — khud buyer bankar)
+// ─────────────────────────────────────────
+export const postRequirementBySeller = async (req, res) => {
+  try {
+    const {
+      productName,
+      description,
+      quantity,
+      budget,
+      location,
+      category,
+      subCategory,
+    } = req.body;
+
+    // VALIDATION
+    if (!productName || !category) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all required fields",
+      });
+    }
+
+    // ✅ NEW — buyer info form se nahi, seller ke account se
+    const currentSeller = await Seller.findById(req.user._id).select("name email phone");
+    if (!currentSeller) {
+      return res.status(404).json({ success: false, message: "Seller not found" });
+    }
+
+    // SUBSCRIBED SELLERS FIND — same logic jaisa postRequirement mein
+    const productQuery = { category, status: "approved" };
+    if (subCategory) productQuery.subcategory = subCategory;
+
+    const categoryProducts = await Product.find(productQuery).distinct("seller");
+
+    const locationParts = location
+      ? location.split(",").map((s) => s.trim())
+      : [];
+    const buyerCity  = locationParts[0] || "";
+    const buyerState = locationParts[1] || "";
+
+    // ✅ NEW — khud (req.user._id) ko $ne se exclude kiya
+    const subscribedSellers = await Seller.find({
+      _id:                { $in: categoryProducts, $ne: req.user._id },
+      subscriptionActive: true,
+    }).select("name email subscriptionPlan city state");
+
+    const getTier = (seller) => {
+      const sameCity  = buyerCity  && seller.city?.toLowerCase()  === buyerCity.toLowerCase();
+      const sameState = buyerState && seller.state?.toLowerCase() === buyerState.toLowerCase();
+      if (sameCity)  return 1;
+      if (sameState) return 2;
+      return 3;
+    };
+
+    const sortedSellers = [...subscribedSellers].sort((a, b) => {
+      const tierA = getTier(a);
+      const tierB = getTier(b);
+      if (tierA !== tierB) return tierA - tierB;
+      const pa = PLAN_PRIORITY[a.subscriptionPlan] || 99;
+      const pb = PLAN_PRIORITY[b.subscriptionPlan] || 99;
+      return pa - pb;
+    });
+
+    const topSellers = sortedSellers;
+
+    const matchedSellers = topSellers.map((seller) => {
+      const delay = PLAN_DELAY[seller.subscriptionPlan] || 0;
+      return {
+        seller:   seller._id,
+        plan:     seller.subscriptionPlan,
+        sentAt:   new Date(Date.now() + delay),
+        isViewed: false,
+      };
+    });
+
+    // SAVE — buyer info seller ke account se liya
+    const requirement = await Requirement.create({
+      buyerName:  currentSeller.name,
+      buyerEmail: currentSeller.email,
+      buyerPhone: currentSeller.phone,
+      productName,
+      description,
+      quantity,
+      budget,
+      location,
+      category,
+      subCategory: subCategory || null,
+      matchedSellers,
+      status: "active",
+      postedBySeller: req.user._id,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: `Requirement posted! ${matchedSellers.length} sellers notified.`,
+      requirement,
+      sellersNotified: matchedSellers.length,
+    });
+
+  } catch (error) {
+    console.error("postRequirementBySeller error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to post requirement",
+    });
+  }
+};
+
+
+// ─────────────────────────────────────────
+// GET MY POSTED REQUIREMENTS (Seller — jo khud post ki)
+// ─────────────────────────────────────────
+export const getMyPostedRequirements = async (req, res) => {
+  try {
+    const requirements = await Requirement.find({
+      postedBySeller: req.user._id,
+    })
+      .populate("category",    "name")
+      .populate("subCategory", "name")
+      .sort({ createdAt: -1 });
+
+    // ✅ Har requirement ke saath ye bhi batao kitne sellers ne dekha/contact kiya
+  const result = requirements.map((r) => {
+  const obj = r.toObject();
+  const viewedCount = obj.matchedSellers.filter((m) =>
+    ["viewed", "contacted", "converted"].includes(m.sellerStatus)
+  ).length;
+  const contactedCount = obj.matchedSellers.filter((m) =>
+    ["contacted", "converted"].includes(m.sellerStatus)
+  ).length;
+  return {
+    ...obj,
+    totalSellersNotified: obj.matchedSellers.length,
+    viewedCount,
+    contactedCount,
+  };
+});
+    return res.status(200).json({
+      success: true,
+      count: result.length,
+      requirements: result,
+    });
+
+  } catch (error) {
+    console.error("getMyPostedRequirements error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch posted requirements",
+    });
+  }
+};

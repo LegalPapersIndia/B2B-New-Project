@@ -48,3 +48,28 @@ export const updateRequirementStatus = async (id, status) => {
   );
   return response.data;
 };
+
+
+
+// ─────────────────────────────────────────
+// POST REQUIREMENT (Seller — khud buyer bankar)
+// ─────────────────────────────────────────
+export const postRequirementBySeller = async (data) => {
+  const response = await axios.post(
+    `${API}/requirements/seller/post`,
+    data,
+    { headers: authHeader() }
+  );
+  return response.data;
+};
+
+// ─────────────────────────────────────────
+// GET MY POSTED REQUIREMENTS (Seller — jo khud post ki)
+// ─────────────────────────────────────────
+export const getMyPostedRequirements = async () => {
+  const response = await axios.get(
+    `${API}/requirements/seller/my-posted`,
+    { headers: authHeader() }
+  );
+  return response.data;
+};
