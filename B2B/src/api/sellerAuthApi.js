@@ -1,13 +1,42 @@
+// //bina otp ke 
+
+// import axios from "axios";
+
+// const API = axios.create({
+//   baseURL: import.meta.env.VITE_API_URL,
+// });
+
+// // REGISTER
+// export const registerSeller = async (sellerData) => {
+//   return await API.post("/seller/register", sellerData);
+// };
+
+// // LOGIN
+// export const loginSeller = async (sellerData) => {
+//   return await API.post("/seller/login", sellerData);
+// };
+
+
+// // FORGOT PASSWORD — email bhejo, OTP aayega
+// export const forgotPasswordApi = (email) =>
+//   API.post("/seller/forgot-password", { email });
+ 
+// // RESET PASSWORD — OTP + new password
+// export const resetPasswordApi = (data) =>
+//   API.post("/seller/reset-password", data);
+ 
+
+
 import axios from "axios";
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-// REGISTER
-export const registerSeller = async (sellerData) => {
-  return await API.post("/seller/register", sellerData);
-};
+// // REGISTER
+// export const registerSeller = async (sellerData) => {
+//   return await API.post("/seller/register", sellerData);
+// };
 
 // LOGIN
 export const loginSeller = async (sellerData) => {
@@ -23,3 +52,13 @@ export const forgotPasswordApi = (email) =>
 export const resetPasswordApi = (data) =>
   API.post("/seller/reset-password", data);
  
+
+// STEP 1 — OTP bhejo
+export const sendOtp = async (sellerData) => {
+  return await API.post("/seller/send-otp", sellerData);
+};
+
+// STEP 2 — OTP verify + account create
+export const verifyRegister = async (data) => {
+  return await API.post("/seller/verify-register", data);
+};

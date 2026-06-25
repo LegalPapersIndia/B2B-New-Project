@@ -9,3 +9,8 @@
   animation: spin-border 2s linear infinite;
 }
 
+/* Date input calendar icon white */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}

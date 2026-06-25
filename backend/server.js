@@ -37,6 +37,11 @@ import Notification from "./models/Notification.model.js";
 import hrUserRoutes from "./routes/hrUserRoutes.js";
 import howItWorksRoutes from "./routes/howItWorksRoutes.js";
 import whyChooseUsRoutes from "./routes/whyChooseUsRoutes.js";
+import ctaSectionRoutes from "./routes/ctaSectionRoutes.js";
+import footerSettingsRoutes from "./routes/footerSettingsRoutes.js";
+import contactPageRoutes from "./routes/contactPageRoutes.js";
+import heroSlideRoutes from "./routes/heroSlideRoutes.js";
+import navbarSettingsRoutes from "./routes/navbarSettingsRoutes.js";
 
 dotenv.config();
 
@@ -198,6 +203,16 @@ app.use("/api/hr-users", hrUserRoutes);
 app.use("/api/how-it-works", howItWorksRoutes);
 
 app.use("/api/why-choose-us", whyChooseUsRoutes);
+
+app.use("/api/cta-section", ctaSectionRoutes);
+
+app.use("/api/footer-settings", footerSettingsRoutes);
+
+app.use("/api/contact-page", contactPageRoutes);
+
+app.use("/api/hero-slides", heroSlideRoutes);
+
+app.use("/api/navbar-settings", navbarSettingsRoutes);
 // ─────────────────────────────────────────
 // SERVER
 // ─────────────────────────────────────────

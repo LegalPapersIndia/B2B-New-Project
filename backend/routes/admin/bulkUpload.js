@@ -166,6 +166,8 @@ router.post("/bulk-upload", upload.single("file"), async (req, res) => {
             subscriptionExpire: validPlan
               ? new Date(Date.now() + planDays * 24 * 60 * 60 * 1000)
               : null,
+              isVerified: true,        // ← ye rakho
+isPhoneVerified: true,
           });
           isNewSeller = true;
         }
