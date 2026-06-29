@@ -242,7 +242,7 @@
 // src/components/Home/TrustedSuppliers.jsx
 
 import React, { useRef, useEffect, useState } from "react";
-import { MapPin, BadgeCheck, Star, Factory, ArrowRight, Crown } from "lucide-react";
+import { MapPin, BadgeCheck, Star, Factory, ArrowRight } from "lucide-react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { getFeaturedSellers } from "../../api/sellerProfileApi";
@@ -391,10 +391,10 @@ export default function TrustedSuppliers() {
 
                   {/* PLAN BADGE */}
                   {/*  UPDATED — badge chhota */}
-                  <div className={`absolute top-2 left-2 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold ${planBadge(seller.subscriptionPlan)}`}>
+                  {/* <div className={`absolute top-2 left-2 text-xs px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold ${planBadge(seller.subscriptionPlan)}`}>
                     <Crown className="w-2.5 h-2.5" />
                     {seller.subscriptionPlan === "gold" ? "Gold" : "Premium"}
-                  </div>
+                  </div> */}
 
                   {/* VERIFIED BADGE */}
                   <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">

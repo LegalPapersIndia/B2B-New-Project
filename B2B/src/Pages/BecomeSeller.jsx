@@ -52,9 +52,9 @@ const BecomeSeller = () => {
             Join our global B2B marketplace and start selling worldwide.
           </p>
 
-          <button className="mt-10 bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-2xl font-semibold">
+          {/* <button className="mt-10 bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-2xl font-semibold">
             Start Selling Now
-          </button>
+          </button> */}
         </div>
       </section>
 

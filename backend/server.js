@@ -1,7 +1,4 @@
 
-
-// app.js
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -79,35 +76,80 @@ cloudinaryConnect();
 // ─────────────────────────────────────────
 // CRON JOB — HAR RAAT 12 BAJE
 // ─────────────────────────────────────────
-cron.schedule("0 0 * * *", async () => {
+// cron.schedule("0 0 * * *", async () => {
+// cron.schedule("0 * * * *", async () => {
+//   try {
+//     const now = new Date();
+
+//     const expiredSellers = await Seller.find({
+//       subscriptionActive: true,
+//       subscriptionExpire: { $lt: now },
+//     });
+
+//     if (expiredSellers.length === 0) return;
+
+//     const expiredIds = expiredSellers.map((s) => s._id);
+
+//     await Seller.updateMany(
+//       { _id: { $in: expiredIds } },
+//       { $set: { subscriptionActive: false, subscriptionPlan: null } }
+//     );
+
+//     await Product.updateMany(
+//       { seller: { $in: expiredIds } },
+//       { $set: { status: "pending", featured: false } }
+//     );
+
+//     console.log(`✅ Cron: ${expiredSellers.length} sellers expired`);
+//   } catch (err) {
+//     console.error("Cron job error:", err);
+//   }
+// });
+
+
+// cron.schedule("0 0 * * *", async () => {
+cron.schedule("0 * * * *", async () => {
   try {
     const now = new Date();
-
     const expiredSellers = await Seller.find({
       subscriptionActive: true,
       subscriptionExpire: { $lt: now },
     });
-
     if (expiredSellers.length === 0) return;
 
-    const expiredIds = expiredSellers.map((s) => s._id);
-
-    await Seller.updateMany(
-      { _id: { $in: expiredIds } },
-      { $set: { subscriptionActive: false, subscriptionPlan: null } }
-    );
-
-    await Product.updateMany(
-      { seller: { $in: expiredIds } },
-      { $set: { status: "pending", featured: false } }
-    );
-
-    console.log(`✅ Cron: ${expiredSellers.length} sellers expired`);
+    for (const seller of expiredSellers) {
+      seller.subscriptionActive = false;
+      seller.subscriptionPlan = null;
+      await seller.save();
+    }
+    console.log(` Cron: ${expiredSellers.length} sellers expired`);
   } catch (err) {
     console.error("Cron job error:", err);
   }
 });
 
+mongoose.connection.once("open", async () => {
+  seedPlans();
+  try {
+    const now = new Date();
+    const expiredSellers = await Seller.find({
+      subscriptionActive: true,
+      subscriptionExpire: { $lt: now },
+    });
+    if (expiredSellers.length === 0) {
+      console.log(" Startup Check: No expired sellers");
+      return;
+    }
+    for (const seller of expiredSellers) {
+      seller.subscriptionActive = false;
+      seller.subscriptionPlan = null;
+      await seller.save();
+    }
+    console.log(` Startup Check: ${expiredSellers.length} sellers expired`);
+  } catch (err) {
+    console.error("Startup expiry check error:", err);
+  }
+});
 
 
 // ── NOTIFICATION CLEANUP — HAR RAAT 1 BAJE ──
@@ -120,7 +162,7 @@ cron.schedule("0 1 * * *", async () => {
       createdAt: { $lt: sevenDaysAgo },
     });
 
-    console.log(`✅ Cleanup: ${deleted.deletedCount} old notifications deleted`);
+    console.log(` Cleanup: ${deleted.deletedCount} old notifications deleted`);
   } catch (err) {
     console.error("Notification cleanup error:", err);
   }
