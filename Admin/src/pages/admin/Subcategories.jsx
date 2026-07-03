@@ -16,6 +16,9 @@
 //   const [currentPage, setCurrentPage] = useState(1);
 //   const itemsPerPage = 10;
 
+//   // ✅ FILTER
+//   const [filterCategory, setFilterCategory] = useState("");
+
 //   const [formData, setFormData] = useState({
 //     name: "",
 //     slug: "",
@@ -59,8 +62,13 @@
 //     }
 //   };
 
-//   const totalPages = Math.ceil(subCategories.length / itemsPerPage);
-//   const paginatedSubCategories = subCategories.slice(
+//   // ✅ FILTERED LIST
+//   const filteredSubCategories = filterCategory
+//     ? subCategories.filter((sub) => sub.category?._id === filterCategory)
+//     : subCategories;
+
+//   const totalPages = Math.ceil(filteredSubCategories.length / itemsPerPage);
+//   const paginatedSubCategories = filteredSubCategories.slice(
 //     (currentPage - 1) * itemsPerPage,
 //     currentPage * itemsPerPage
 //   );
@@ -217,7 +225,6 @@
 //           onSubmit={handleSubmit}
 //           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4"
 //         >
-//           {/* NAME */}
 //           <input
 //             type="text"
 //             name="name"
@@ -227,8 +234,6 @@
 //             className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-700"
 //             required
 //           />
-
-//           {/* SLUG */}
 //           <input
 //             type="text"
 //             name="slug"
@@ -238,8 +243,6 @@
 //             className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-700"
 //             required
 //           />
-
-//           {/* DESC */}
 //           <input
 //             type="text"
 //             name="desc"
@@ -249,8 +252,6 @@
 //             className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-700"
 //             required
 //           />
-
-//           {/* CATEGORY */}
 //           <select
 //             name="category"
 //             value={formData.category}
@@ -265,15 +266,11 @@
 //               </option>
 //             ))}
 //           </select>
-
-//           {/* IMAGE */}
 //           <input
 //             type="file"
 //             onChange={(e) => setImage(e.target.files[0])}
 //             className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm outline-none"
 //           />
-
-//           {/* BUTTON */}
 //           <div className="flex gap-2">
 //             <button
 //               type="submit"
@@ -281,14 +278,9 @@
 //               className="bg-blue-800 hover:bg-blue-900 px-4 py-3 rounded-xl text-sm font-medium transition w-full"
 //             >
 //               {loading
-//                 ? editingId
-//                   ? "Updating..."
-//                   : "Creating..."
-//                 : editingId
-//                 ? "Update"
-//                 : "Add"}
+//                 ? editingId ? "Updating..." : "Creating..."
+//                 : editingId ? "Update" : "Add"}
 //             </button>
-
 //             {editingId && (
 //               <button
 //                 type="button"
@@ -302,11 +294,37 @@
 //         </form>
 //       </div>
 
+//       {/* ✅ FILTER */}
+//       <div className="mb-4 flex items-center gap-3">
+//         <select
+//           value={filterCategory}
+//           onChange={(e) => { setFilterCategory(e.target.value); setCurrentPage(1); }}
+//           className="bg-[#0D0D14] border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-blue-700 text-white"
+//         >
+//           <option value="">All Categories</option>
+//           {categories.map((cat) => (
+//             <option key={cat._id} value={cat._id} className="bg-black">
+//               {cat.name}
+//             </option>
+//           ))}
+//         </select>
+//         {filterCategory && (
+//           <button
+//             onClick={() => { setFilterCategory(""); setCurrentPage(1); }}
+//             className="text-xs text-white/40 hover:text-white transition"
+//           >
+//             ✕ Clear
+//           </button>
+//         )}
+//         <span className="text-white/40 text-xs ml-auto">
+//           {filteredSubCategories.length} subcategories
+//         </span>
+//       </div>
+
 //       {/* ================= TABLE ================= */}
 //       <div className="bg-[#0D0D14] border border-white/10 rounded-2xl overflow-hidden">
 //         <div className="overflow-x-auto">
 //           <table className="min-w-full text-sm text-left">
-//             {/* HEAD */}
 //             <thead className="bg-white/5 text-white/50 border-b border-white/10">
 //               <tr>
 //                 <th className="p-4">Image</th>
@@ -316,15 +334,12 @@
 //                 <th className="p-4">Actions</th>
 //               </tr>
 //             </thead>
-
-//             {/* BODY */}
 //             <tbody>
 //               {paginatedSubCategories.map((sub) => (
 //                 <tr
 //                   key={sub._id}
 //                   className="border-t border-white/10 hover:bg-white/[0.03]"
 //                 >
-//                   {/* IMAGE */}
 //                   <td className="p-4">
 //                     <img
 //                       src={sub.image}
@@ -332,17 +347,9 @@
 //                       className="w-14 h-14 rounded-lg object-cover"
 //                     />
 //                   </td>
-
-//                   {/* NAME */}
 //                   <td className="p-4">{sub.name}</td>
-
-//                   {/* SLUG */}
 //                   <td className="p-4 text-white/50">/{sub.slug}</td>
-
-//                   {/* CATEGORY */}
 //                   <td className="p-4 text-blue-400">{sub.category?.name}</td>
-
-//                   {/* ACTIONS */}
 //                   <td className="p-4">
 //                     <div className="flex gap-2">
 //                       <button
@@ -351,7 +358,6 @@
 //                       >
 //                         Edit
 //                       </button>
-
 //                       <button
 //                         onClick={() => handleDelete(sub._id)}
 //                         className="bg-red-800 hover:bg-red-900 px-3 py-1.5 rounded-lg text-xs"
@@ -362,9 +368,7 @@
 //                   </td>
 //                 </tr>
 //               ))}
-
-//               {/* EMPTY */}
-//               {subCategories.length === 0 && (
+//               {filteredSubCategories.length === 0 && (
 //                 <tr>
 //                   <td colSpan="5" className="text-center py-10 text-white/40">
 //                     No Subcategories Found
@@ -380,8 +384,8 @@
 //           <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
 //             <p className="text-white/40 text-sm">
 //               Showing {(currentPage - 1) * itemsPerPage + 1}–
-//               {Math.min(currentPage * itemsPerPage, subCategories.length)} of{" "}
-//               {subCategories.length}
+//               {Math.min(currentPage * itemsPerPage, filteredSubCategories.length)} of{" "}
+//               {filteredSubCategories.length}
 //             </p>
 //             <div className="flex items-center gap-2">
 //               <button
@@ -391,7 +395,6 @@
 //               >
 //                 ← Prev
 //               </button>
-
 //               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
 //                 <button
 //                   key={page}
@@ -405,11 +408,8 @@
 //                   {page}
 //                 </button>
 //               ))}
-
 //               <button
-//                 onClick={() =>
-//                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-//                 }
+//                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
 //                 disabled={currentPage === totalPages}
 //                 className="px-3 py-1.5 rounded-lg text-xs border border-white/10 bg-white/5 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
 //               >
@@ -422,6 +422,7 @@
 //     </div>
 //   );
 // }
+
 
 
 
@@ -498,6 +499,25 @@ export default function SubCategories() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  // ✅ NEW - Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
+  const getPageNumbers = () => {
+    const pages = [];
+    const delta = 1;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - delta && i <= currentPage + delta)
+      ) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "...") {
+        pages.push("...");
+      }
+    }
+    return pages;
+  };
 
   // ================= HANDLE CHANGE =================
   const handleChange = (e) => {
@@ -821,19 +841,26 @@ export default function SubCategories() {
               >
                 ← Prev
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-lg text-xs font-medium transition ${
-                    currentPage === page
-                      ? "bg-blue-600 text-white"
-                      : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
+              {/* ✅ UPDATED - ab getPageNumbers() se limited pages + ellipsis render honge */}
+              {getPageNumbers().map((page, idx) =>
+                page === "..." ? (
+                  <span key={`dots-${idx}`} className="px-2 text-white/30 text-xs">
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-8 h-8 rounded-lg text-xs font-medium transition ${
+                      currentPage === page
+                        ? "bg-blue-600 text-white"
+                        : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
               <button
                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}

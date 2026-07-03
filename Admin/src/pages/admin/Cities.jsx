@@ -1,5 +1,3 @@
-
-
 // src/pages/admin/Cities.jsx
 
 import React, { useEffect, useState } from "react";
@@ -43,6 +41,25 @@ export default function Cities() {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  // ✅ NEW - Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
+  const getPageNumbers = () => {
+    const pages = [];
+    const delta = 1;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - delta && i <= currentPage + delta)
+      ) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "...") {
+        pages.push("...");
+      }
+    }
+    return pages;
+  };
 
   // ── HANDLE CHANGE ──
   const handleChange = (e) => {
@@ -345,19 +362,26 @@ export default function Cities() {
               >
                 ← Prev
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 rounded-lg text-xs font-medium transition
-                    ${currentPage === page
-                      ? "bg-blue-600 text-white"
-                      : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
-                    }`}
-                >
-                  {page}
-                </button>
-              ))}
+              {/* ✅ UPDATED - ab getPageNumbers() se limited pages + ellipsis render honge */}
+              {getPageNumbers().map((page, idx) =>
+                page === "..." ? (
+                  <span key={`dots-${idx}`} className="px-2 text-white/30 text-xs">
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-8 h-8 rounded-lg text-xs font-medium transition
+                      ${currentPage === page
+                        ? "bg-blue-600 text-white"
+                        : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
+                      }`}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
               <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
