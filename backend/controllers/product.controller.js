@@ -523,50 +523,106 @@ export const deleteProductAdmin = async (req, res) => {
   }
 };
 
-
+// ─────────────────────────────────────────
+// GET TRENDING SUBCATEGORIES (Public) — ✅ UPDATED - product-level se subCategory-level
+// ─────────────────────────────────────────
 export const getFeaturedProducts = async (req, res) => {
   try {
-    //  NEW — Lead collection se product-wise enquiry count nikalo
-    const leadCounts = await Lead.aggregate([
+    // ✅ NEW - last 7 din ka date range
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    // ✅ NEW - last 7 din ke Leads, productId se group karke count
+    const recentLeadCounts = await Lead.aggregate([
+      { $match: { createdAt: { $gte: sevenDaysAgo } } },
       { $group: { _id: "$productId", count: { $sum: 1 } } },
     ]);
-
-    //  NEW — quick lookup map banayi: { productId: enquiryCount }
-    const enquiryMap = {};
-    leadCounts.forEach((item) => {
-      if (item._id) enquiryMap[item._id.toString()] = item.count;
+    const recentEnquiryMap = {};
+    recentLeadCounts.forEach((item) => {
+      if (item._id) recentEnquiryMap[item._id.toString()] = item.count;
     });
 
-    //  UPDATED — subscription/gold filter hata diya, saare approved products laao
+    // ✅ NEW - saare approved products, sirf subcategory + views chahiye
     const products = await Product.find({
       status: "approved",
       isActive: true,
     })
-      .populate("seller", "name companyName companyWebsite city state subscriptionPlan")
-      .populate("category", "name slug")
-      .populate("subcategory", "name slug")
+      .select("subcategory views")
       .lean();
 
-    //  NEW — har product ka trending score calculate karo
-    const scored = products.map((p) => {
-      const enquiryCount = enquiryMap[p._id.toString()] || 0;
-      const score = (p.views || 0) + enquiryCount * 5;
-      return { ...p, enquiryCount, score };
+    // ✅ NEW - subcategory-wise group karke views (all-time) + enquiries (7 din) sum karo
+    const subScores = {};
+    products.forEach((p) => {
+      if (!p.subcategory) return;
+      const subId = p.subcategory.toString();
+      const recentEnquiries = recentEnquiryMap[p._id.toString()] || 0;
+
+      if (!subScores[subId]) {
+        subScores[subId] = {
+          totalViews: 0,
+          totalRecentEnquiries: 0,
+          productCount: 0,
+        };
+      }
+      subScores[subId].totalViews += p.views || 0;
+      subScores[subId].totalRecentEnquiries += recentEnquiries;
+      subScores[subId].productCount += 1;
     });
 
-    // NEW — score ke hisaab se sort, top 10
-    scored.sort((a, b) => b.score - a.score);
-    const topProducts = scored.slice(0, 10);
+    // ✅ NEW - final score: totalViews + (recentEnquiries × 5)
+    const scoredSubIds = Object.entries(subScores).map(([id, stats]) => ({
+      id,
+      ...stats,
+      score: stats.totalViews + stats.totalRecentEnquiries * 5,
+    }));
 
-    return res.status(200).json({ success: true, products: topProducts });
+    // ✅ NEW - top 10 subcategories score ke hisab se
+    const topSubs = scoredSubIds
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+
+    if (topSubs.length === 0) {
+      return res.status(200).json({ success: true, subCategories: [] });
+    }
+
+    const topSubIds = topSubs.map((s) => s.id);
+
+    // ✅ NEW - subCategory details (image, name, slug) + category slug (link ke liye)
+    const subCategoryDocs = await SubCategory.find({ _id: { $in: topSubIds } })
+      .populate("category", "name slug")
+      .lean();
+
+    const subCategoryMap = {};
+    subCategoryDocs.forEach((s) => {
+      subCategoryMap[s._id.toString()] = s;
+    });
+
+    // ✅ NEW - score order maintain karte hue final response banao
+    const trendingSubCategories = topSubs
+      .map((s) => {
+        const sub = subCategoryMap[s.id];
+        if (!sub) return null;
+        return {
+          ...sub,
+          productCount: s.productCount,
+        };
+      })
+      .filter(Boolean);
+
+    return res.status(200).json({
+      success: true,
+      subCategories: trendingSubCategories,
+    });
 
   } catch (error) {
     console.error("getFeaturedProducts error:", error);
-    return res.status(500).json({ success: false, message: "Failed to fetch featured products" });
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch trending subcategories",
+    });
   }
 };
 
-// Neeche ye function add karo
 export const getProductsByCity = async (req, res) => {
   try {
     const { citySlug } = req.params;

@@ -4,7 +4,7 @@ import HeroCarousel from "../components/Home/HeroCarousel";
 import Sidebar from "../components/Home/SideBar";
 import ActionSidebar from "../components/Home/ActionSide";
 import CategoryShowcase from "../components/Home/CategoryShowcase";
-import FeaturedProducts from "../components/Home/FeaturedProducts";
+import TrendingCategories from "../components/Home/TrendingCategories";
 import TrustedSuppliers from "../components/Home/TrustedSuppliers";
 import ManufacturingHubs from "../components/Home/ManufacturingHubs";
 import HowItWorks from "../components/Home/HowItWorks";
@@ -54,7 +54,7 @@ export default function Home() {
 
       {/* BELOW HERO SECTIONS */}
       <div className="space-y-20 mt-12">
-        <FeaturedProducts />
+        <TrendingCategories />
         <TrustedSuppliers />
         <CategoryShowcase />
         <ManufacturingHubs />

@@ -1,5 +1,7 @@
 
 
+
+
 // // src/Pages/HubPage.jsx
 
 // import React, { useState, useEffect } from "react";
@@ -18,7 +20,7 @@
 // import { getProductsByCity } from "../api/productApi";
 // import { getCities } from "../api/cityApi";
 
-// const ITEMS_PER_PAGE = 12;
+// const ITEMS_PER_PAGE = 15;
 
 // export default function HubPage() {
 // const { city: slug } = useParams(); // /hub/:slug → slug = "surat"
@@ -179,11 +181,11 @@
 //               {/* Stats */}
 //               <div className="flex flex-wrap items-center gap-6">
 //                 <div className="text-center">
-//   <p className="text-2xl font-bold text-white">
-//     {products.length}+
-//   </p>
-//   <p className="text-[11px] text-blue-300/60">Products</p>
-// </div>
+//                   <p className="text-2xl font-bold text-white">
+//                     {products.length}+
+//                   </p>
+//                   <p className="text-[11px] text-blue-300/60">Products</p>
+//                 </div>
 //                 <div className="h-8 w-px bg-white/10" />
 //                 <div className="text-center">
 //                   <p className="text-2xl font-bold text-white">
@@ -288,7 +290,8 @@
 //         {!loading && !error && (
 //           <>
 //             {paginated.length > 0 ? (
-//               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+//               //  UPDATED: 2 cols mobile → 3 tablet → 4 desktop → 5 xl
+//               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 //                 {paginated.map((product) => (
 //                   <ProductCard
 //                     key={product._id}
@@ -358,61 +361,61 @@
 // }
 
 // // ─────────────────────────────────────────
-// // PRODUCT CARD — SubCategoryPage se same pattern
+// // PRODUCT CARD —  UPDATED: compact UI
 // // ─────────────────────────────────────────
 // function ProductCard({ product, onInquiry }) {
 //   return (
-//     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white transition duration-300 hover:shadow-lg">
+//     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white transition duration-300 hover:shadow-md">
 
 //       {/* Image */}
-//       <div className="h-52 overflow-hidden bg-gray-100">
+//       <div className="h-36 overflow-hidden bg-gray-100">
 //         {product.images?.[0]?.url ? (
 //           <img
 //             src={product.images[0].url}
 //             alt={product.title}
-//             className="h-full w-full object-cover transition duration-300 hover:scale-105"
+//            className="h-full w-full object-contain"
 //           />
 //         ) : (
-//           <div className="flex h-full w-full items-center justify-center text-sm text-gray-300">
+//           <div className="flex h-full w-full items-center justify-center text-xs text-gray-300">
 //             No Image
 //           </div>
 //         )}
 //       </div>
 
 //       {/* Content */}
-//       <div className="p-4">
-//         <h2 className="line-clamp-1 font-semibold text-gray-900">{product.title}</h2>
+//       <div className="p-3">
+//         <h2 className="line-clamp-1 text-sm font-semibold text-gray-900">{product.title}</h2>
 
-//        <p className="mt-1 text-sm font-medium text-slate-600">
-//   {product.seller?.companyName || product.seller?.name || "—"}
-// </p>
+//         <p className="mt-0.5 text-xs font-medium text-slate-600">
+//           {product.seller?.companyName || product.seller?.name || "—"}
+//         </p>
 
 //         {(product.seller?.city || product.seller?.state) && (
-//           <p className="mt-0.5 text-xs text-gray-400">
+//           <p className="mt-0.5 text-[11px] text-gray-400">
 //             📍 {[product.seller?.city, product.seller?.state].filter(Boolean).join(", ")}
 //           </p>
 //         )}
 
-//         <p className="mt-2 font-semibold text-blue-800">
+//         <p className="mt-1.5 text-sm font-semibold text-blue-800">
 //           ₹{product.price?.toLocaleString()}
-//           <span className="ml-1 text-xs font-normal text-gray-400">/ {product.unit}</span>
+//           <span className="ml-1 text-[11px] font-normal text-gray-400">/ {product.unit}</span>
 //         </p>
-//         <p className="mt-1 text-xs text-gray-400">
+//         <p className="text-[11px] text-gray-400">
 //           MOQ: {product.moq} {product.unit}
 //         </p>
 
-//         <div className="mt-4 flex gap-3">
+//         <div className="mt-3 flex gap-2">
 //           <Link
 //             to={`/category/${product.category?.slug}/subcategory/${product.subcategory?.slug}/product/${product.slug}`}
 //             className="flex-1"
 //           >
-//             <button className="w-full rounded-xl bg-blue-800 py-2.5 text-sm font-medium text-white transition hover:bg-blue-900">
+//             <button className="w-full rounded-lg bg-blue-800 py-1.5 text-xs font-medium text-white transition hover:bg-blue-900">
 //               View Details
 //             </button>
 //           </Link>
 //           <button
 //             onClick={onInquiry}
-//             className="flex-1 rounded-xl border border-blue-800 py-2.5 text-sm font-medium text-blue-800 transition hover:bg-blue-50"
+//             className="flex-1 rounded-lg border border-blue-800 py-1.5 text-xs font-medium text-blue-800 transition hover:bg-blue-50"
 //           >
 //             Send Inquiry
 //           </button>
@@ -426,12 +429,10 @@
 
 
 
-
-
 // src/Pages/HubPage.jsx
 
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   ChevronRight,
   MapPin,
@@ -541,6 +542,25 @@ const { city: slug } = useParams(); // /hub/:slug → slug = "surat"
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
+  // Smart pagination (Products.jsx wala pattern - limited pages + ellipsis)
+  const getPageNumbers = () => {
+    const pages = [];
+    const delta = 1;
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - delta && i <= currentPage + delta)
+      ) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "...") {
+        pages.push("...");
+      }
+    }
+    return pages;
+  };
 
   // Industry chips — city.industries ya products se derive karein
   const industries = city?.industries?.length
@@ -739,7 +759,7 @@ const { city: slug } = useParams(); // /hub/:slug → slug = "surat"
 
             {/* ── PAGINATION ── */}
             {totalPages > 1 && (
-              <div className="mt-10 flex items-center justify-center gap-2">
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-2">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
@@ -748,19 +768,25 @@ const { city: slug } = useParams(); // /hub/:slug → slug = "surat"
                   <ChevronRight className="h-4 w-4 rotate-180" />
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`flex h-9 w-9 items-center justify-center rounded-xl border text-sm font-medium transition ${
-                      currentPage === page
-                        ? "border-blue-900 bg-blue-900 text-white"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-blue-900 hover:text-blue-900"
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
+                {getPageNumbers().map((page, idx) =>
+                  page === "..." ? (
+                    <span key={`dots-${idx}`} className="px-1 text-slate-400 text-sm">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`flex h-9 w-9 items-center justify-center rounded-xl border text-sm font-medium transition ${
+                        currentPage === page
+                          ? "border-blue-900 bg-blue-900 text-white"
+                          : "border-slate-200 bg-white text-slate-600 hover:border-blue-900 hover:text-blue-900"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                )}
 
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
@@ -787,11 +813,23 @@ const { city: slug } = useParams(); // /hub/:slug → slug = "surat"
 }
 
 // ─────────────────────────────────────────
-// PRODUCT CARD —  UPDATED: compact UI
+// PRODUCT CARD —  UPDATED: clickable card + clickable company name (same route as ProductDetailsPage)
 // ─────────────────────────────────────────
 function ProductCard({ product, onInquiry }) {
+  const navigate = useNavigate();
+
+  // Poora card click karne pe product detail page khulega
+  const goToProduct = () => {
+    navigate(
+      `/category/${product.category?.slug}/subcategory/${product.subcategory?.slug}/product/${product.slug}`
+    );
+  };
+
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white transition duration-300 hover:shadow-md">
+    <div
+      onClick={goToProduct}
+      className="cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-white transition duration-300 hover:shadow-md"
+    >
 
       {/* Image */}
       <div className="h-36 overflow-hidden bg-gray-100">
@@ -812,9 +850,20 @@ function ProductCard({ product, onInquiry }) {
       <div className="p-3">
         <h2 className="line-clamp-1 text-sm font-semibold text-gray-900">{product.title}</h2>
 
-        <p className="mt-0.5 text-xs font-medium text-slate-600">
-          {product.seller?.companyName || product.seller?.name || "—"}
-        </p>
+        {/* ✅ UPDATED - route ab /seller/:id (ProductDetailsPage jaisa hi, jo sahi khulta hai) */}
+        {product.seller?._id ? (
+          <Link
+            to={`/seller/${product.seller._id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="mt-0.5 block text-xs font-medium text-slate-600 hover:text-blue-800 hover:underline w-fit"
+          >
+            {product.seller?.companyName || product.seller?.name || "—"}
+          </Link>
+        ) : (
+          <p className="mt-0.5 text-xs font-medium text-slate-600">
+            {product.seller?.companyName || product.seller?.name || "—"}
+          </p>
+        )}
 
         {(product.seller?.city || product.seller?.state) && (
           <p className="mt-0.5 text-[11px] text-gray-400">
@@ -834,13 +883,17 @@ function ProductCard({ product, onInquiry }) {
           <Link
             to={`/category/${product.category?.slug}/subcategory/${product.subcategory?.slug}/product/${product.slug}`}
             className="flex-1"
+            onClick={(e) => e.stopPropagation()}
           >
             <button className="w-full rounded-lg bg-blue-800 py-1.5 text-xs font-medium text-white transition hover:bg-blue-900">
               View Details
             </button>
           </Link>
           <button
-            onClick={onInquiry}
+            onClick={(e) => {
+              e.stopPropagation();
+              onInquiry();
+            }}
             className="flex-1 rounded-lg border border-blue-800 py-1.5 text-xs font-medium text-blue-800 transition hover:bg-blue-50"
           >
             Send Inquiry

@@ -235,6 +235,124 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getSubCategories } from "../../api/subCategoryApi";
+
+// // =========================
+// // SUBCATEGORY CARD
+// // =========================
+// function SubCategoryCard({ img, title, categorySlug, subcategory }) {
+//   return (
+//     <Link
+//       to={`/category/${categorySlug}/subcategory/${subcategory}`}
+//       className="group flex flex-col bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-blue-400 hover:shadow-md transition-all duration-200"
+//     >
+//       {/* IMAGE */}
+//       <div className="w-full h-[100px] sm:h-[110px] overflow-hidden bg-gray-100">
+//         <img
+//           src={img}
+//           alt={title}
+//           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+//         />
+//       </div>
+
+//       {/* INFO */}
+//       <div className="px-2 py-2">
+//         <p className="text-[12px] sm:text-[13px] font-medium text-gray-800 leading-tight line-clamp-2">
+//           {title}
+//         </p>
+//         <p className="text-[10px] text-gray-400 mt-1">Verified Supplier</p>
+//       </div>
+//     </Link>
+//   );
+// }
+
+// // =========================
+// // MAIN COMPONENT
+// // =========================
+// export default function SubCategoryGrid({ categorySlug }) {
+//   const [subCategories, setSubCategories] = useState([]);
+//   const [loading, setLoading] = useState(false);
+
+//   // =========================
+//   // FETCH SUBCATEGORIES
+//   // =========================
+//   useEffect(() => {
+//     fetchSubCategories();
+//   }, []);
+
+//   const fetchSubCategories = async () => {
+//     try {
+//       setLoading(true);
+//       const data = await getSubCategories();
+//       setSubCategories(data.subCategories || []);
+//     } catch (error) {
+//       console.log(error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // =========================
+//   // FILTER + LIMIT TO 8
+//   // =========================
+//   const filteredSubCategories = subCategories.filter(
+//     (item) => item.category?.slug === categorySlug
+//   );
+
+//   const limited = filteredSubCategories.slice(0, 8);
+//   const hasMore = filteredSubCategories.length > 8;
+
+//   return (
+//     <div className="flex-1 min-w-0">
+//       {loading ? (
+//         // SKELETON LOADER
+//         <div className="grid grid-cols-4 gap-3">
+//           {[...Array(8)].map((_, i) => (
+//             <div
+//               key={i}
+//               className="rounded-xl bg-gray-100 animate-pulse h-[140px]"
+//             />
+//           ))}
+//         </div>
+//       ) : limited.length > 0 ? (
+//         <>
+//           {/* GRID */}
+//           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+//             {limited.map((item, i) => (
+//               <SubCategoryCard
+//                 key={`${item._id}-${i}`}
+//                 img={item.image}
+//                 title={item.name}
+//                 categorySlug={item.category?.slug || "category"}
+//                 subcategory={item.slug}
+//               />
+//             ))}
+//           </div>
+
+//           {/* VIEW ALL LINK */}
+//           {hasMore && (
+//             <div className="mt-3 text-right">
+//               <Link
+//                 to={`/category/${categorySlug}`}
+//                 className="text-[12px] text-blue-600 hover:text-orange-600 font-medium transition-colors duration-200"
+//               >
+//                 View all {filteredSubCategories.length} subcategories →
+//               </Link>
+//             </div>
+//           )}
+//         </>
+//       ) : (
+//         <p className="text-gray-400 text-sm p-4">No subcategories found</p>
+//       )}
+//     </div>
+//   );
+// }
+
+
+
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getSubCategories } from "../../api/subCategoryApi";
@@ -295,11 +413,11 @@ export default function SubCategoryGrid({ categorySlug }) {
   };
 
   // =========================
-  // FILTER + LIMIT TO 8
+  // FILTER + SORT BY ORDER + LIMIT TO 8 ✅ UPDATED
   // =========================
-  const filteredSubCategories = subCategories.filter(
-    (item) => item.category?.slug === categorySlug
-  );
+  const filteredSubCategories = subCategories
+    .filter((item) => item.category?.slug === categorySlug)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0)); // ✅ NEW
 
   const limited = filteredSubCategories.slice(0, 8);
   const hasMore = filteredSubCategories.length > 8;

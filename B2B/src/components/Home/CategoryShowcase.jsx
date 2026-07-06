@@ -375,7 +375,7 @@ export default function CategoryShowcase() {
       </div>
 
       {/* CATEGORY LOOP */}
-      <div className="space-y-6">
+      <div className="space-y-10">
         {homeCategories.map((cat) => (
           <section
             key={cat._id}
