@@ -121,13 +121,13 @@ export const getFeaturedSellers = async (req, res) => {
   try {
     // Gold + Premium sellers fetch karo
     const sellers = await Seller.find({
-      subscriptionActive: true,
-      subscriptionPlan:   { $in: ["gold", "premium"] },
-      companyName:        { $ne: "" },
-    })
-      .select("name companyName companyType city state profileImage subscriptionPlan yearEstablished")
-      .sort({ subscriptionPlan: 1 }) // gold pehle
-      .limit(10);
+  subscriptionActive: true,
+  subscriptionPlan:   { $in: ["diamond", "gold"] },
+  companyName:        { $ne: "" },
+})
+  .select("name companyName companyType city state profileImage subscriptionPlan yearEstablished")
+  .sort({ subscriptionPlan: 1 }) // diamond pehle
+  .limit(10);
 
     // Har seller ke products count karo
     const sellersWithCount = await Promise.all(

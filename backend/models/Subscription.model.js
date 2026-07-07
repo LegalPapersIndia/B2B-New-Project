@@ -16,11 +16,11 @@ const subscriptionSchema = new mongoose.Schema(
     // ─────────────────────────────────────────
     // PLAN
     // ─────────────────────────────────────────
-    plan: {
-      type: String,
-      enum: ["basic", "premium", "gold"],
-      required: true,
-    },
+   plan: {
+  type: String,
+  enum: ["silver", "gold", "diamond"],
+  required: true,
+},
 
     // ─────────────────────────────────────────
     // PRICING

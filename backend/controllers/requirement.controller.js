@@ -9,18 +9,18 @@ import Product from "../models/product.model.js";
 // PLAN PRIORITY
 // ─────────────────────────────────────────
 const PLAN_PRIORITY = {
-  gold:    1,
-  premium: 2,
-  basic:   3,
+  diamond: 1,
+  gold:    2,
+  silver:  3,
 };
 
 // ─────────────────────────────────────────
 // PLAN DELAY
 // ─────────────────────────────────────────
 const PLAN_DELAY = {
-  gold:    0,                    // turant
-  premium: 30 * 60 * 1000,      // 30 min
-  basic:   60 * 60 * 1000,      // 1 hour
+  diamond: 0,                    // turant
+  gold:    30 * 60 * 1000,      // 30 min
+  silver:  60 * 60 * 1000,      // 1 hour
 };
 
 // ─────────────────────────────────────────

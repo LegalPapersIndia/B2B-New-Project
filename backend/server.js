@@ -55,9 +55,9 @@ const seedPlans = async () => {
     const count = await Plan.countDocuments();
     if (count === 0) {
       await Plan.insertMany([
-        { key: "basic",   amount: 999,  duration: 30 },
-        { key: "premium", amount: 1999, duration: 30 },
-        { key: "gold",    amount: 3999, duration: 30 },
+        { key: "silver",  amount: 999,  duration: 30 },
+        { key: "gold",    amount: 1999, duration: 30 },
+        { key: "diamond", amount: 3999, duration: 30 },
       ]);
       console.log(" Plans seeded");
     }

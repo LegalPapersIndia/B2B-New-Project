@@ -892,7 +892,7 @@ const AddProduct = () => {
                     instantly.
                   </p>
                   <div className="flex gap-2 mt-3 flex-wrap">
-                    {["Basic", "Premium", "Gold"].map((plan) => (
+                    {["Silver", "Gold", "Diamond"].map((plan) => (
                       <span
                         key={plan}
                         className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/50 border border-white/10"

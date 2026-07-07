@@ -191,7 +191,7 @@ export default function PostRequirementForm({ onPosted }) {
           <h3 className="text-2xl font-bold text-gray-800 mb-2">Requirement Posted! 🎉</h3>
           <p className="text-gray-500 mb-2">Your requirement has been sent to</p>
           <p className="text-3xl font-bold text-blue-800 mb-2">{sellersNotified} Sellers</p>
-          <p className="text-gray-400 text-sm mb-6">Gold & Premium sellers will contact you first.</p>
+          <p className="text-gray-400 text-sm mb-6">Diamond & Gold sellers will contact you first.</p>
           <button
             onClick={handlePostAnother}
             className="bg-blue-800 hover:bg-blue-900 text-white px-8 py-3 rounded-2xl font-semibold transition"
@@ -341,9 +341,9 @@ export default function PostRequirementForm({ onPosted }) {
             <div className="w-7 h-7 bg-blue-800 rounded-xl flex items-center justify-center flex-shrink-0">
               <Send className="w-3.5 h-3.5 text-white" />
             </div>
-            <p className="text-xs text-blue-700">
-              Sent to <strong>Gold & Premium</strong> sellers first, then Basic plan sellers.
-            </p>
+           <p className="text-xs text-blue-700">
+  Sent to <strong>Diamond & Gold</strong> sellers first, then Silver plan sellers.
+</p>
           </div>
 
           {/* SUBMIT */}

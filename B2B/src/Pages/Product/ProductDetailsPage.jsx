@@ -523,12 +523,12 @@ export default function ProductDetailsPage() {
                     alt={product.title}
                     className="w-full h-[280px] sm:h-[420px] object-contain bg-gray-50"
                   />
-                  {product.seller?.subscriptionPlan && (
-                    <div className="absolute top-4 left-4 bg-blue-800 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                      {product.seller.subscriptionPlan === "gold" ? "⭐ Gold" :
-                       product.seller.subscriptionPlan === "premium" ? "💎 Premium" : "Featured"}
-                    </div>
-                  )}
+                 {product.seller?.subscriptionPlan && (
+  <div className="absolute top-4 left-4 bg-blue-800 text-white text-xs px-3 py-1 rounded-full font-semibold">
+    {product.seller.subscriptionPlan === "diamond" ? "💎 Diamond" :
+     product.seller.subscriptionPlan === "gold" ? "⭐ Gold" : "Featured"}
+  </div>
+)}
                 </div>
               </div>
 

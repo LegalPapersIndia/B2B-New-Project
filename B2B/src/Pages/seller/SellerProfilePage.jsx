@@ -440,15 +440,15 @@ export default function SellerProfilePage() {
   };
 
   const planBadge = {
-    gold: { label: "⭐ Gold Supplier", bg: "bg-yellow-100 text-yellow-700" },
-    premium: {
-      label: "💎 Premium Supplier",
-      bg: "bg-purple-100 text-purple-700",
-    },
-  }[seller.subscriptionPlan] || {
-    label: "Verified Supplier",
-    bg: "bg-blue-100 text-blue-700",
-  };
+  diamond: { label: "💎 Diamond Supplier", bg: "bg-cyan-100 text-cyan-700" },
+  gold: {
+    label: "⭐ Gold Supplier",
+    bg: "bg-yellow-100 text-yellow-700",
+  },
+}[seller.subscriptionPlan] || {
+  label: "Verified Supplier",
+  bg: "bg-blue-100 text-blue-700",
+};
 
   return (
     <div className="min-h-screen bg-gray-50">

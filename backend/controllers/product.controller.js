@@ -63,7 +63,7 @@ const productStatus = seller.subscriptionActive
   ? "approved"
   : "pending";
 
-      const isFeatured = ["gold", "premium"].includes(
+      const isFeatured = ["gold", "diamond"].includes(
   seller.subscriptionPlan
 );
 

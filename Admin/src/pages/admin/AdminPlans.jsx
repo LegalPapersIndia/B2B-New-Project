@@ -5,9 +5,9 @@ import { adminGetPlans, adminUpdatePlan } from "../../api/planApi";
 import { FaCrown, FaRocket, FaStar, FaEdit } from "react-icons/fa";
 
 const PLAN_CONFIG = {
-  basic:   { icon: <FaRocket />,  color: "text-blue-400",   bg: "bg-blue-500/20"   },
-  premium: { icon: <FaStar />,    color: "text-purple-400", bg: "bg-purple-500/20" },
-  gold:    { icon: <FaCrown />,   color: "text-yellow-400", bg: "bg-yellow-500/20" },
+  silver:  { icon: <FaRocket />,  color: "text-blue-400",   bg: "bg-blue-500/20"   },
+  gold:    { icon: <FaStar />,    color: "text-purple-400", bg: "bg-purple-500/20" },
+  diamond: { icon: <FaCrown />,   color: "text-yellow-400", bg: "bg-yellow-500/20" },
 };
 
 export default function AdminPlans() {
@@ -73,7 +73,7 @@ export default function AdminPlans() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map(plan => {
-            const config = PLAN_CONFIG[plan.key] || PLAN_CONFIG.basic;
+            const config = PLAN_CONFIG[plan.key] || PLAN_CONFIG.silver;
             return (
               <div key={plan._id}
                 className="bg-[#0D0D14] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition">

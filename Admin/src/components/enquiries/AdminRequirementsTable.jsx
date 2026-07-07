@@ -412,9 +412,9 @@ const timeAgo = (date) => {
 
 const planStyle = (plan) => {
   switch (plan) {
-    case "gold":    return "bg-yellow-500/20 text-yellow-400";
-    case "premium": return "bg-purple-500/20 text-purple-400";
-    case "basic":   return "bg-blue-500/20 text-blue-400";
+    case "diamond": return "bg-cyan-500/20 text-cyan-400";    
+    case "gold":    return "bg-yellow-500/20 text-yellow-400"; 
+    case "silver":  return "bg-gray-400/20 text-gray-300";     
     default:        return "bg-gray-500/20 text-gray-400";
   }
 };
@@ -666,7 +666,7 @@ export default function AdminRequirementsTable({
                   <td className="p-4 text-white/60">{req.budget || "—"}</td>
                   <td className="p-4">
                     <div className="flex flex-col gap-1">
-                      {["gold", "premium", "basic"].map((plan) => {
+                     {["diamond", "gold", "silver"].map((plan) => {
                         const count = req.matchedSellers?.filter((s) => s.plan === plan).length;
                         if (!count) return null;
                         return (
@@ -752,7 +752,7 @@ export default function AdminRequirementsTable({
         )}
       </div>
 
-      {/* REQUIREMENT VIEW MODAL */}
+      {/* REQUIREMENT VIEW MODAL*/}
       {selectedReq && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className="bg-[#0D0D14] border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col">

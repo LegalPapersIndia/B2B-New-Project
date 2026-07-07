@@ -133,30 +133,31 @@ const Subscription = () => {
   // ─────────────────────────────────────────
   // PLAN CONFIG
   // ─────────────────────────────────────────
-  const planConfig = {
-    basic: {
-      icon:       <FaRocket className="text-2xl" />,
-      color:      "from-blue-500 to-blue-700",
-      badge:      "Starter",
-      badgeColor: "bg-blue-100 text-blue-700",
-      popular:    false,
-    },
-    premium: {
-      icon:       <FaStar className="text-2xl" />,
-      color:      "from-purple-500 to-purple-700",
-      badge:      "Most Popular",
-      badgeColor: "bg-purple-100 text-purple-700",
-      popular:    true,
-    },
-    gold: {
-      icon:       <FaCrown className="text-2xl" />,
-      color:      "from-yellow-500 to-orange-500",
-      badge:      "Best Value",
-      badgeColor: "bg-yellow-100 text-yellow-700",
-      popular:    false,
-    },
-  };
+ 
 
+  const planConfig = {
+  silver: {
+    icon:       <FaRocket className="text-2xl" />,
+    color:      "from-gray-400 to-gray-600",
+    badge:      "Starter",
+    badgeColor: "bg-gray-100 text-gray-700",
+    popular:    false,
+  },
+  gold: {
+    icon:       <FaStar className="text-2xl" />,
+    color:      "from-yellow-500 to-yellow-700",
+    badge:      "Most Popular",
+    badgeColor: "bg-yellow-100 text-yellow-700",
+    popular:    true,
+  },
+  diamond: {
+    icon:       <FaCrown className="text-2xl" />,
+    color:      "from-cyan-500 to-cyan-700",
+    badge:      "Best Value",
+    badgeColor: "bg-cyan-100 text-cyan-700",
+    popular:    false,
+  },
+};
   // ─────────────────────────────────────────
   // LOADING
   // ─────────────────────────────────────────

@@ -854,7 +854,7 @@ export default function Sellers() {
 
   // ── ASSIGN PLAN STATE ADDED ──
   const [assignPlanSeller, setAssignPlanSeller] = useState(null);
-  const [selectedPlan, setSelectedPlan] = useState("basic");
+  const [selectedPlan, setSelectedPlan] = useState("silver");
   const [assigning, setAssigning] = useState(false);
   const [assignError, setAssignError] = useState("");
 
@@ -1047,18 +1047,18 @@ export default function Sellers() {
   // ─────────────────────────────────────────
   // PLAN STYLE
   // ─────────────────────────────────────────
-  const planStyle = (plan) => {
-    switch (plan) {
-      case "gold":
-        return "bg-yellow-500/20 text-yellow-400";
-      case "premium":
-        return "bg-purple-500/20 text-purple-400";
-      case "basic":
-        return "bg-blue-500/20 text-blue-400";
-      default:
-        return "bg-gray-500/20 text-gray-400";
-    }
-  };
+ const planStyle = (plan) => {
+  switch (plan) {
+    case "diamond":
+      return "bg-cyan-500/20 text-cyan-400";
+    case "gold":
+      return "bg-yellow-500/20 text-yellow-400";
+    case "silver":
+      return "bg-gray-400/20 text-gray-300";
+    default:
+      return "bg-gray-500/20 text-gray-400";
+  }
+};
 
   // ─────────────────────────────────────────
   // RENDER
@@ -1313,7 +1313,7 @@ export default function Sellers() {
                         {/* ── ASSIGN PLAN BUTTON ADDED ── */}
                         <button
                           onClick={() => {
-                            setSelectedPlan(seller.subscriptionPlan || "basic");
+                            setSelectedPlan(seller.subscriptionPlan || "silver");
                             setAssignError("");
                             setAssignPlanSeller(seller);
                           }}
@@ -1431,7 +1431,7 @@ export default function Sellers() {
               )}
 
               <div className="space-y-2">
-                {["basic", "premium", "gold"].map((plan) => (
+               {["silver", "gold", "diamond"].map((plan) => (
                   <button
                     key={plan}
                     onClick={() => setSelectedPlan(plan)}

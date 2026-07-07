@@ -816,10 +816,10 @@ import { getSellerPublicProfile } from "../api/sellerProfileApi";
 // ─────────────────────────────────────────
 const planBadge = (plan) => {
   switch (plan) {
+    case "diamond":
+      return "bg-cyan-500 text-white";
     case "gold":
       return "bg-yellow-500 text-white";
-    case "premium":
-      return "bg-purple-600 text-white";
     default:
       return "bg-blue-800 text-white";
   }
@@ -976,7 +976,7 @@ export default function SellerPublicProfile() {
                       className={`text-[11px] px-3 py-1 rounded-full flex items-center gap-1 font-bold ${planBadge(seller.subscriptionPlan)}`}
                     >
                       <Crown className="w-3 h-3" />
-                      {seller.subscriptionPlan === "gold" ? "Gold" : "Premium"}
+                      {seller.subscriptionPlan === "diamond" ? "Diamond" : "Gold"}
                     </span>
                   )}
                   <span className="bg-green-500 text-white text-[11px] px-3 py-1 rounded-full flex items-center gap-1 font-bold">

@@ -820,13 +820,13 @@ const SellerProfile = () => {
 
   // ── PLAN STYLE ──
   const planStyle = (plan) => {
-    switch (plan) {
-      case "gold":    return "bg-yellow-100 text-yellow-700 border-yellow-200";
-      case "premium": return "bg-purple-100 text-purple-700 border-purple-200";
-      case "basic":   return "bg-blue-100 text-blue-700 border-blue-200";
-      default:        return "bg-gray-100 text-gray-500 border-gray-200";
-    }
-  };
+  switch (plan) {
+    case "diamond": return "bg-cyan-100 text-cyan-700 border-cyan-200";
+    case "gold":    return "bg-yellow-100 text-yellow-700 border-yellow-200";
+    case "silver":  return "bg-gray-200 text-gray-700 border-gray-300";
+    default:        return "bg-gray-100 text-gray-500 border-gray-200";
+  }
+};
 
   // ── SHARED INPUT CLASSES ──
   const inputClass = `w-full h-12 pl-12 border rounded-xl outline-none transition

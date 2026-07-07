@@ -1102,12 +1102,12 @@ import { getMyLeads } from "../../api/leadApi";
 
 const planStyle = (plan) => {
   switch (plan) {
+    case "diamond":
+      return { bg: "bg-cyan-100", text: "text-cyan-700", border: "border-cyan-200", icon: "💎" };
     case "gold":
       return { bg: "bg-yellow-100", text: "text-yellow-700", border: "border-yellow-200", icon: "⭐" };
-    case "premium":
-      return { bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200", icon: "💎" };
-    case "basic":
-      return { bg: "bg-blue-100", text: "text-blue-700", border: "border-blue-200", icon: "🔵" };
+    case "silver":
+      return { bg: "bg-gray-200", text: "text-gray-700", border: "border-gray-300", icon: "🔵" };
     default:
       return { bg: "bg-gray-100", text: "text-gray-500", border: "border-gray-200", icon: "—" };
   }

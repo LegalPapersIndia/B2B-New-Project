@@ -71,17 +71,17 @@ export const renderRow = {
         {[s.city, s.state].filter(Boolean).join(", ") || "—"}
       </td>
       <td className="px-4 py-3.5">
-        <span
-          className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize ${
-            s.subscriptionPlan === "gold"
-              ? "bg-yellow-500/20 text-yellow-400"
-              : s.subscriptionPlan === "premium"
-                ? "bg-purple-500/20 text-purple-400"
-                : s.subscriptionPlan === "basic"
-                  ? "bg-blue-500/20 text-blue-400"
-                  : "bg-gray-500/20 text-gray-400"
-          }`}
-        >
+       <span
+  className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold capitalize ${
+    s.subscriptionPlan === "diamond"
+      ? "bg-cyan-500/20 text-cyan-400"
+      : s.subscriptionPlan === "gold"
+        ? "bg-yellow-500/20 text-yellow-400"
+        : s.subscriptionPlan === "silver"
+          ? "bg-gray-400/20 text-gray-300"
+          : "bg-gray-500/20 text-gray-400"
+  }`}
+>
           {s.subscriptionPlan || "No Plan"}
         </span>
       </td>
