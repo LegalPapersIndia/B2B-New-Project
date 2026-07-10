@@ -4,7 +4,7 @@ import {
   getNavbarSettings,
   updateNavbarSettings,
 } from "../controllers/navbarSettings.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; // ✅ UPDATED
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ const router = express.Router();
 router.get("/", getNavbarSettings);
 
 // ADMIN
-router.put("/", adminAuthMiddleware, updateNavbarSettings);
+router.put("/", checkPermission("navbar"), updateNavbarSettings); 
 
 export default router;

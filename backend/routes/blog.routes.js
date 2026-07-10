@@ -4,7 +4,7 @@ import {
   createBlog, getAllBlogs, getAllBlogsAdmin,
   getSingleBlog, updateBlog, deleteBlog
 } from "../controllers/blog.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -14,9 +14,9 @@ router.get("/",           getAllBlogs);
 router.get("/:slug",      getSingleBlog);
 
 // ADMIN
-router.get("/admin/all",                        adminAuthMiddleware, getAllBlogsAdmin);
-router.post("/",          upload.single("image"), adminAuthMiddleware, createBlog);
-router.put("/:id",        upload.single("image"), adminAuthMiddleware, updateBlog);
-router.delete("/:id",                            adminAuthMiddleware, deleteBlog);
+router.get("/admin/all",                        checkPermission("blogs"), getAllBlogsAdmin); 
+router.post("/",          upload.single("image"), checkPermission("blogs"), createBlog); 
+router.put("/:id",        upload.single("image"), checkPermission("blogs"), updateBlog); 
+router.delete("/:id",                            checkPermission("blogs"), deleteBlog); 
 
 export default router;

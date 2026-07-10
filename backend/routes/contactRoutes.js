@@ -8,7 +8,7 @@ import {
   deleteContact,
 } from "../controllers/contactController.js";
 
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; // ✅ UPDATED
 
 const router = express.Router();
 
@@ -16,12 +16,13 @@ const router = express.Router();
 router.post("/", createContact);
 
 // ADMIN
-router.get("/", adminAuthMiddleware, getAllContacts);
+// ADMIN
+router.get("/", checkPermission("contacts"), getAllContacts); 
 
-router.get("/:id", adminAuthMiddleware, getContactById);
+router.get("/:id", checkPermission("contacts"), getContactById); 
 
-router.put("/:id/status", adminAuthMiddleware, updateContactStatus);
+router.put("/:id/status", checkPermission("contacts"), updateContactStatus); 
 
-router.delete("/:id", adminAuthMiddleware, deleteContact);
+router.delete("/:id", checkPermission("contacts"), deleteContact);
 
 export default router;

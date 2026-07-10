@@ -52,7 +52,7 @@ import {
   resetPassword,
 } from "../controllers/sellerAuthController.js";
 
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; // ✅ UPDATED
 
 const router = express.Router();
 
@@ -74,6 +74,6 @@ router.post("/reset-password", resetPassword);
 router.get("/all", getAllSellers);
 
 // DELETE SELLER (Admin)
-router.delete("/:id", adminAuthMiddleware, deleteSeller);
+router.delete("/:id", checkPermission("sellers"), deleteSeller);
 
 export default router;

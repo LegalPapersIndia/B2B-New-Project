@@ -7,7 +7,7 @@ import {
   updateFaq,
   deleteFaq,
 } from "../controllers/contactPage.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 
@@ -15,9 +15,9 @@ const router = express.Router();
 router.get("/", getContactPage);
 
 // ADMIN
-router.put("/",                     adminAuthMiddleware, updateContactPage);
-router.post("/faqs",                adminAuthMiddleware, addFaq);
-router.put("/faqs/:faqId",          adminAuthMiddleware, updateFaq);
-router.delete("/faqs/:faqId",       adminAuthMiddleware, deleteFaq);
+router.put("/",                     checkPermission("contact-page"), updateContactPage); 
+router.post("/faqs",                checkPermission("contact-page"), addFaq); 
+router.put("/faqs/:faqId",          checkPermission("contact-page"), updateFaq); 
+router.delete("/faqs/:faqId",       checkPermission("contact-page"), deleteFaq); 
 
 export default router;

@@ -39,6 +39,7 @@ import footerSettingsRoutes from "./routes/footerSettingsRoutes.js";
 import contactPageRoutes from "./routes/contactPageRoutes.js";
 import heroSlideRoutes from "./routes/heroSlideRoutes.js";
 import navbarSettingsRoutes from "./routes/navbarSettingsRoutes.js";
+import managerRoutes from "./routes/managerRoutes.js";
 
 dotenv.config();
 
@@ -255,6 +256,8 @@ app.use("/api/contact-page", contactPageRoutes);
 app.use("/api/hero-slides", heroSlideRoutes);
 
 app.use("/api/navbar-settings", navbarSettingsRoutes);
+
+app.use("/api/managers", managerRoutes);
 // ─────────────────────────────────────────
 // SERVER
 // ─────────────────────────────────────────

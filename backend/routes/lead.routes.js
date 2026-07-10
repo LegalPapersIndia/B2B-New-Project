@@ -45,7 +45,7 @@ import {
 } from "../controllers/lead.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";  // ⬅️ ADD KARO
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; // ✅ UPDATED  
 
 const router = express.Router();
 
@@ -67,7 +67,7 @@ router.patch("/:id/status", authMiddleware, updateLeadStatus);
 // ─────────────────────────────────────────
 // ADMIN — Saari leads dekhe
 // ─────────────────────────────────────────
-router.get("/admin/all", adminAuthMiddleware, getAllLeads); 
+router.get("/admin/all", checkPermission("leads"), getAllLeads);
 
 // Single delete
 router.delete("/:id", authMiddleware, deleteLead);
@@ -75,7 +75,7 @@ router.delete("/:id", authMiddleware, deleteLead);
 // Multiple delete
 router.post("/delete-multiple", authMiddleware, deleteMultipleLeads);
 
-router.delete("/admin/:id", adminAuthMiddleware, deleteLeadAdmin);
-router.post("/admin/delete-multiple", adminAuthMiddleware, deleteMultipleLeadsAdmin);
+router.delete("/admin/:id", checkPermission("leads"), deleteLeadAdmin);
+router.post("/admin/delete-multiple", checkPermission("leads"), deleteMultipleLeadsAdmin);
 
 export default router;

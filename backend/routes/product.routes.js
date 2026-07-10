@@ -109,7 +109,7 @@ import {
 } from "../controllers/product.controller.js";
 
 import authMiddleware      from "../middleware/authMiddleware.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; // ✅ UPDATED
 import upload              from "../middleware/upload.js";
 
 const router = express.Router();
@@ -117,7 +117,7 @@ const router = express.Router();
 // ─────────────────────────────────────────
 // ADMIN ROUTES — sabse pehle
 // ─────────────────────────────────────────
-router.get("/admin/all",        adminAuthMiddleware, getAdminProducts);
+router.get("/admin/all", checkPermission("products"), getAdminProducts);
 router.get("/featured",         getFeaturedProducts);
 router.get("/suggestions",  getSearchSuggestions);
 
@@ -151,8 +151,8 @@ router.get("/city/:citySlug",               getProductsByCity);
 router.get("/subcategory/:subcategorySlug", getProductsBySubCategory);
 
 // ADMIN ROUTES
-router.get("/admin/product/:id",    adminAuthMiddleware, getProductByIdAdmin);
-router.delete("/admin/product/:id", adminAuthMiddleware, deleteProductAdmin);
+router.get("/admin/product/:id",    checkPermission("products"), getProductByIdAdmin);
+router.delete("/admin/product/:id", checkPermission("products"), deleteProductAdmin);  
 
 router.get("/:slug", getSingleProduct);
 

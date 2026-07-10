@@ -5,7 +5,7 @@ import {
   updateStat,
   deleteStat,
 } from "../controllers/marketplaceStat.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 
@@ -13,8 +13,8 @@ const router = express.Router();
 router.get("/", getAllStats);
 
 // PROTECTED — sirf admin
-router.post("/", adminAuthMiddleware, createStat);
-router.put("/:id", adminAuthMiddleware, updateStat);
-router.delete("/:id", adminAuthMiddleware, deleteStat);
+router.post("/", checkPermission("marketplace-stats"), createStat); 
+router.put("/:id", checkPermission("marketplace-stats"), updateStat); 
+router.delete("/:id", checkPermission("marketplace-stats"), deleteStat); 
 
 export default router;

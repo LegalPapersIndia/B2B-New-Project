@@ -15,7 +15,7 @@ import {
 } from "../controllers/requirement.controller.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.post("/post", postRequirement);
 router.get("/my-requirements", authMiddleware, getMyRequirements);
 
 // ADMIN — Saari requirements
-router.get("/admin/all", adminAuthMiddleware, getAllRequirements);
+router.get("/admin/all", checkPermission("leads"), getAllRequirements);
 
 // Single delete
 router.delete("/:id", authMiddleware, deleteRequirement);
@@ -34,8 +34,8 @@ router.delete("/:id", authMiddleware, deleteRequirement);
 // Multiple delete
 router.post("/delete-multiple", authMiddleware, deleteMultipleRequirements);
 
-router.delete("/admin/:id", adminAuthMiddleware, deleteRequirementAdmin);
-router.post("/admin/delete-multiple", adminAuthMiddleware, deleteMultipleRequirementsAdmin);
+router.delete("/admin/:id", checkPermission("leads"), deleteRequirementAdmin);
+router.post("/admin/delete-multiple", checkPermission("leads"), deleteMultipleRequirementsAdmin);
 
 // SELLER — Status update
 router.put("/:id/status", authMiddleware, updateRequirementStatus);

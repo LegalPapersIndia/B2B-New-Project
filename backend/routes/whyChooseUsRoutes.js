@@ -7,7 +7,7 @@ import {
   updateFeature,
   deleteFeature,
 } from "../controllers/whyChooseUs.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 
@@ -15,9 +15,9 @@ const router = express.Router();
 router.get("/", getAllFeatures);
 
 // ADMIN
-router.get("/admin/all", adminAuthMiddleware, getAllFeaturesAdmin);
-router.post("/", adminAuthMiddleware, createFeature);
-router.put("/:id", adminAuthMiddleware, updateFeature);
-router.delete("/:id", adminAuthMiddleware, deleteFeature);
+router.get("/admin/all", checkPermission("why-choose-us"), getAllFeaturesAdmin); 
+router.post("/", checkPermission("why-choose-us"), createFeature);
+router.put("/:id", checkPermission("why-choose-us"), updateFeature); 
+router.delete("/:id", checkPermission("why-choose-us"), deleteFeature); 
 
 export default router;

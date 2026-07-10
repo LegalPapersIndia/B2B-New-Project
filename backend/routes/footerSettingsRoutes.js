@@ -4,7 +4,7 @@ import {
   getFooterSettings,
   updateFooterSettings,
 } from "../controllers/footerSettings.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js";
 
 const router = express.Router();
 
@@ -12,6 +12,6 @@ const router = express.Router();
 router.get("/", getFooterSettings);
 
 // ADMIN
-router.put("/", adminAuthMiddleware, updateFooterSettings);
+router.put("/", checkPermission("footer-settings"), updateFooterSettings); 
 
 export default router;

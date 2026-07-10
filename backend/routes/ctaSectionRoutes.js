@@ -1,7 +1,7 @@
 // backend/routes/ctaSectionRoutes.js
 import express from "express";
 import { getCTA, updateCTA } from "../controllers/ctaSection.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ const router = express.Router();
 router.get("/", getCTA);
 
 // ADMIN
-router.put("/", adminAuthMiddleware, updateCTA);
+// ADMIN
+router.put("/", checkPermission("cta-section"), updateCTA); 
 
 export default router;

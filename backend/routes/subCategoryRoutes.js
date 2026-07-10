@@ -1,7 +1,9 @@
 
+// // backend/routes/subCategoryRoutes.js
 
 // import express from "express";
 // import upload from "../middleware/upload.js";
+// import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js";
 
 // import {
 //   createSubCategory,
@@ -12,25 +14,28 @@
 
 // const router = express.Router();
 
-// // CREATE
+// // CREATE (Admin only)
 // router.post(
 //   "/create",
+// checkPermission("subcategories"),
+//   adminAuthMiddleware,
 //   upload.single("image"),
 //   createSubCategory
 // );
 
-// // GET ALL
+// // GET ALL (Public)
 // router.get("/", getSubCategories);
 
-// // ✅ GET BY CATEGORY (ADD THIS)
+// // GET BY CATEGORY (Public)
 // router.get("/category/:categoryId", getSubCategories);
 
-// // DELETE
-// router.delete("/:id", deleteSubCategory);
-
-// // UPDATE
+// // DELETE (Admin only)
+// router.delete("/:id", checkPermission("subcategories"), deleteSubCategory);
+// // UPDATE (Admin only)
 // router.put(
 //   "/:id",
+// checkPermission("subcategories"),
+//   adminAuthMiddleware,
 //   upload.single("image"),
 //   updateSubCategory
 // );
@@ -39,13 +44,11 @@
 
 
 
-
-
 // backend/routes/subCategoryRoutes.js
 
 import express from "express";
 import upload from "../middleware/upload.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; // ✅ UPDATED
 
 import {
   createSubCategory,
@@ -56,27 +59,28 @@ import {
 
 const router = express.Router();
 
-// CREATE (Admin only)
+// CREATE (Admin + Manager-with-permission) ✅ UPDATED
 router.post(
   "/create",
-  adminAuthMiddleware,
+  
+  checkPermission("subcategories"),
   upload.single("image"),
   createSubCategory
 );
 
-// GET ALL (Public)
+// GET ALL (Public) - unchanged
 router.get("/", getSubCategories);
 
-// GET BY CATEGORY (Public)
+// GET BY CATEGORY (Public) - unchanged
 router.get("/category/:categoryId", getSubCategories);
 
-// DELETE (Admin only)
-router.delete("/:id", adminAuthMiddleware, deleteSubCategory);
+// DELETE (Admin + Manager-with-permission) ✅ UPDATED
+router.delete("/:id", checkPermission("subcategories"), deleteSubCategory);
 
-// UPDATE (Admin only)
+// UPDATE (Admin + Manager-with-permission) ✅ UPDATED
 router.put(
   "/:id",
-  adminAuthMiddleware,
+  checkPermission("subcategories"),
   upload.single("image"),
   updateSubCategory
 );

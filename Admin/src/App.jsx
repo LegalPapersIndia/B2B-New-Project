@@ -31,6 +31,7 @@ import AdminFooterSettings from "./pages/admin/FooterSettings";
 import ContactPage from "./pages/admin/ContactPage";
 import HeroSlides from "./pages/admin/HeroSlides";
 import NavbarSettings from "./pages/admin/NavbarSettings";
+import AdminManagerUsers from "./pages/admin/AdminManagerUsers"; // ✅ NEW
 
 export default function App() {
   return (
@@ -76,6 +77,7 @@ export default function App() {
            <Route path="/admin/contact-page" element={<ContactPage />} />
             <Route path="/admin/hero-slides" element={<HeroSlides />} />
              <Route path="/admin/navbar-settings" element={<NavbarSettings />} />
+             <Route path="/admin/manager-users" element={<AdminManagerUsers />} /> {/* ✅ NEW */}
         </Route>
       </Routes>
     </BrowserRouter>

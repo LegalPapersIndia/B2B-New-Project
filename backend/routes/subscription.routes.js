@@ -13,7 +13,7 @@ import {
 } from "../controllers/subscription.controller.js";
 import Plan from "../models/Plan.model.js";
 import authMiddleware from "../middleware/authMiddleware.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 
@@ -42,7 +42,7 @@ router.get("/my-subscription", authMiddleware, getMySubscription);
 // ─────────────────────────────────────────
 
 // GET ALL PLANS
-router.get("/admin/plans", adminAuthMiddleware, async (req, res) => {
+router.get("/admin/plans", checkPermission("plans"), async (req, res) => { 
   try {
     const plans = await Plan.find().sort({ amount: 1 });
     res.json({ success: true, plans });
@@ -54,10 +54,11 @@ router.get("/admin/plans", adminAuthMiddleware, async (req, res) => {
 // ─────────────────────────────────────────
 // ADMIN — Manually plan assign karo seller ko
 // ─────────────────────────────────────────
-router.post("/admin/assign-plan/:sellerId", adminAuthMiddleware, adminAssignPlan);
+// ADMIN — Manually plan assign karo seller ko
+router.post("/admin/assign-plan/:sellerId", checkPermission("sellers"), adminAssignPlan); 
 
 // UPDATE PLAN — price + duration
-router.put("/admin/plans/:id", adminAuthMiddleware, async (req, res) => {
+router.put("/admin/plans/:id", checkPermission("plans"), async (req, res) => { 
   try {
     const { amount, duration } = req.body;
     const plan = await Plan.findByIdAndUpdate(

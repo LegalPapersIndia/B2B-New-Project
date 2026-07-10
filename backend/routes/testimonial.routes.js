@@ -8,7 +8,7 @@ import {
   adminUpdateTestimonial,
   adminDeleteTestimonial,
 } from "../controllers/testimonial.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -17,9 +17,9 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.get("/", getTestimonials);
 
 // ADMIN
-router.get("/admin/all",     adminAuthMiddleware, adminGetTestimonials);
-router.post("/admin/create", adminAuthMiddleware, upload.single("image"), adminCreateTestimonial);
-router.put("/admin/:id",     adminAuthMiddleware, upload.single("image"), adminUpdateTestimonial);
-router.delete("/admin/:id",  adminAuthMiddleware, adminDeleteTestimonial);
+router.get("/admin/all",     checkPermission("testimonials"), adminGetTestimonials); 
+router.post("/admin/create", checkPermission("testimonials"), upload.single("image"), adminCreateTestimonial); 
+router.put("/admin/:id",     checkPermission("testimonials"), upload.single("image"), adminUpdateTestimonial); 
+router.delete("/admin/:id",  checkPermission("testimonials"), adminDeleteTestimonial); 
 
 export default router;

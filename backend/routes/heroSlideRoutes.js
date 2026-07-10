@@ -8,7 +8,7 @@ import {
   updateHeroSlide,
   deleteHeroSlide,
 } from "../controllers/heroSlide.controller.js";
-import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
+import adminAuthMiddleware, { checkPermission } from "../middleware/adminAuthMiddleware.js"; 
 
 const router = express.Router();
 
@@ -19,9 +19,9 @@ const upload  = multer({ storage });
 router.get("/",       getHeroSlides);
 
 // ADMIN
-router.get("/admin",            adminAuthMiddleware, getHeroSlidesAdmin);
-router.post("/",                adminAuthMiddleware, upload.single("image"), createHeroSlide);
-router.put("/:id",              adminAuthMiddleware, upload.single("image"), updateHeroSlide);
-router.delete("/:id",           adminAuthMiddleware, deleteHeroSlide);
+router.get("/admin",            checkPermission("hero-slides"), getHeroSlidesAdmin); 
+router.post("/",                checkPermission("hero-slides"), upload.single("image"), createHeroSlide); 
+router.put("/:id",              checkPermission("hero-slides"), upload.single("image"), updateHeroSlide); 
+router.delete("/:id",           checkPermission("hero-slides"), deleteHeroSlide); // ✅ UPDATED
 
 export default router;
