@@ -1,5 +1,7 @@
 
 
+
+
 // // src/Pages/seller/SellerProfile.jsx
 
 // import React, { useState, useEffect, useRef } from "react";
@@ -7,7 +9,7 @@
 //   FaUserCircle, FaBuilding,
 //   FaPhone, FaEnvelope, FaGlobe, FaMapMarkerAlt,
 //   FaCamera, FaCrown, FaFileAlt, FaUsers,
-//   FaChartLine, FaCalendarAlt, FaSpinner,
+//   FaChartLine, FaCalendarAlt, FaSpinner, FaEdit, FaLock,
 // } from "react-icons/fa";
 // import { getMyProfile, updateProfile } from "../../api/sellerProfileApi";
 // import { useLocation } from "react-router-dom";
@@ -20,6 +22,7 @@
 //   const [alert, setAlert]               = useState(null);
 //   const [imageFile, setImageFile]       = useState(null);
 //   const [imagePreview, setImagePreview] = useState(null);
+//   const [editMode, setEditMode]         = useState(false);
 //   const imageRef                        = useRef(null);
 
 //   // ── LOCATION STATES ──
@@ -191,6 +194,7 @@
 //         setProfile(data.seller);
 //         setAlert({ type: "success", message: "Profile updated successfully!" });
 //         setImageFile(null);
+//         setEditMode(false);
 
 //         const userData = JSON.parse(localStorage.getItem("user") || "{}");
 //         localStorage.setItem("user", JSON.stringify({
@@ -215,13 +219,38 @@
 
 //   // ── PLAN STYLE ──
 //   const planStyle = (plan) => {
-//     switch (plan) {
-//       case "gold":    return "bg-yellow-100 text-yellow-700 border-yellow-200";
-//       case "premium": return "bg-purple-100 text-purple-700 border-purple-200";
-//       case "basic":   return "bg-blue-100 text-blue-700 border-blue-200";
-//       default:        return "bg-gray-100 text-gray-500 border-gray-200";
-//     }
-//   };
+//   switch (plan) {
+//     case "diamond": return "bg-cyan-100 text-cyan-700 border-cyan-200";
+//     case "gold":    return "bg-yellow-100 text-yellow-700 border-yellow-200";
+//     case "silver":  return "bg-gray-200 text-gray-700 border-gray-300";
+//     default:        return "bg-gray-100 text-gray-500 border-gray-200";
+//   }
+// };
+
+//   // ── SHARED INPUT CLASSES ──
+//   const inputClass = `w-full h-12 pl-12 border rounded-xl outline-none transition
+//     ${editMode
+//       ? "bg-white focus:border-blue-800 focus:ring-2 focus:ring-blue-100"
+//       : "bg-gray-50 text-gray-500 cursor-not-allowed select-none"
+//     }`;
+
+//   const inputClassNoIcon = `w-full h-12 px-4 border rounded-xl outline-none transition
+//     ${editMode
+//       ? "bg-white focus:border-blue-800 focus:ring-2 focus:ring-blue-100"
+//       : "bg-gray-50 text-gray-500 cursor-not-allowed select-none"
+//     }`;
+
+//   const selectClass = `w-full h-12 pl-12 border rounded-xl outline-none appearance-none transition
+//     ${editMode
+//       ? "bg-white focus:border-blue-800 focus:ring-2 focus:ring-blue-100"
+//       : "bg-gray-50 text-gray-500 cursor-not-allowed select-none"
+//     }`;
+
+//   const textareaClass = `w-full mt-2 p-4 border rounded-xl outline-none resize-none transition
+//     ${editMode
+//       ? "bg-white focus:border-blue-800 focus:ring-2 focus:ring-blue-100"
+//       : "bg-gray-50 text-gray-500 cursor-not-allowed select-none"
+//     }`;
 
 //   // ── LOADING ──
 //   if (loading) {
@@ -273,12 +302,15 @@
 //                     <FaUserCircle className="text-5xl text-white/70" />
 //                   )}
 //                 </div>
-//                 <button
-//                   onClick={() => imageRef.current?.click()}
-//                   className="absolute -bottom-2 -right-2 w-8 h-8 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center shadow-lg transition"
-//                 >
-//                   <FaCamera className="text-white text-xs" />
-//                 </button>
+//                 {/* Camera button only in edit mode */}
+//                 {editMode && (
+//                   <button
+//                     onClick={() => imageRef.current?.click()}
+//                     className="absolute -bottom-2 -right-2 w-8 h-8 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center shadow-lg transition"
+//                   >
+//                     <FaCamera className="text-white text-xs" />
+//                   </button>
+//                 )}
 //                 <input
 //                   ref={imageRef}
 //                   type="file"
@@ -313,8 +345,36 @@
 //                 </div>
 //               </div>
 //             </div>
+
+//             {/* EDIT / LOCKED BUTTON */}
+//             {!editMode ? (
+//               <button
+//                 type="button"
+//                 onClick={() => setEditMode(true)}
+//                 className="flex items-center gap-2 bg-white/10 hover:bg-white/25 border border-white/30 text-white px-5 py-3 rounded-2xl font-semibold transition text-sm self-start sm:self-auto"
+//               >
+//                 <FaEdit className="text-orange-400" />
+//                 Edit Profile
+//               </button>
+//             ) : (
+//               <div className="flex items-center gap-2 bg-orange-500/20 border border-orange-400/40 text-orange-300 px-5 py-3 rounded-2xl text-sm font-semibold self-start sm:self-auto">
+//                 <FaEdit className="text-orange-400" />
+//                 Editing Mode
+//               </div>
+//             )}
+
 //           </div>
 //         </div>
+
+//         {/* ── LOCKED BANNER (read-only mode) ── */}
+//         {!editMode && (
+//           <div className="mx-8 mt-6 flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-2xl px-5 py-3">
+//             <FaLock className="text-gray-400 text-sm flex-shrink-0" />
+//             <p className="text-gray-500 text-sm">
+//               Profile is in <strong>read-only</strong> mode. Click <strong>"Edit Profile"</strong> to make changes.
+//             </p>
+//           </div>
+//         )}
 
 //         {/* ── FORM ── */}
 //         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -327,9 +387,14 @@
 //             <label className="font-semibold text-gray-700 text-sm">Owner Name</label>
 //             <div className="relative mt-2">
 //               <FaUserCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="name" value={profile.name} onChange={handleChange}
+//               <input
+//                 name="name"
+//                 value={profile.name}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="Your name"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
@@ -338,8 +403,11 @@
 //             <label className="font-semibold text-gray-700 text-sm">Email</label>
 //             <div className="relative mt-2">
 //               <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input value={profile.email} disabled
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-100 text-gray-500 outline-none cursor-not-allowed" />
+//               <input
+//                 value={profile.email}
+//                 disabled
+//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-100 text-gray-500 outline-none cursor-not-allowed"
+//               />
 //             </div>
 //           </div>
 
@@ -348,9 +416,14 @@
 //             <label className="font-semibold text-gray-700 text-sm">Phone</label>
 //             <div className="relative mt-2">
 //               <FaPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="phone" value={profile.phone} onChange={handleChange}
+//               <input
+//                 name="phone"
+//                 value={profile.phone}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="Phone number"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
@@ -362,23 +435,33 @@
 //             <label className="font-semibold text-gray-700 text-sm">Company Name</label>
 //             <div className="relative mt-2">
 //               <FaBuilding className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="companyName" value={profile.companyName} onChange={handleChange}
+//               <input
+//                 name="companyName"
+//                 value={profile.companyName}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="Your company name"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
 //           {/* COMPANY TYPE */}
 //           <div>
 //             <label className="font-semibold text-gray-700 text-sm">Company Type</label>
-//             <select name="companyType" value={profile.companyType} onChange={handleChange}
-//               className="w-full h-12 mt-2 px-4 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none appearance-none">
+//             <select
+//               name="companyType"
+//               value={profile.companyType}
+//               onChange={handleChange}
+//               disabled={!editMode}
+//               className={`w-full h-12 mt-2 px-4 border rounded-xl outline-none appearance-none transition ${editMode ? "bg-white focus:border-blue-800" : "bg-gray-50 text-gray-500 cursor-not-allowed"}`}
+//             >
 //               <option value="">Select Type</option>
 //               <option value="Manufacturer">Manufacturer</option>
 //               <option value="Trader">Trader</option>
 //               <option value="Exporter">Exporter</option>
-//               <option value="Wholesaler">Wholesaler</option>
-//               <option value="Retailer">Retailer</option>
+//               <option value="Services">Services</option>
+              
 //             </select>
 //           </div>
 
@@ -387,9 +470,14 @@
 //             <label className="font-semibold text-gray-700 text-sm">Year Established</label>
 //             <div className="relative mt-2">
 //               <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="yearEstablished" value={profile.yearEstablished} onChange={handleChange}
+//               <input
+//                 name="yearEstablished"
+//                 value={profile.yearEstablished}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="e.g. 2010"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
@@ -398,8 +486,13 @@
 //             <label className="font-semibold text-gray-700 text-sm">No. of Employees</label>
 //             <div className="relative mt-2">
 //               <FaUsers className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <select name="employees" value={profile.employees} onChange={handleChange}
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none appearance-none">
+//               <select
+//                 name="employees"
+//                 value={profile.employees}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
+//                 className={selectClass}
+//               >
 //                 <option value="">Select Range</option>
 //                 <option value="1-10">1-10</option>
 //                 <option value="11-50">11-50</option>
@@ -415,8 +508,13 @@
 //             <label className="font-semibold text-gray-700 text-sm">Annual Turnover</label>
 //             <div className="relative mt-2">
 //               <FaChartLine className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <select name="annualTurnover" value={profile.annualTurnover} onChange={handleChange}
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none appearance-none">
+//               <select
+//                 name="annualTurnover"
+//                 value={profile.annualTurnover}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
+//                 className={selectClass}
+//               >
 //                 <option value="">Select Range</option>
 //                 <option value="Below 1 Crore">Below 1 Crore</option>
 //                 <option value="1-5 Crore">1-5 Crore</option>
@@ -434,9 +532,14 @@
 //             </label>
 //             <div className="relative mt-2">
 //               <FaGlobe className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="companyWebsite" value={profile.companyWebsite} onChange={handleChange}
+//               <input
+//                 name="companyWebsite"
+//                 value={profile.companyWebsite}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="https://yourwebsite.com"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
@@ -445,9 +548,15 @@
 //             <label className="font-semibold text-gray-700 text-sm">
 //               Company Description <span className="text-gray-400 font-normal">(optional)</span>
 //             </label>
-//             <textarea name="companyDescription" value={profile.companyDescription} onChange={handleChange}
-//               rows={3} placeholder="Tell buyers about your company..."
-//               className="w-full mt-2 p-4 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none resize-none" />
+//             <textarea
+//               name="companyDescription"
+//               value={profile.companyDescription}
+//               onChange={handleChange}
+//               disabled={!editMode}
+//               rows={3}
+//               placeholder="Tell buyers about your company..."
+//               className={textareaClass}
+//             />
 //           </div>
 
 //           {/* ════ LEGAL INFO ════ */}
@@ -458,9 +567,14 @@
 //             <label className="font-semibold text-gray-700 text-sm">GST Number</label>
 //             <div className="relative mt-2">
 //               <FaFileAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="gstNumber" value={profile.gstNumber} onChange={handleChange}
+//               <input
+//                 name="gstNumber"
+//                 value={profile.gstNumber}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="e.g. 27ABCDE1234F1Z5"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
@@ -469,9 +583,14 @@
 //             <label className="font-semibold text-gray-700 text-sm">PAN Number</label>
 //             <div className="relative mt-2">
 //               <FaFileAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="panNumber" value={profile.panNumber} onChange={handleChange}
+//               <input
+//                 name="panNumber"
+//                 value={profile.panNumber}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="e.g. ABCDE1234F"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
@@ -482,9 +601,14 @@
 //             </label>
 //             <div className="relative mt-2">
 //               <FaFileAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-//               <input name="regNumber" value={profile.regNumber} onChange={handleChange}
+//               <input
+//                 name="regNumber"
+//                 value={profile.regNumber}
+//                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 placeholder="Registration number"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none" />
+//                 className={inputClass}
+//               />
 //             </div>
 //           </div>
 
@@ -504,9 +628,10 @@
 //                 name="pincode"
 //                 value={profile.pincode}
 //                 onChange={handleChange}
+//                 disabled={!editMode}
 //                 maxLength={6}
 //                 placeholder="Enter pincode (auto-fills state & city)"
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none"
+//                 className={inputClass}
 //               />
 //             </div>
 //           </div>
@@ -526,8 +651,8 @@
 //                 onChange={(e) => {
 //                   setProfile({ ...profile, state: e.target.value, city: "" });
 //                 }}
-//                 disabled={loadingStates}
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none appearance-none"
+//                 disabled={!editMode || loadingStates}
+//                 className={selectClass}
 //               >
 //                 <option value="">Select State</option>
 //                 {states.map(s => (
@@ -550,8 +675,8 @@
 //                 name="city"
 //                 value={profile.city}
 //                 onChange={handleChange}
-//                 disabled={!profile.state || loadingDistricts}
-//                 className="w-full h-12 pl-12 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none appearance-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+//                 disabled={!editMode || !profile.state || loadingDistricts}
+//                 className={selectClass}
 //               >
 //                 <option value="">Select City</option>
 //                 {districts.map(d => (
@@ -564,30 +689,46 @@
 //           {/* ADDRESS */}
 //           <div className="md:col-span-2">
 //             <label className="font-semibold text-gray-700 text-sm">Full Address</label>
-//             <textarea name="address" value={profile.address} onChange={handleChange}
-//               rows={3} placeholder="Full address..."
-//               className="w-full mt-2 p-4 border rounded-xl bg-gray-50 focus:border-blue-800 outline-none resize-none" />
+//             <textarea
+//               name="address"
+//               value={profile.address}
+//               onChange={handleChange}
+//               disabled={!editMode}
+//               rows={3}
+//               placeholder="Full address..."
+//               className={textareaClass}
+//             />
 //           </div>
 
-//           {/* SAVE / CANCEL */}
+//           {/* ── SAVE / CANCEL ── */}
 //           <div className="md:col-span-2 flex gap-3">
-//             <button
-//               onClick={handleSave}
-//               disabled={saving}
-//               className="bg-blue-800 hover:bg-blue-900 disabled:opacity-60 text-white px-8 py-3 rounded-2xl font-semibold transition"
-//             >
-//               {saving ? "Saving..." : "Save Changes"}
-//             </button>
-//             <button
-//               onClick={() => {
-//                 setImageFile(null);
-//                 setImagePreview(null);
-//                 setAlert(null);
-//               }}
-//               className="border border-gray-200 hover:border-red-300 hover:text-red-500 px-8 py-3 rounded-2xl font-semibold transition"
-//             >
-//               Cancel
-//             </button>
+//             {editMode ? (
+//               <>
+//                 <button
+//                   onClick={handleSave}
+//                   disabled={saving}
+//                   className="bg-blue-800 hover:bg-blue-900 disabled:opacity-60 text-white px-8 py-3 rounded-2xl font-semibold transition"
+//                 >
+//                   {saving ? "Saving..." : "Save Changes"}
+//                 </button>
+//                 <button
+//                   onClick={() => {
+//                     setEditMode(false);
+//                     setImageFile(null);
+//                     setImagePreview(null);
+//                     setAlert(null);
+//                   }}
+//                   className="border border-gray-200 hover:border-red-300 hover:text-red-500 px-8 py-3 rounded-2xl font-semibold transition"
+//                 >
+//                   Cancel
+//                 </button>
+//               </>
+//             ) : (
+//               <p className="text-gray-400 text-sm flex items-center gap-2">
+//                 <FaLock className="text-gray-300" />
+//                 Click <strong className="text-gray-500 mx-1">"Edit Profile"</strong> at the top to make changes.
+//               </p>
+//             )}
 //           </div>
 
 //         </div>
@@ -597,9 +738,6 @@
 // };
 
 // export default SellerProfile;
-
-
-
 
 
 
@@ -875,7 +1013,7 @@ const SellerProfile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-3 sm:p-6">
       {alert && (
         <AlertPopup
           type={alert.type}
@@ -969,7 +1107,7 @@ const SellerProfile = () => {
 
         {/* ── LOCKED BANNER (read-only mode) ── */}
         {!editMode && (
-          <div className="mx-8 mt-6 flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-2xl px-5 py-3">
+          <div className="mx-4 sm:mx-8 mt-6 flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-2xl px-5 py-3">
             <FaLock className="text-gray-400 text-sm flex-shrink-0" />
             <p className="text-gray-500 text-sm">
               Profile is in <strong>read-only</strong> mode. Click <strong>"Edit Profile"</strong> to make changes.
@@ -978,7 +1116,7 @@ const SellerProfile = () => {
         )}
 
         {/* ── FORM ── */}
-        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-4 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* ════ BASIC INFO ════ */}
           <SectionHeader title="Basic Information" />
@@ -1302,7 +1440,7 @@ const SellerProfile = () => {
           </div>
 
           {/* ── SAVE / CANCEL ── */}
-          <div className="md:col-span-2 flex gap-3">
+          <div className="md:col-span-2 flex flex-wrap gap-3">
             {editMode ? (
               <>
                 <button

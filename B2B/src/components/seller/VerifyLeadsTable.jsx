@@ -1,3 +1,4 @@
+
 // import React, { useState } from "react";
 // import {
 //   FaEye,
@@ -71,6 +72,25 @@
 //     (reqPage - 1) * ITEMS_PER_PAGE,
 //     reqPage * ITEMS_PER_PAGE,
 //   );
+
+//   // ✅ NEW - Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
+//   const getReqPageNumbers = () => {
+//     const pages = [];
+//     const delta = 1;
+
+//     for (let i = 1; i <= reqTotalPages; i++) {
+//       if (
+//         i === 1 ||
+//         i === reqTotalPages ||
+//         (i >= reqPage - delta && i <= reqPage + delta)
+//       ) {
+//         pages.push(i);
+//       } else if (pages[pages.length - 1] !== "...") {
+//         pages.push("...");
+//       }
+//     }
+//     return pages;
+//   };
 
 //   // CHECKBOX
 //   const toggleReqCheckbox = (id) =>
@@ -416,14 +436,19 @@
 //                 </p>
 //                 <div className="flex items-center gap-2">
 //                   <button
-//                     onClick={() => setReqPage((p) => p - 1)}
+//                     onClick={() => setReqPage((p) => Math.max(p - 1, 1))}
 //                     disabled={reqPage === 1}
 //                     className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-orange-600 hover:text-orange-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
 //                   >
 //                     ← Prev
 //                   </button>
-//                   {Array.from({ length: reqTotalPages }, (_, i) => i + 1).map(
-//                     (p) => (
+//                   {/* ✅ UPDATED - ab getReqPageNumbers() se limited pages + ellipsis render honge */}
+//                   {getReqPageNumbers().map((p, idx) =>
+//                     p === "..." ? (
+//                       <span key={`dots-${idx}`} className="px-2 text-gray-400 text-sm">
+//                         …
+//                       </span>
+//                     ) : (
 //                       <button
 //                         key={p}
 //                         onClick={() => setReqPage(p)}
@@ -435,7 +460,7 @@
 //                     ),
 //                   )}
 //                   <button
-//                     onClick={() => setReqPage((p) => p + 1)}
+//                     onClick={() => setReqPage((p) => Math.min(p + 1, reqTotalPages))}
 //                     disabled={reqPage === reqTotalPages}
 //                     className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-orange-600 hover:text-orange-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
 //                   >
@@ -508,8 +533,6 @@
 // };
 
 // export default VerifyLeadsTable;
-
-
 
 
 
@@ -587,7 +610,7 @@ const VerifyLeadsTable = ({
     reqPage * ITEMS_PER_PAGE,
   );
 
-  // ✅ NEW - Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
+  // Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
   const getReqPageNumbers = () => {
     const pages = [];
     const delta = 1;
@@ -690,16 +713,16 @@ const VerifyLeadsTable = ({
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-md border border-gray-100 overflow-hidden">
+    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-md border border-gray-100 overflow-hidden">
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white px-6 py-4 flex items-center justify-between flex-wrap gap-3">
+      <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold">Verify Leads</h2>
+          <h2 className="text-lg sm:text-xl font-semibold">Verify Leads</h2>
           <p className="text-orange-100 text-xs mt-0.5">
             Buyers looking for products in your category
           </p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
           {/* SEARCH */}
           <input
             type="text"
@@ -709,64 +732,66 @@ const VerifyLeadsTable = ({
               setReqPage(1);
             }}
             placeholder="Search buyer, product..."
-            className="px-3 py-2 rounded-xl text-xs bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white/50 w-44"
+            className="px-3 py-2 rounded-xl text-xs bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white/50 w-full sm:w-44"
           />
 
-          {/* DOWNLOAD */}
-          <div className="relative">
-            <button
-              onClick={() => setShowDownload((v) => !v)}
-              className="px-4 py-2 rounded-xl text-xs border border-white/20 bg-white/10 hover:bg-white/20 text-white transition flex items-center gap-1.5"
-            >
-              ↓ Download
-              {selectedReqIds.length > 0 && (
-                <span className="bg-white text-orange-600 rounded-full px-1.5 py-0.5 text-[10px] font-bold">
-                  {selectedReqIds.length}
-                </span>
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            {/* DOWNLOAD */}
+            <div className="relative">
+              <button
+                onClick={() => setShowDownload((v) => !v)}
+                className="px-3 sm:px-4 py-2 rounded-xl text-xs border border-white/20 bg-white/10 hover:bg-white/20 text-white transition flex items-center gap-1.5 whitespace-nowrap"
+              >
+                ↓ Download
+                {selectedReqIds.length > 0 && (
+                  <span className="bg-white text-orange-600 rounded-full px-1.5 py-0.5 text-[10px] font-bold">
+                    {selectedReqIds.length}
+                  </span>
+                )}
+                <span className="text-white/60 text-[10px]">▾</span>
+              </button>
+              {showDownload && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowDownload(false)}
+                  />
+                  <div className="absolute right-0 top-full mt-1 z-20 bg-white border border-gray-200 rounded-xl overflow-hidden w-40 shadow-xl">
+                    <p className="text-gray-400 text-[10px] px-3 pt-2 pb-1">
+                      {selectedReqIds.length > 0
+                        ? `${selectedReqIds.length} selected`
+                        : "All filtered"}
+                    </p>
+                    <button
+                      onClick={handleExcel}
+                      className="w-full text-left px-3 py-2 text-xs text-green-600 hover:bg-gray-50 transition flex items-center gap-2"
+                    >
+                      <span>📊</span> Excel (.xlsx)
+                    </button>
+                    <button
+                      onClick={handlePDF}
+                      className="w-full text-left px-3 py-2 text-xs text-red-500 hover:bg-gray-50 transition flex items-center gap-2"
+                    >
+                      <span>📄</span> PDF
+                    </button>
+                  </div>
+                </>
               )}
-              <span className="text-white/60 text-[10px]">▾</span>
-            </button>
-            {showDownload && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowDownload(false)}
-                />
-                <div className="absolute right-0 top-full mt-1 z-20 bg-white border border-gray-200 rounded-xl overflow-hidden w-40 shadow-xl">
-                  <p className="text-gray-400 text-[10px] px-3 pt-2 pb-1">
-                    {selectedReqIds.length > 0
-                      ? `${selectedReqIds.length} selected`
-                      : "All filtered"}
-                  </p>
-                  <button
-                    onClick={handleExcel}
-                    className="w-full text-left px-3 py-2 text-xs text-green-600 hover:bg-gray-50 transition flex items-center gap-2"
-                  >
-                    <span>📊</span> Excel (.xlsx)
-                  </button>
-                  <button
-                    onClick={handlePDF}
-                    className="w-full text-left px-3 py-2 text-xs text-red-500 hover:bg-gray-50 transition flex items-center gap-2"
-                  >
-                    <span>📄</span> PDF
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+            </div>
 
-          {/* DELETE SELECTED */}
-          {/* {selectedReqIds.length > 0 && (
-            <button
-              onClick={handleDeleteMultipleReqs}
-              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition"
-            >
-              <FaTrash /> Delete Selected ({selectedReqIds.length})
-            </button>
-          )} */}
-          <span className="text-orange-100 text-sm">
-            {requirements.length} leads
-          </span>
+            {/* DELETE SELECTED */}
+            {/* {selectedReqIds.length > 0 && (
+              <button
+                onClick={handleDeleteMultipleReqs}
+                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-semibold transition"
+              >
+                <FaTrash /> Delete Selected ({selectedReqIds.length})
+              </button>
+            )} */}
+            <span className="text-orange-100 text-xs sm:text-sm whitespace-nowrap">
+              {requirements.length} leads
+            </span>
+          </div>
         </div>
       </div>
 
@@ -786,9 +811,9 @@ const VerifyLeadsTable = ({
       {!requirementsLoading &&
         !requirementsError &&
         requirements.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-            <FaClipboardList className="text-6xl mb-4 text-gray-300" />
-            <p className="text-lg font-medium">No verify leads yet</p>
+          <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-gray-400 px-4 text-center">
+            <FaClipboardList className="text-5xl sm:text-6xl mb-4 text-gray-300" />
+            <p className="text-base sm:text-lg font-medium">No verify leads yet</p>
             <p className="text-sm mt-1">
               Requirements will appear when buyers post in your category
             </p>
@@ -801,7 +826,7 @@ const VerifyLeadsTable = ({
         requirements.length > 0 && (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
+              <table className="w-full min-w-[1000px] text-sm text-left">
                 <thead className="bg-gray-50 text-gray-500 uppercase text-xs">
                   <tr>
                     <th className="p-4 w-10">
@@ -942,31 +967,30 @@ const VerifyLeadsTable = ({
 
             {/* PAGINATION */}
             {reqTotalPages > 1 && (
-              <div className="px-6 py-4 border-t flex items-center justify-between text-sm">
-                <p className="text-gray-500">
+              <div className="px-4 sm:px-6 py-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+                <p className="text-gray-500 text-xs sm:text-sm text-center sm:text-left">
                   Showing {(reqPage - 1) * ITEMS_PER_PAGE + 1}–
                   {Math.min(reqPage * ITEMS_PER_PAGE, filteredReqs.length)} of{" "}
                   {filteredReqs.length}
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center">
                   <button
                     onClick={() => setReqPage((p) => Math.max(p - 1, 1))}
                     disabled={reqPage === 1}
-                    className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-orange-600 hover:text-orange-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="px-3 sm:px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-orange-600 hover:text-orange-600 transition disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm whitespace-nowrap"
                   >
                     ← Prev
                   </button>
-                  {/* ✅ UPDATED - ab getReqPageNumbers() se limited pages + ellipsis render honge */}
                   {getReqPageNumbers().map((p, idx) =>
                     p === "..." ? (
-                      <span key={`dots-${idx}`} className="px-2 text-gray-400 text-sm">
+                      <span key={`dots-${idx}`} className="px-1 sm:px-2 text-gray-400 text-sm">
                         …
                       </span>
                     ) : (
                       <button
                         key={p}
                         onClick={() => setReqPage(p)}
-                        className={`w-9 h-9 rounded-xl border text-sm font-medium transition
+                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl border text-xs sm:text-sm font-medium transition
                       ${reqPage === p ? "bg-orange-600 text-white border-orange-600" : "border-gray-200 text-gray-600 hover:border-orange-600 hover:text-orange-600"}`}
                       >
                         {p}
@@ -976,7 +1000,7 @@ const VerifyLeadsTable = ({
                   <button
                     onClick={() => setReqPage((p) => Math.min(p + 1, reqTotalPages))}
                     disabled={reqPage === reqTotalPages}
-                    className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-orange-600 hover:text-orange-600 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="px-3 sm:px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-orange-600 hover:text-orange-600 transition disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm whitespace-nowrap"
                   >
                     Next →
                   </button>
@@ -989,12 +1013,12 @@ const VerifyLeadsTable = ({
       {/* VIEW MODAL */}
       {selectedReq && (
              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-               <div className="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
-                 <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white px-6 py-4 flex justify-between items-center">
+               <div className="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto">
+                 <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white px-4 sm:px-6 py-4 flex justify-between items-center">
                    <h2 className="text-lg font-semibold">Verify Lead Details</h2>
                    <button onClick={() => setSelectedReq(null)} className="text-white hover:text-orange-200 text-xl font-bold">✕</button>
                  </div>
-                 <div className="p-6 space-y-4">
+                 <div className="p-4 sm:p-6 space-y-4">
                    <div>
                      <p className="text-gray-400 text-xs mb-1">Product Required</p>
                      <p className="font-bold text-gray-800 text-lg">{selectedReq.productName}</p>
@@ -1030,13 +1054,13 @@ const VerifyLeadsTable = ({
                        <FaPhoneAlt className="text-xs" /> {selectedReq.buyerPhone}
                      </a>
                      {selectedReq.buyerEmail && (
-                       <a href={`mailto:${selectedReq.buyerEmail}`} className="flex items-center gap-2 text-blue-600 text-xs mt-1">
+                       <a href={`mailto:${selectedReq.buyerEmail}`} className="flex items-center gap-2 text-blue-600 text-xs mt-1 break-all">
                          <FaEnvelope className="text-xs" /> {selectedReq.buyerEmail}
                        </a>
                      )}
                    </div>
                  </div>
-                 <div className="px-6 py-4 border-t flex justify-end">
+                 <div className="px-4 sm:px-6 py-4 border-t flex justify-end">
                    <button onClick={() => setSelectedReq(null)} className="px-5 py-2 border rounded-xl text-sm hover:border-orange-600 hover:text-orange-600 transition">Close</button>
                  </div>
                </div>

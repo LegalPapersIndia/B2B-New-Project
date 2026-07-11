@@ -1,3 +1,4 @@
+
 // // src/pages/seller/MyProducts.jsx
 
 // import React, { useState, useEffect } from "react";
@@ -60,6 +61,25 @@
 //   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 //   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 //   const currentItems = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+//   //  NEW - Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
+//   const getPageNumbers = () => {
+//     const pages = [];
+//     const delta = 1;
+
+//     for (let i = 1; i <= totalPages; i++) {
+//       if (
+//         i === 1 ||
+//         i === totalPages ||
+//         (i >= currentPage - delta && i <= currentPage + delta)
+//       ) {
+//         pages.push(i);
+//       } else if (pages[pages.length - 1] !== "...") {
+//         pages.push("...");
+//       }
+//     }
+//     return pages;
+//   };
 
 //   // ─────────────────────────────────────────
 //   // DELETE — Step 1: show warning confirm
@@ -326,16 +346,22 @@
 //                   {products.length} products
 //                 </p>
 //                 <div className="flex items-center gap-2 flex-wrap">
+//                   {/* ✅ UPDATED - Math.max clamp add kiya */}
 //                   <button
-//                     onClick={() => setCurrentPage((p) => p - 1)}
+//                     onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
 //                     disabled={currentPage === 1}
 //                     className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-blue-800 hover:text-blue-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
 //                   >
 //                     ← Prev
 //                   </button>
 
-//                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-//                     (page) => (
+//                   {/* ✅ UPDATED - ab getPageNumbers() se limited pages + ellipsis render honge */}
+//                   {getPageNumbers().map((page, idx) =>
+//                     page === "..." ? (
+//                       <span key={`dots-${idx}`} className="px-2 text-gray-400 text-sm">
+//                         …
+//                       </span>
+//                     ) : (
 //                       <button
 //                         key={page}
 //                         onClick={() => setCurrentPage(page)}
@@ -348,11 +374,12 @@
 //                       >
 //                         {page}
 //                       </button>
-//                     ),
+//                     )
 //                   )}
 
+//                   {/*  UPDATED - Math.min clamp add kiya */}
 //                   <button
-//                     onClick={() => setCurrentPage((p) => p + 1)}
+//                     onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
 //                     disabled={currentPage === totalPages}
 //                     className="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 hover:border-blue-800 hover:text-blue-800 transition disabled:opacity-40 disabled:cursor-not-allowed"
 //                   >
@@ -532,7 +559,6 @@
 
 
 
-
 // src/pages/seller/MyProducts.jsx
 
 import React, { useState, useEffect } from "react";
@@ -596,7 +622,7 @@ const MyProducts = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentItems = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  // ✅ NEW - Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
+  //  NEW - Smart pagination (sirf limited pages + ellipsis dikhega jab pages zyada ho)
   const getPageNumbers = () => {
     const pages = [];
     const delta = 1;
@@ -911,7 +937,7 @@ const MyProducts = () => {
                     )
                   )}
 
-                  {/* ✅ UPDATED - Math.min clamp add kiya */}
+                  {/*  UPDATED - Math.min clamp add kiya */}
                   <button
                     onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                     disabled={currentPage === totalPages}
@@ -954,7 +980,8 @@ const MyProducts = () => {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              {/* ✅ UPDATED - responsive: mobile pe 1 column, sm+ pe 2 columns (sirf responsive fix, UI/logic same) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div>
                   <p className="text-gray-400 text-xs mb-1">Product Name</p>
                   <p className="font-medium">{selectedProduct.title}</p>
